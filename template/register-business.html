@@ -38,14 +38,56 @@
        </nav>
       </div>
 
-
-      <div class="parallax-container">
-        <div class="parallax"><img src="images/pexels-photo.jpeg"></div>
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">account_circle</i>
+              <input id="name" type="text" class="validate">
+              <label for="name">Business Name</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">email</i>
+              <input id="email" type="text" class="validate">
+              <label for="email">Email</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">phone</i>
+              <input id="phone" type="tel" class="validate">
+              <label for="phone">Telephone</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">add_location</i>
+              <input id="address" type="text" class="validate">
+              <label for="address">Address</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">mode_edit</i>
+              <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
+              <label for="icon_prefix2">Services we render</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">mode_edit</i>
+              <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
+              <label for="icon_prefix2">Company goals</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">mode_edit</i>
+              <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
+              <label for="icon_prefix2">Mission statement</label>
+            </div>
+            <div class="input-field col s12 m6 l4 offset-l1">
+              <i class="material-icons prefix">mode_edit</i>
+              <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
+              <label for="icon_prefix2">Vision statement</label>
+            </div>
+          </div>
+          <button class="btn col s2 offset-s5 m1 offset-m5 l1 offset-l5 submit-btn waves-effect
+           waves-light blue-grey darken-1" type="submit" name="action">
+           <i class="material-icons right">send</i>
+          </button>
+        </form>
       </div>
-
-
-      <!-- Modal Trigger -->
-      <button data-target="modal1" class="btn modal-trigger">Register business</button>
 
       <!-- Modal Structure -->
       <div id="modal1" class="modal modal-fixed-footer">
@@ -113,9 +155,7 @@
           </div>
         </div>
 
-        <div class="modal-footer">
-          <a href="/businesses" class="modal-action modal-close waves-effect waves-green btn-flat ">Register</a>
-        </div>
+
       </div>
 
 
