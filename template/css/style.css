@@ -1,0 +1,66 @@
+/*# sourceMappingURL=style.css.map */
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+@media only screen and (max-width: 992px) {
+  .parallax img {
+    max-height: 150%;
+  }
+}
+
+@media only screen and (min-width: 993px) {
+  .parallax img {
+    max-height: 270%;
+  }
+}
+
+.login {
+  margin-top: 4%;
+}
+
+.custom-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.card-title {
+  text-align: center;
+}
+
+.explore-btn {
+  position: relative;
+  bottom: 250px;
+}
+
+.submit-btn {
+  margin-left: 25px;
+  margin-top: 20px;
+}
+
+.modal {
+  width: 10%;
+}
+
+.searchbar {
+  width: 20%;
+}
+
+/* .page-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+} */
+
+.scrollspy-float {
+  position: absolute;
+  top: 700px;
+}
