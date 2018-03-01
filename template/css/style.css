@@ -10,7 +10,7 @@ main {
   flex: 1 0 auto;
 }
 
-@media only screen and (max-width: 992px) {
+/* @media only screen and (max-width: 992px) {
   .parallax img {
     max-height: 150%;
   }
@@ -20,25 +20,54 @@ main {
   .parallax img {
     max-height: 270%;
   }
-}
+} */
 
 .login {
   margin-top: 4%;
 }
 
-.custom-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+.promo {
+  width: 300px;
 }
 
-.card-title {
+.promo i {
+  display: block;
+  color: #607d8b;
+  font-size: 7rem;
+}
+
+.promo-caption {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+#business-card {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.custom-card-title {
   text-align: center;
+}
+
+#action-color {
+  font-size: 12px;
+  font-weight: 500;
+  color: #607d8b;
+}
+
+#action-color:hover {
+  font-size: 15px;
+  color: #263238;
 }
 
 .explore-btn {
   position: relative;
   bottom: 250px;
+}
+
+.explore-btn i {
+  font-weight: 500;
 }
 
 .submit-btn {
@@ -54,11 +83,11 @@ main {
   width: 20%;
 }
 
-/* .page-footer {
+.custom-footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-} */
+}
 
 .scrollspy-float {
   position: absolute;
