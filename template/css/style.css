@@ -10,6 +10,14 @@ main {
   flex: 1 0 auto;
 }
 
+.nav-wrapper ul li:hover {
+  background-color: #e65100;
+}
+
+.nav-wrapper ul li.active {
+background-color: #e65100;
+}
+
 /* @media only screen and (max-width: 992px) {
   .parallax img {
     max-height: 150%;
@@ -22,17 +30,36 @@ main {
   }
 } */
 
-.login {
-  margin-top: 4%;
+.login-form {
+  margin-top: 50px;
+}
+
+@media only screen and (min-width: 773px) {
+  .login-form {
+    margin-top: 100px;
+  }
+}
+
+.signup-form {
+  margin-top: 30px;
+}
+
+@media only screen and (min-width: 773px) {
+  .signup-form {
+    margin-top: 60px;
+  }
 }
 
 .promo {
+  display: block;
   width: 300px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .promo i {
   display: block;
-  color: #607d8b;
+  color: #e65100;
   font-size: 7rem;
 }
 
@@ -53,17 +80,17 @@ main {
 #action-color {
   font-size: 12px;
   font-weight: 500;
-  color: #607d8b;
+  color: #ff6d00;
 }
 
 #action-color:hover {
   font-size: 15px;
-  color: #263238;
+  color: #e65100;
 }
 
 .explore-btn {
   position: relative;
-  bottom: 250px;
+  bottom: 200px;
 }
 
 .explore-btn i {
