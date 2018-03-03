@@ -6,6 +6,7 @@ body {
 
 main {
     flex: 1 0 auto;
+    background: rgba(98, 116, 124, 0.3);
 }
 
 .nav-wrapper ul li:hover {
@@ -30,22 +31,6 @@ main {
     margin-top: 50px;
 }
 
-@media only screen and (min-width: 773px) {
-    .form-padding {
-        margin-top: 100px;
-    }
-}
-
-.signup-form {
-    margin-top: 30px;
-}
-
-@media only screen and (min-width: 773px) {
-    .signup-form {
-        margin-top: 60px;
-    }
-}
-
 .promo {
     display: block;
     width: 300px;
@@ -62,6 +47,37 @@ main {
 .promo-caption {
     font-size: 1.5rem;
     font-weight: 500;
+}
+
+.parallax-text {
+  position: relative;
+  top: 150px;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media only screen and (min-width: 773px) {
+    .parallax-text {
+
+    }
+}
+
+@media only screen and (min-width: 773px) {
+    .form-padding {
+        margin-top: 100px;
+    }
+}
+
+.signup-form {
+    margin-top: 30px;
+}
+
+@media only screen and (min-width: 773px) {
+    .signup-form {
+        margin-top: 60px;
+    }
 }
 
 #business-card {
@@ -107,6 +123,11 @@ main {
 }
 
 .scrollspy-float {
-    position: absolute;
+    position: fixed;
     top: 700px;
+}
+
+#scrollspy-text li a {
+    color: #e65100;
+    font-weight: 600;
 }
