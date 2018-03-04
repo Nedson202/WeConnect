@@ -17,6 +17,62 @@ main {
     background-color: #e65100;
 }
 
+.parallax-text {
+  position: relative;
+  top: 150px;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.explore-btn {
+  position: relative;
+  bottom: 200px;
+}
+
+.explore-btn i {
+  font-weight: 500;
+}
+
+.promo {
+  display: block;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.promo i {
+  display: block;
+  color: #e65100;
+  font-size: 7rem;
+}
+
+.promo-caption {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.form-padding {
+  margin-top: 50px;
+}
+
+@media only screen and (min-width: 773px) {
+  .form-padding {
+    margin-top: 100px;
+  }
+}
+
+.signup-form {
+  margin-top: 30px;
+}
+
+@media only screen and (min-width: 773px) {
+  .signup-form {
+    margin-top: 60px;
+  }
+}
+
 #input-text-style {
     color: black;
     font-weight: 600;
@@ -27,58 +83,6 @@ main {
     color: #e65100;
 }
 
-.form-padding {
-    margin-top: 50px;
-}
-
-.promo {
-    display: block;
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.promo i {
-    display: block;
-    color: #e65100;
-    font-size: 7rem;
-}
-
-.promo-caption {
-    font-size: 1.5rem;
-    font-weight: 500;
-}
-
-.parallax-text {
-  position: relative;
-  top: 150px;
-  color: #ffffff;
-  font-size: 25px;
-  font-weight: 700;
-  text-align: center;
-}
-
-@media only screen and (min-width: 773px) {
-    .parallax-text {
-
-    }
-}
-
-@media only screen and (min-width: 773px) {
-    .form-padding {
-        margin-top: 100px;
-    }
-}
-
-.signup-form {
-    margin-top: 30px;
-}
-
-@media only screen and (min-width: 773px) {
-    .signup-form {
-        margin-top: 60px;
-    }
-}
 
 #business-card {
     font-size: 1rem;
@@ -100,22 +104,10 @@ main {
     color: #e65100;
 }
 
-.explore-btn {
-    position: relative;
-    bottom: 200px;
-}
-
-.explore-btn i {
-    font-weight: 500;
-}
 
 .submit-btn {
     margin-left: 25px;
     margin-top: 20px;
-}
-
-.modal {
-    width: 10%;
 }
 
 .searchbar {
