@@ -1,12 +1,17 @@
 import users from '../model/user';
 
-/** @class representing user authentication */
+/**
+  *Represents user authentication
+  *@class
+*/
 class Auth {
   /**
     *
-    *@param {any} req - The request value
-    *@param {any} res - The response value
-    *return {json}
+    *Register user
+    *@param {any} req - request value - handles data coming from the user
+    *@param {any} res - response value - this is the response gotten after
+    interaction with the Api routes
+    *@return {json} response object gotten
     *@memberof Auth
   */
   static createUser(req, res) {
@@ -19,7 +24,7 @@ class Auth {
     if (filterUsername || filterEmail) {
       res.status(400).json({
         message: 'username or email is taken',
-         error: true
+        error: true
       });
     }
 
@@ -35,6 +40,34 @@ class Auth {
     return res.status(201).json({
       message: 'Signup successful',
       error: 'false'
+    });
+  }
+
+  /**
+    *
+    *Method responsible for logging in user
+    *@param {any} req - request value - handles data coming from the user
+    *@param {any} res - response value - this is the response gotten after
+    interaction with the Api routes
+    *@return {json} response object goten
+    *@memberof Auth
+  */
+  static logUser(req, res) {
+    const { username, password } = req.body;
+
+    const filterUser = users.filter(user => user.username === username
+      && password === user.password)[0];
+
+    if (filterUser) {
+      res.status(200).send({
+        message: 'Login successful',
+        error: false
+      });
+    }
+
+    return res.status(401).json({
+      message: 'Unathorised, check your username or password',
+      error: true
     });
   }
 }
