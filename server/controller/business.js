@@ -71,7 +71,9 @@ class Businesses {
     *@memberof Businesses
   */
   static updateBusiness(req, res) {
-    const { name, email, address, location, category } = req.body;
+    const {
+      name, email, address, location, category
+    } = req.body;
 
     const businessId = parseInt(req.params.businessId, 10);
     const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
