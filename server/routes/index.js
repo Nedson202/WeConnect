@@ -11,6 +11,7 @@ export default (route) => {
   route.post('/api/v1/auth/login', userValidator.userLogin, Auth.logUser);
   route.post('/api/v1/businesses', businessValidator.registerBusiness, Businesses.createBusiness);
   route.get('/api/v1/businesses', businessFilter.filterByLocation, businessFilter.filterByCategory, Businesses.getBusiness);
-  route.get('/api/v1/businesses/:businessId', businessFilter.filterById);
+  route.get('/api/v1/businesses/:businessId', Businesses.getOneBusiness);
   route.put('/api/v1/businesses/:businessId', Businesses.updateBusiness);
+  route.delete('/api/v1/businesses/:businessId', businessFilter.filterBeforeDelete, Businesses.deleteBusiness);
 };
