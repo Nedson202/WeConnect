@@ -9,4 +9,5 @@ export default (route) => {
   route.post('/api/v1/auth/signup', userValidator.userSignup, Auth.createUser);
   route.post('/api/v1/auth/login', userValidator.userLogin, Auth.logUser);
   route.post('/api/v1/businesses', validateBusiness.registerBusiness, Businesses.createBusiness);
+  route.get('/api/v1/businesses', Businesses.getBusiness);
 };
