@@ -246,12 +246,12 @@ describe('Register business', () => {
   });
 });
 
-describe('Display all business', () => {// Test to return 404 when request is posted unavailable route
+describe('Display all business', () => { // Test to return 404 when request is posted unavailable route
   it('should return an object', (done) => {
     chai.request(app)
       .get('/api/v1/businesses')
       .end((err, res) => {
-        res.body.should.be.an('object')
+        res.body.should.be.an('object');
         done();
       });
   });
@@ -259,6 +259,26 @@ describe('Display all business', () => {// Test to return 404 when request is po
   it('should return a status of 200', (done) => {
     chai.request(app)
       .get('/api/v1/businesses')
+      .end((err, res) => {
+        res.should.have.status('200');
+        done();
+      });
+  });
+});
+
+describe('Filter business by location', () => { // Test to return 404 when request is posted unavailable route
+  it('should return a 404 if no business with provided location is found', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses?location=ajah')
+      .end((err, res) => {
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  it('should return a status of 200 if a match is found', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses?location=lagos')
       .end((err, res) => {
         res.should.have.status('200');
         done();
