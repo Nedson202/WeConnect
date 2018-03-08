@@ -245,3 +245,23 @@ describe('Register business', () => {
       });
   });
 });
+
+describe('Display all business', () => {// Test to return 404 when request is posted unavailable route
+  it('should return an object', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses')
+      .end((err, res) => {
+        res.body.should.be.an('object')
+        done();
+      });
+  });
+
+  it('should return a status of 200', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses')
+      .end((err, res) => {
+        res.should.have.status('200');
+        done();
+      });
+  });
+});
