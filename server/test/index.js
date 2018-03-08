@@ -305,3 +305,23 @@ describe('Filter business by category', () => { // Test to return 404 when reque
       });
   });
 });
+
+describe('Filter/get business by id', () => { // Test to return 404 when request is posted unavailable route
+  it('should return a 404 if no business with provided id is found', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses/0')
+      .end((err, res) => {
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  it('should return status of 200 if match is found', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses/2')
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
+});
