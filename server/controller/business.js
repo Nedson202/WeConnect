@@ -57,8 +57,41 @@ class Businesses {
   */
   static getBusiness(req, res) {
     return res.status(200).json({
-      message: businesses,
+      businesses,
       error: 'false'
+    });
+  }
+  /**
+    *
+    *Update a business by id
+    *@param {any} req - request value - handles data coming from the user
+    *@param {any} res - response value - this is the response gotten after
+    interaction with the Api routes
+    *@return {json} response object gotten
+    *@memberof Businesses
+  */
+  static updateBusiness(req, res) {
+    const { name, email, address, location, category } = req.body;
+
+    const businessId = parseInt(req.params.businessId, 10);
+    const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
+
+    if (!filteredBusiness) {
+      res.status(404).json({
+        messsage: 'Business not found',
+        error: true
+      });
+    }
+
+    filteredBusiness.name = name || filteredBusiness.name;
+    filteredBusiness.email = email || filteredBusiness.email;
+    filteredBusiness.address = address || filteredBusiness.address;
+    filteredBusiness.location = location || filteredBusiness.location;
+    filteredBusiness.category = category || filteredBusiness.category;
+
+    return res.status(201).json({
+      message: 'Business profile updated',
+      error: false
     });
   }
 }
