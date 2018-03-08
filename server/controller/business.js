@@ -63,6 +63,31 @@ class Businesses {
   }
   /**
     *
+    *Get a business by id
+    *@param {any} req - request value - handles data coming from the user
+    *@param {any} res - response value - this is the response gotten after
+    interaction with the Api routes
+    *@param {any} next - next value - this is a middleware reserved keyword
+    responsible for allowing other methods or action in line to act only after this pressent
+    action has taken place
+    *@return {json} response object gotten
+    *@memberof filterBusiness
+  */
+  static getOneBusiness(req, res) {
+    const businessId = parseInt(req.params.businessId, 10);
+    const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
+
+    if (!filteredBusiness) {
+      res.status(404).json({
+        messsage: 'Business not found',
+        error: true
+      });
+    }
+
+    res.status(200).json(filteredBusiness);
+  }
+  /**
+    *
     *Update a business by id
     *@param {any} req - request value - handles data coming from the user
     *@param {any} res - response value - this is the response gotten after
@@ -95,6 +120,25 @@ class Businesses {
       message: 'Business profile updated',
       error: false
     });
+  }
+  /**
+    *
+    *Delete a business by id
+    *@param {any} req - request value - handles data coming from the user
+    *@param {any} res - response value - this is the response gotten after
+    interaction with the Api routes
+    *@return {status} response object gotten
+    *@memberof Businesses
+  */
+  static deleteBusiness(req, res, next) {
+    const businessId = parseInt(req.params.businessId, 10);
+
+    for (let i = 0; i <= businesses.length; i += 1) {
+      if (businessId === businesses[i].id) {
+        businesses.splice(i, 1);
+        res.sendStatus(204);
+      }
+    }
   }
 }
 
