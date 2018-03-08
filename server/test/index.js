@@ -194,3 +194,54 @@ describe('User Login authenticator', () => {
       });
   });
 });
+
+describe('Register business', () => {
+  it('should return status 400 if any field is missing', (done) => {
+    chai.request(app)
+      .post('/api/v1/businesses')
+      .send({
+        name: null,
+        email: 'asynch',
+        address: 'asynch',
+        location: 'asynch',
+        category: 'asynch'
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+  it('should return status 400 if any property is missing', (done) => {
+    chai.request(app)
+      .post('/api/v1/businesses')
+      .send({
+        // name: null,
+        email: 'asynch',
+        address: 'asynch',
+        location: 'asynch',
+        category: 'asynch'
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+  // Test to return 404 when request is posted unavailable route
+  it('should return message on successful registration', (done) => {
+    chai.request(app)
+      .post('/api/v1/businesses')
+      .send({
+        name: 'Fine cracker',
+        email: 'crack@fine.net',
+        address: '12 payne avenue',
+        location: 'lagos',
+        category: 'snacks'
+      })
+      .end((err, res) => {
+        expect(res.body.message).to.eql('Business registration successful');
+        done();
+      });
+  });
+});
