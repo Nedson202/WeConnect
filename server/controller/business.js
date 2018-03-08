@@ -46,6 +46,21 @@ class Businesses {
       error: 'false'
     });
   }
+  /**
+    *
+    *Display all business
+    *@param {any} req - request value - handles data coming from the user
+    *@param {any} res - response value - this is the response gotten after
+    interaction with the Api routes
+    *@return {json} response object gotten
+    *@memberof Businesses
+  */
+  static getBusiness(req, res) {
+    return res.status(200).json({
+      message: businesses,
+      error: 'false'
+    });
+  }
 }
 
 export default Businesses;
