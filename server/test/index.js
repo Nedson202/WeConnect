@@ -278,3 +278,23 @@ describe('Update business by id', () => {
       });
   });
 });
+
+describe('Delete a business', () => {
+  it('should return status of 204 on successful', (done) => {
+    chai.request(app)
+      .delete('/api/v1/businesses/2')
+      .end((err, res) => {
+        res.should.have.status(204);
+        done();
+      });
+  });
+
+  it('should return a 404 if no business with provided id is found', (done) => {
+    chai.request(app)
+      .delete('/api/v1/businesses/2')
+      .end((err, res) => {
+        res.should.have.status(404);
+        done();
+      });
+  });
+});
