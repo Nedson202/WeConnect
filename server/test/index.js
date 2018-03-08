@@ -1,26 +1,25 @@
-import mocha from 'mocha';
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../index';
 
-const should = chai.should();
+const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
 chai.use(chaiHttp);
 
 describe('Api test', () => {
-  // Test to get default route for api
-  it('should return status 200 for default route', (done) => {
+  // Test to get default for unavailable route
+  it('should return status 405 as default for unavailable route', (done) => {
     chai.request(app)
       .get('/')
       .end((err, res) => {
-        res.should.have.status(200);
+        res.should.have.status(405);
         res.body.should.be.an('object');
         done();
       });
   });
 
-  // Test to return 404 for unavailable route
-  it('should return status 400 for unavailable route', (done) => {
+  // Test to return 404 when request is posted unavailable route
+  it('should return status 404 for unavailable route', (done) => {
     chai.request(app)
       .post('/here/here/here')
       .end((err, res) => {
@@ -103,6 +102,94 @@ describe('User signup authenticator', () => {
       .end((err, res) => {
         res.should.have.status(201);
         res.body.should.have.property('message').eql('Signup successful');
+        done();
+      });
+  });
+});
+
+// Test for login authentication
+describe('User Login authenticator', () => {
+  // Test to return unauthorised if no data is provided
+  it('should return status 401 if no data is provided', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: null,
+        password: null
+      })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+  // Test to return 401 if any field is missing
+  it('should return status 401 if any field is missing', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: null,
+        password: 'horus'
+      })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+  // Test to return 401 if any property is missing
+  it('should return status 401 if any property is missing', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: 'alpha',
+        // password: 'horus'
+      })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+  // Test to return 401 if not user
+  it('should return status 401 if user credentials is incorrect', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: 'michael',
+        password: 'horus'
+      })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+  // Test to return 401 password length is less than 5
+  it('should return status message if password length is below 5', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: 'michael',
+        password: 'horu'
+      })
+      .end((err, res) => {
+        expect(res.body.message).to.eql('minimun password length is 5 chars');
+        done();
+      });
+  });
+
+  // Test to return 200 for successful user login
+  it('should return status 200 on successful user login', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: 'michael',
+        password: 'asynch'
+      })
+      .end((err, res) => {
+        expect(res.body.message).to.eql('Login successful');
+        res.should.have.status(200);
         done();
       });
   });
