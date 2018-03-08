@@ -215,7 +215,7 @@ describe('Filter business by location', () => {
   });
 });
 
-describe('Filter business by category', () => { 
+describe('Filter business by category', () => {
   it('should return a 404 if no business with provided category is found', (done) => {
     chai.request(app)
       .get('/api/v1/businesses?category=ajah')
@@ -255,7 +255,7 @@ describe('Filter/get business by id', () => {
   });
 });
 
-describe('Update business by id', () => { 
+describe('Update business by id', () => {
   it('should return a 404 if no business with provided id is found', (done) => {
     chai.request(app)
       .put('/api/v1/businesses/10')
