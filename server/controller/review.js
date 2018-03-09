@@ -20,8 +20,6 @@ class Reviews {
     const businessId = parseInt(req.params.businessId, 10);
     const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
 
-    console.log(filteredBusiness);
-
     if (!filteredBusiness) {
       res.status(404).send({
         message: 'Business not found, no review posted',
@@ -38,9 +36,9 @@ class Reviews {
 
     if ((reviewer.length && message.length) >= 1) {
       filteredBusiness.reviews.push({
-        reviewer: reviewer,
-        message: message
-      })
+        reviewer,
+        message
+      });
     }
 
     res.status(201).json({
