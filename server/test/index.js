@@ -300,15 +300,15 @@ describe('Delete a business', () => {
 });
 
 describe('Review posting', () => {
-  it('should return 400 if any field is empty', (done) => {
+  it('should return 404 if no specified business is found', (done) => {
     chai.request(app)
-      .post('/api/v1/businesses/4/reviews/')
+      .post('/api/v1/businesses/6/reviews/')
       .send({
-        reviewer: 'null',
-        message: ''
+        reviewer: 'smith',
+        message: 'alan'
       })
       .end((err, res) => {
-        res.should.have.status(400);
+        res.should.have.status(404);
         done();
       });
   });
