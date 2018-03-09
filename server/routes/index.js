@@ -16,4 +16,5 @@ export default (route) => {
   route.put('/api/v1/businesses/:businessId', Businesses.updateBusiness);
   route.delete('/api/v1/businesses/:businessId', businessFilter.filterBeforeDelete, Businesses.deleteBusiness);
   route.post('/api/v1/businesses/:businessId/reviews/', reviewValidator.reviews, Reviews.postReview);
+  route.get('/api/v1/businesses/:businessId/reviews/', Reviews.getReview);
 };
