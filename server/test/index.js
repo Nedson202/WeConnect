@@ -326,3 +326,23 @@ describe('Review posting', () => {
       });
   });
 });
+
+describe('Get reviews', () => {
+  it('should return 404 if no specified business is found', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses/6/reviews/')
+      .end((err, res) => {
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  it('should return status of 200 on success', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses/1/reviews/')
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
+});
