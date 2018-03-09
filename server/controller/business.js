@@ -67,9 +67,6 @@ class Businesses {
     *@param {any} req - request value - handles data coming from the user
     *@param {any} res - response value - this is the response gotten after
     interaction with the Api routes
-    *@param {any} next - next value - this is a middleware reserved keyword
-    responsible for allowing other methods or action in line to act only after this pressent
-    action has taken place
     *@return {json} response object gotten
     *@memberof filterBusiness
   */
@@ -130,7 +127,7 @@ class Businesses {
     *@return {status} response object gotten
     *@memberof Businesses
   */
-  static deleteBusiness(req, res, next) {
+  static deleteBusiness(req, res) {
     const businessId = parseInt(req.params.businessId, 10);
 
     for (let i = 0; i <= businesses.length; i += 1) {
