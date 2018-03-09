@@ -6,10 +6,12 @@ const businesses = [
     address: '223rd road ondo',
     location: 'ondo',
     category: 'oil',
-    reviews: {
-      reviewer: ['michael', 'alfred', 'israel'],
-      message: ['Great business', 'Highly interactive team', 'Great support']
-    }
+    reviews: [
+      {
+        reviewer: 'michael',
+        messsage: 'great business'
+      }
+    ]
   },
   {
     id: 2,
@@ -18,10 +20,12 @@ const businesses = [
     address: '12 cl allen avenue',
     location: 'enugu',
     category: 'mobile',
-    reviews: {
-      reviewer: ['michael', 'alfred', 'israel'],
-      message: ['Great business', 'Highly interactive team', 'Great support']
-    }
+    reviews: [
+      {
+        reviewer: 'michael',
+        messsage: 'great business'
+      }
+    ]
   },
   {
     id: 3,
@@ -29,7 +33,9 @@ const businesses = [
     email: 'landaf@landaf.org',
     address: '2b psg clos',
     location: 'lagos',
-    category: 'accounting'
+    category: 'accounting',
+    reviews: [
+    ]
   },
   {
     id: 4,
@@ -38,10 +44,12 @@ const businesses = [
     address: '2b psg clos',
     location: 'lagos',
     category: 'accounting',
-    reviews: {
-      reviewer: ['michael', 'alfred', 'israel'],
-      message: ['Great business', 'Highly interactive team', 'Great support']
-    }
+    reviews: [
+      {
+        reviewer: 'michael',
+        messsage: 'great business'
+      }
+    ]
   },
 ];
 
