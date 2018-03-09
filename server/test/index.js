@@ -280,7 +280,7 @@ describe('Update business by id', () => {
 });
 
 describe('Delete a business', () => {
-  it('should return status of 204 on successful', (done) => {
+  it('should return status of 204 on success', (done) => {
     chai.request(app)
       .delete('/api/v1/businesses/2')
       .end((err, res) => {
@@ -294,6 +294,34 @@ describe('Delete a business', () => {
       .delete('/api/v1/businesses/2')
       .end((err, res) => {
         res.should.have.status(404);
+        done();
+      });
+  });
+});
+
+describe('Review posting', () => {
+  it('should return 400 if any field is empty', (done) => {
+    chai.request(app)
+      .post('/api/v1/businesses/4/reviews/')
+      .send({
+        reviewer: 'null',
+        message: ''
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+  it('should return status of 201 on success', (done) => {
+    chai.request(app)
+      .post('/api/v1/businesses/1/reviews/')
+      .send({
+        reviewer: 'smith',
+        message: 'Great product quality'
+      })
+      .end((err, res) => {
+        res.should.have.status(201);
         done();
       });
   });
