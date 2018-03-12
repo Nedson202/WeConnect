@@ -95,7 +95,7 @@ describe('User Login authenticator', () => {
         password: null
       })
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(400);
         done();
       });
   });
@@ -108,7 +108,7 @@ describe('User Login authenticator', () => {
         password: 'horus'
       })
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(400);
         done();
       });
   });
@@ -225,11 +225,11 @@ describe('Filter business by category', () => {
       });
   });
 
-  it('should return an object if match is found', (done) => {
+  it('should return 200 if match is found', (done) => {
     chai.request(app)
-      .get('/api/v1/businesses?category=lagos')
+      .get('/api/v1/businesses?category=oil')
       .end((err, res) => {
-        res.should.be.an('object');
+        res.should.have.status(200);
         done();
       });
   });
