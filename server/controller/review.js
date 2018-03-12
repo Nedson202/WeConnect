@@ -18,32 +18,23 @@ class Reviews {
   static postReview(req, res) {
     const { reviewer, message } = req.body;
     const businessId = parseInt(req.params.businessId, 10);
-    const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
 
-    if (!filteredBusiness) {
-      res.status(404).send({
-        message: 'Business not found, no review posted',
-        error: true
-      });
-    }
+    businesses.forEach((business) => {
+      if (business.id === businessId) {
+        business.reviews.push({
+          reviewer,
+          message
+        });
+        res.status(201).json({
+          message: 'Review posted successfully',
+          error: false
+        });
+      }
+    });
 
-    if (filteredBusiness.reviews === undefined) {
-      res.status(404).send({
-        message: 'Business not found, no review posted',
-        error: true
-      });
-    }
-
-    if ((reviewer.length && message.length) >= 1) {
-      filteredBusiness.reviews.push({
-        reviewer,
-        message
-      });
-    }
-
-    res.status(201).json({
-      message: 'Review posted successfully',
-      error: false
+    return res.status(404).send({
+      message: 'Business not found, no review posted',
+      error: true
     });
   }
   /**
@@ -57,23 +48,17 @@ class Reviews {
   */
   static getReview(req, res) {
     const businessId = parseInt(req.params.businessId, 10);
-    const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
 
-    if (!filteredBusiness) {
-      res.status(404).send({
-        message: 'Business not found, no review gotten',
-        error: true
-      });
-    }
+    businesses.forEach((business) => {
+      if (business.id === businessId) {
+        res.status(200).json(business.reviews);
+      }
+    });
 
-    if (filteredBusiness.reviews === undefined) {
-      res.status(404).json({
-        message: 'No review found',
-        error: true
-      });
-    }
-
-    return res.status(200).json(filteredBusiness.reviews);
+    return res.status(404).send({
+      message: 'Business not found, no review gotten',
+      error: true
+    });
   }
 }
 
