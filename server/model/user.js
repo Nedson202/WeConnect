@@ -10,13 +10,7 @@ const users = [
     username: 'alfred',
     email: 'alfred@gmail.com',
     password: 'fadaha',
-  },
-  {
-    id: 3,
-    username: 'israel',
-    email: 'manuel@imail.me',
-    password: 'nadlah',
-  },
+  }
 ];
 
 export default users;
