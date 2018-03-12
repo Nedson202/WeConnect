@@ -19,15 +19,6 @@ class validateReviews {
     req.check('reviewer', 'reviewers name is required').isLength({ min: 1 });
     req.check('message', 'message is required').isLength({ min: 1 });
 
-    const errors = req.validationErrors();
-
-    if (errors) {
-      res.status(400).json({
-        message: errors[0].msg,
-        error: true
-      });
-    }
-
     next();
   }
 }

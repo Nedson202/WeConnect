@@ -22,14 +22,6 @@ class validateUsers {
       .check('password', 'minimun password length is 5 chars')
       .isLength({ min: 5 });
 
-    const errors = req.validationErrors();
-
-    if (errors) {
-      res.status(400).json({
-        message: errors[0].msg,
-        error: true
-      });
-    }
     next();
   }
   /**
@@ -48,15 +40,6 @@ class validateUsers {
     req.check('username', 'Username is required').notEmpty();
     req.check('password', 'minimun password length is 5 chars')
       .isLength({ min: 5 });
-
-    const errors = req.validationErrors();
-
-    if (errors) {
-      res.status(401).json({
-        message: errors[0].msg,
-        error: true
-      });
-    }
 
     next();
   }
