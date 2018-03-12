@@ -17,9 +17,9 @@ describe('Api test', () => {
       });
   });
 
-  it('should return status 404 for unavailable route', (done) => {
+  it('should return status 404 when a post request is sent to an unavailable route', (done) => {
     chai.request(app)
-      .post('/here/here/here')
+      .post('/here')
       .end((err, res) => {
         res.should.have.status(404);
         done();
@@ -151,6 +151,23 @@ describe('Register business', () => {
         address: 'asynch',
         location: 'asynch',
         category: 'asynch'
+      })
+      .end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+  it('should return 400 if name is taken', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/businesses')
+      .send({
+        name: 'alans',
+        email: 'crack@fine.net',
+        address: '12 payne avenue',
+        location: 'lagos',
+        category: 'snacks'
       })
       .end((err, res) => {
         res.should.have.status(400);
