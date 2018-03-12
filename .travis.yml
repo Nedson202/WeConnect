@@ -8,3 +8,5 @@ cache:
   directories:
     - node_modules
 
+script:
+  - npm run test server/test/
