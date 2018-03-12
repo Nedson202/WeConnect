@@ -7,7 +7,10 @@ const errorHandler = (req, res, next) => {
       error: true
     });
   }
-  next();
+
+  if (!errors) {
+    next();
+  }
 };
 
 export default errorHandler;
