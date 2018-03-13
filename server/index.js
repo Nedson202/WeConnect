@@ -1,8 +1,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import expressValidator from 'express-validator';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
 import logger from 'morgan';
 import route from './routes/index';
+
+const swaggerDocument = yaml.load(`${process.cwd()}/swagger.yaml`);
 
 const app = express();
 
@@ -14,6 +18,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // validator to check user input
 app.use(expressValidator());
+
+// route for api-docs
+app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(logger('dev'));
 
