@@ -1,0 +1,361 @@
+swagger: "2.0"
+info:
+  description: "Welcome to WeConnect API.
+  WeConnect provides a platform that brings businesses and individuals together. This platform creates
+   awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with."
+
+  version: "1"
+  title: "WeConnect API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "simeonsamson4@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:4000/api"
+basePath: "/v1"
+tags:
+- name: "User"
+  description: "Everything about your users"
+- name: "Business"
+  description: "Access to all business methods"
+- name: "Reviews"
+  description: "Access to all review methods"
+paths:
+  /auth/signup:
+    post:
+      tags:
+      - "User"
+      summary: "User signup"
+      description: "This endpoint registers a user if all field is filled, a check will be done to make sure your username
+      and email is unique, lastly email should be in the proper format."
+      operationId: "addUser"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "user object to add to database"
+        required: true
+        schema:
+          $ref: "#/definitions/userSignUp"
+      responses:
+        201:
+          description: "User signup successful"
+        400:
+          description: "Invalid input, user exists"
+  /auth/login:
+    post:
+      tags:
+      - "User"
+      summary: "Login"
+      description: "You can login to become authenticated, no field should be missing"
+      operationId: "addUser"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "user object to add to database"
+        required: true
+        schema:
+          $ref: "#/definitions/userLogin"
+      responses:
+        200:
+          description: "Login successful"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorised, incorrect details"
+  /businesses:
+    post:
+      tags:
+      - "Business"
+      summary: "Register a business"
+      description: "Register your Businesses with this endpoint, duplicate registration is not allowed"
+      operationId: "createBusiness"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "user object to add to database"
+        required: true
+        schema:
+          $ref: "#/definitions/createBusiness"
+      responses:
+        400:
+          description: "Invalid input, business exists"
+        201:
+          description: "Business registered successful"
+
+    get:
+      tags:
+      - "Business"
+      summary: "Get all business"
+      description: "Displays all registered business"
+      operationId: "getBusiness"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+
+  /businesses?location=location:
+    get:
+      tags:
+      - "Business"
+      summary: "Filter businesses by location"
+      description: "Filter all businesses by location, if no business with your specified location is available,
+      you'll be notified"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "location"
+          in: "query"
+          description: "location to filter business"
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Business not foound"
+
+  /businesses?category=category:
+    get:
+      tags:
+      - "Business"
+      summary: "Filter businesses by category"
+      description: "Filter all businesses by category, if no business with your specified category is available,
+      you'll be notified"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "category"
+          in: "query"
+          description: "category to filter businesses by"
+
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Business not found"
+
+  /businesses/{businessId}:
+    get:
+      tags:
+      - "Business"
+      summary: "Get a business by ID"
+      description: "Displays business whose ID is specified"
+      operationId: "getBusinessById"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "businessId"
+          in: "path"
+          description: "ID of the business to get"
+          required: true
+          type: "integer"
+          minimum: 1.0
+          format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Business not found"
+
+    put:
+      tags:
+      - "Business"
+      summary: "Update a business by ID"
+      description: "Queries business model by id and update business"
+      operationId: "updateBusiness"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "businessId"
+        in: "path"
+        description: "ID of the business that needs to be updated"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "business object to update business with"
+        required: true
+        schema:
+          $ref: "#/definitions/updateBusiness"
+      responses:
+        201:
+          description: "Business updated successful"
+        404:
+          description: "Business not found"
+
+    delete:
+      tags:
+      - Business
+      summary: "Delete a business by ID"
+      description: "For valid response try integer IDs with positive integer value.
+       Negative or non-integer values will generate API errors"
+      operationId: "deleteBusiness"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "businessId"
+        in: "path"
+        description: "ID of the business that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        204:
+          description: "No content, successful"
+        404:
+          description: "Business not found"
+
+  /businesses/{businessId}/reviews:
+    post:
+      tags:
+      - "Reviews"
+      summary: "post review"
+      description: "Post reviews under a business gotten by ID"
+      operationId: "postReview"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "businessId"
+        in: "path"
+        description: "ID of the business that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "user object to add to database"
+        required: true
+        schema:
+          $ref: "#/definitions/postReview"
+      responses:
+        404:
+          description: "Business not found"
+        400:
+          description: "Invalid input"
+        201:
+          description: "Review posted successful"
+
+    get:
+      tags:
+      - "Reviews"
+      summary: "Get all reviews"
+      description: "Returns all reviews available under a business"
+      operationId: "getReviews"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "businessId"
+          in: "path"
+          description: "ID of the business whose reviews to get"
+          required: true
+          type: "integer"
+          minimum: 1.0
+          format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Business not found"
+definitions:
+  userSignUp:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+    xml:
+      name: "userSignUp"
+  userLogin:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+    xml:
+      name: "userLogin"
+  createBusiness:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      address:
+        type: "string"
+      location:
+        type: "string"
+      category:
+        type: "string"
+    xml:
+      name: "createBusiness"
+  updateBusiness:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      address:
+        type: "string"
+      location:
+        type: "string"
+      category:
+        type: "string"
+    xml:
+      name: "updateBusiness"
+  postReview:
+    type: "object"
+    properties:
+      reviewer:
+        type: "string"
+      message:
+        type: "string"
+    xml:
+      name: "postReview"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
