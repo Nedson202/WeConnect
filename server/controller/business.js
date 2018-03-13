@@ -24,7 +24,7 @@ class Businesses {
     const filteredBusiness = businesses.filter(business => business.name === name)[0];
 
     if (filteredBusiness) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Business with name, is already taken',
         error: true
       });
@@ -41,7 +41,7 @@ class Businesses {
       });
     }
 
-    return res.status(201).json({
+    res.status(201).json({
       message: 'Business registration successful',
       error: 'false'
     });
@@ -75,7 +75,7 @@ class Businesses {
     const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
 
     if (!filteredBusiness) {
-      res.status(404).json({
+      return res.status(404).json({
         messsage: 'Business not found',
         error: true
       });
@@ -101,7 +101,7 @@ class Businesses {
     const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
 
     if (!filteredBusiness) {
-      res.status(404).json({
+      return res.status(404).json({
         messsage: 'Business not found',
         error: true
       });
@@ -133,7 +133,7 @@ class Businesses {
     for (let i = 0; i <= businesses.length; i += 1) {
       if (businessId === businesses[i].id) {
         businesses.splice(i, 1);
-        res.sendStatus(204);
+        return res.sendStatus(204);
       }
     }
   }

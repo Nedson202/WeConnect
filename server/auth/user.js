@@ -22,7 +22,7 @@ class Auth {
     const filterEmail = users.filter(user => email === user.email)[0];
 
     if (filterUsername || filterEmail) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'username or email is taken',
         error: true
       });
@@ -59,7 +59,7 @@ class Auth {
       && password === user.password)[0];
 
     if (filterUser) {
-      res.status(200).send({
+      return res.status(200).send({
         message: 'Login successful',
         error: false
       });

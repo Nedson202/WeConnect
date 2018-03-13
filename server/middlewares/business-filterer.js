@@ -26,8 +26,8 @@ export function sortQuery(req, res, next) {
       }
     });
 
-    if (array.length > 0) {res.status(200).send(array)};
-    res.status(404).json({
+    if (array.length > 0) {return res.status(200).send(array)};
+    return res.status(404).json({
       message: 'Business not found',
       error: true
     });
@@ -53,7 +53,7 @@ export function filterToDelete(req, res, next) {
   const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
 
   if (!filteredBusiness) {
-    res.status(404).json({
+    return res.status(404).json({
       messsage: 'Business not found',
       error: true
     });

@@ -1,4 +1,9 @@
 import businesses from '../model/business';
+
+const errorMessage = (res) => res.status(404).json({
+  message: 'Business not found, no review gotten',
+  error: true
+});
 /**
   *
   *Review class to handle review posting and getting all reviews for a business
@@ -19,23 +24,20 @@ class Reviews {
     const { reviewer, message } = req.body;
     const businessId = parseInt(req.params.businessId, 10);
 
-    businesses.forEach((business) => {
-      if (business.id === businessId) {
-        business.reviews.push({
+    for (let i = 0; i < businesses.length; i += 1) {
+      if (businessId === businesses[i].id) {
+        businesses[i].reviews.push({
           reviewer,
           message
         });
-        res.status(201).json({
+        return res.status(201).json({
           message: 'Review posted successfully',
           error: false
         });
       }
-    });
+    }
 
-    return res.status(404).send({
-      message: 'Business not found, no review posted',
-      error: true
-    });
+    return errorMessage(res);
   }
   /**
     *
@@ -49,16 +51,13 @@ class Reviews {
   static getReview(req, res) {
     const businessId = parseInt(req.params.businessId, 10);
 
-    businesses.forEach((business) => {
-      if (business.id === businessId) {
-        res.status(200).json(business.reviews);
+    for (let i = 0; i < businesses.length; i += 1) {
+      if (businessId === businesses[i].id) {
+        return res.status(200).json(businesses[i].reviews);
       }
-    });
+    }
 
-    return res.status(404).send({
-      message: 'Business not found, no review gotten',
-      error: true
-    });
+    return errorMessage(res);
   }
 }
 

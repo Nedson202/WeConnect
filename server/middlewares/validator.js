@@ -12,7 +12,6 @@ class validator {
     *@param {any} next - next value - this is a middleware reserved keyword
     responsible for allowing other methods or action in line to act only after this pressent
     action has taken place
-    *@return {json} response object gotten
     *@memberof validator
   */
   static userSignup(req, res, next) {
@@ -33,7 +32,6 @@ class validator {
     *@param {any} next - next value - this is a middleware reserved keyword
     responsible for allowing other methods or action in line to act only after this pressent
     action has taken place
-    *@return {json} response object gotten
     *@memberof validator
   */
   static userLogin(req, res, next) {
@@ -52,7 +50,6 @@ class validator {
     *@param {any} next - next value - this is a middleware reserved keyword
     responsible for allowing other methods or action in line to act only after this pressent
     action has taken place
-    *@return {json} response object gotten
     *@memberof validateBusiness
   */
   static registerBusiness(req, res, next) {
@@ -75,7 +72,6 @@ class validator {
     *@param {any} next - next value - this is a middleware reserved keyword
     responsible for allowing other methods or action in line to act only after this pressent
     action has taken place
-    *@return {json} response object gotten
     *@memberof validateReviews
   */
   static reviews(req, res, next) {
