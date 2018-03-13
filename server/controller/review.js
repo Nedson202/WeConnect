@@ -1,6 +1,6 @@
 import businesses from '../model/business';
 
-const errorMessage = (res) => res.status(404).json({
+const errorMessage = res => res.status(404).json({
   message: 'Business not found, no review gotten',
   error: true
 });

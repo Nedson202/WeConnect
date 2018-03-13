@@ -7,28 +7,26 @@ const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no
 chai.use(chaiHttp);
 
 describe('Api test', () => {
-  it('should return status 405 as default for unavailable route', (done) => {
+  it('should return status 405 as default for unavailable route', () => {
     chai.request(app)
       .get('/')
       .end((err, res) => {
         res.should.have.status(405);
         res.body.should.be.an('object');
-        done();
       });
   });
 
-  it('should return status 404 when a post request is sent to an unavailable route', (done) => {
+  it('should return status 404 when a post request is sent to an unavailable route', () => {
     chai.request(app)
       .post('/here')
       .end((err, res) => {
         res.should.have.status(404);
-        done();
       });
   });
 });
 
 describe('User signup authenticator', () => {
-  it('should return status 400 if no data is provided', (done) => {
+  it('should return status 400 if no data is provided', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
@@ -38,11 +36,10 @@ describe('User signup authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return status 400 if any field is missing', (done) => {
+  it('should return status 400 if any field is missing', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
@@ -52,11 +49,10 @@ describe('User signup authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return status 400 if user already exists', (done) => {
+  it('should return status 400 if user already exists', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
@@ -66,11 +62,10 @@ describe('User signup authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return status 201 on successful signup', (done) => {
+  it('should return status 201 on successful signup', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
@@ -80,14 +75,12 @@ describe('User signup authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(201);
-        res.body.should.have.property('message').eql('Signup successful');
-        done();
       });
   });
 });
 
 describe('User Login authenticator', () => {
-  it('should return status 401 if no data is provided', (done) => {
+  it('should return status 401 if no data is provided', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
@@ -96,11 +89,10 @@ describe('User Login authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return status 401 if any field is missing', (done) => {
+  it('should return status 401 if any field is missing', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
@@ -109,11 +101,10 @@ describe('User Login authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return status 401 if user credentials is incorrect', (done) => {
+  it('should return status 401 if user credentials is incorrect', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
@@ -122,11 +113,10 @@ describe('User Login authenticator', () => {
       })
       .end((err, res) => {
         res.should.have.status(401);
-        done();
       });
   });
 
-  it('should return status 200 on successful user login', (done) => {
+  it('should return status 200 on successful user login', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
@@ -136,13 +126,12 @@ describe('User Login authenticator', () => {
       .end((err, res) => {
         expect(res.body.message).to.eql('Login successful');
         res.should.have.status(200);
-        done();
       });
   });
 });
 
 describe('Register business', () => {
-  it('should return status 400 if any field is missing', (done) => {
+  it('should return status 400 if any field is missing', () => {
     chai.request(app)
       .post('/api/v1/businesses')
       .send({
@@ -154,11 +143,10 @@ describe('Register business', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return 400 if name is taken', (done) => {
+  it('should return 400 if name is taken', () => {
     chai
       .request(app)
       .post('/api/v1/businesses')
@@ -171,11 +159,10 @@ describe('Register business', () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
-        done();
       });
   });
 
-  it('should return message on successful registration', (done) => {
+  it('should return message on successful registration', () => {
     chai.request(app)
       .post('/api/v1/businesses')
       .send({
@@ -187,102 +174,92 @@ describe('Register business', () => {
       })
       .end((err, res) => {
         expect(res.body.message).to.eql('Business registration successful');
-        done();
       });
   });
 });
 
 describe('Display all business', () => {
-  it('should return an object', (done) => {
+  it('should return an object', () => {
     chai.request(app)
       .get('/api/v1/businesses')
       .end((err, res) => {
         res.body.should.be.an('object');
-        done();
       });
   });
 
-  it('should return a status of 200', (done) => {
+  it('should return a status of 200', () => {
     chai.request(app)
       .get('/api/v1/businesses')
       .end((err, res) => {
         res.should.have.status('200');
-        done();
       });
   });
 });
 
 describe('Filter business by location', () => {
-  it('should return a 404 if no business with provided location is found', (done) => {
+  it('should return a 404 if no business with provided location is found', () => {
     chai.request(app)
       .get('/api/v1/businesses?location=ajah')
       .end((err, res) => {
         res.should.have.status(404);
-        done();
       });
   });
 
-  it('should return a status of 200 if a match is found', (done) => {
+  it('should return a status of 200 if a match is found', () => {
     chai.request(app)
       .get('/api/v1/businesses?location=lagos')
       .end((err, res) => {
         res.should.have.status('200');
-        done();
       });
   });
 });
 
 describe('Filter business by category', () => {
-  it('should return a 404 if no business with provided category is found', (done) => {
+  it('should return a 404 if no business with provided category is found', () => {
     chai.request(app)
       .get('/api/v1/businesses?category=ajah')
       .end((err, res) => {
         res.should.have.status(404);
-        done();
       });
   });
 
-  it('should return 200 if match is found', (done) => {
+  it('should return 200 if match is found', () => {
     chai.request(app)
       .get('/api/v1/businesses?category=oil')
       .end((err, res) => {
         res.should.have.status(200);
-        done();
       });
   });
 });
 
 describe('Filter/get business by id', () => {
-  it('should return a 404 if no business with provided id is found', (done) => {
+  it('should return a 404 if no business with provided id is found', () => {
     chai.request(app)
       .get('/api/v1/businesses/0')
       .end((err, res) => {
         res.should.have.status(404);
-        done();
       });
   });
 
-  it('should return status of 200 if match is found', (done) => {
+  it('should return status of 200 if match is found', () => {
     chai.request(app)
       .get('/api/v1/businesses/2')
       .end((err, res) => {
         res.should.have.status(200);
-        done();
       });
   });
 });
 
 describe('Update business by id', () => {
-  it('should return a 404 if no business with provided id is found', (done) => {
+  it('should return a 404 if no business with provided id is found', () => {
     chai.request(app)
       .put('/api/v1/businesses/10')
       .end((err, res) => {
         res.should.have.status(404);
-        done();
       });
   });
 
-  it('should return a message if update is successful', (done) => {
+  it('should return a message if update is successful', () => {
     chai.request(app)
       .put('/api/v1/businesses/2')
       .send({
@@ -291,46 +268,30 @@ describe('Update business by id', () => {
       })
       .end((err, res) => {
         expect(res.body.message).to.eql('Business profile updated');
-        done();
       });
   });
 });
 
 describe('Delete a business', () => {
-  it('should return status of 204 on success', (done) => {
+  it('should return status of 204 on success', () => {
     chai.request(app)
       .delete('/api/v1/businesses/2')
       .end((err, res) => {
         res.should.have.status(204);
-        done();
       });
   });
 
-  it('should return a 404 if no business with provided id is found', (done) => {
+  it('should return a 404 if no business with provided id is found', () => {
     chai.request(app)
       .delete('/api/v1/businesses/2')
       .end((err, res) => {
         res.should.have.status(404);
-        done();
       });
   });
 });
 
 describe('Review posting', () => {
-  it('should return 404 if no specified business is found', (done) => {
-    chai.request(app)
-      .post('/api/v1/businesses/6/reviews/')
-      .send({
-        reviewer: 'smith',
-        message: 'alan'
-      })
-      .end((err, res) => {
-        res.should.have.status(404);
-        done();
-      });
-  });
-
-  it('should return status of 201 on success', (done) => {
+  it('should return status of 201 on success', () => {
     chai.request(app)
       .post('/api/v1/businesses/1/reviews/')
       .send({
@@ -339,27 +300,34 @@ describe('Review posting', () => {
       })
       .end((err, res) => {
         res.should.have.status(201);
-        done();
+      });
+  });
+
+  it('should return 404 if no specified business is found', () => {
+    chai.request(app)
+      .post('/api/v1/businesses/6/reviews/')
+      .send({
+        reviewer: 'smith',
+        message: 'alan'
+      })
+      .end((err, res) => {
+        res.should.have.status(404);
       });
   });
 });
 
 describe('Get reviews', () => {
-  it('should return 404 if no specified business is found', (done) => {
+  it('should return 404 if no specified business is found', () => {
     chai.request(app)
       .get('/api/v1/businesses/6/reviews/')
-      .end((err, res) => {
-        res.should.have.status(404);
-        done();
-      });
+      .end((err, res) => res.should.have.status(404));
   });
 
-  it('should return status of 200 on success', (done) => {
+  it('should return status of 200 on success', () => {
     chai.request(app)
       .get('/api/v1/businesses/1/reviews/')
       .end((err, res) => {
         res.should.have.status(200);
-        done();
       });
   });
 });

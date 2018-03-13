@@ -19,14 +19,14 @@ export function sortQuery(req, res, next) {
     const array = [];
     businesses.forEach((business) => {
       if (location === business.location) {
-        array.push(business)
+        array.push(business);
       }
       if (category === business.category) {
-        array.push(business)
+        array.push(business);
       }
     });
 
-    if (array.length > 0) {return res.status(200).send(array)};
+    if (array.length > 0) { return res.status(200).send(array); }
     return res.status(404).json({
       message: 'Business not found',
       error: true
