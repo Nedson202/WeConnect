@@ -24,7 +24,7 @@ app.use(logger('dev'));
 
 route(app);
 // route for api-docs
-app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port);
 
