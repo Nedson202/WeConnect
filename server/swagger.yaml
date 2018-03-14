@@ -16,7 +16,7 @@ host: "localhost:4000"
 basePath: "/api/v1"
 tags:
 - name: "User"
-  description: "Everything about your users"
+  description: "Everything about users"
 - name: "Business"
   description: "Access to all business methods"
 - name: "Reviews"
@@ -205,7 +205,7 @@ paths:
           $ref: "#/definitions/updateBusiness"
       responses:
         201:
-          description: "Business updated successful"
+          description: "Business updated successfully"
         404:
           description: "Business not found"
 
@@ -349,13 +349,3 @@ definitions:
         type: "string"
     xml:
       name: "postReview"
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
