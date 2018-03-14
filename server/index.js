@@ -10,7 +10,7 @@ const swaggerDocument = yaml.load(`${process.cwd()}/swagger.yaml`);
 
 const app = express();
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 // parse incoming requests data
 app.use(bodyParser.json());
@@ -24,7 +24,7 @@ app.use(logger('dev'));
 
 route(app);
 // route for api-docs
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port);
 
