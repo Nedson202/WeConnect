@@ -7,12 +7,11 @@ const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no
 chai.use(chaiHttp);
 
 describe('Api test', () => {
-  it('should return status 405 as default for unavailable route', () => {
+  it('should return status 405 as default for unavailable routes', () => {
     chai.request(app)
       .get('/')
       .end((err, res) => {
         res.should.have.status(405);
-        res.body.should.be.an('object');
       });
   });
 
@@ -80,7 +79,7 @@ describe('User signup authenticator', () => {
 });
 
 describe('User Login authenticator', () => {
-  it('should return status 401 if no data is provided', () => {
+  it('should return status 400 if no data is provided', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
@@ -92,7 +91,7 @@ describe('User Login authenticator', () => {
       });
   });
 
-  it('should return status 401 if any field is missing', () => {
+  it('should return status 400 if any field is missing', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
@@ -205,7 +204,7 @@ describe('Filter business by location', () => {
       });
   });
 
-  it('should return a status of 200 if a match is found', () => {
+  it('should return a status of 200 if match is found', () => {
     chai.request(app)
       .get('/api/v1/businesses?location=lagos')
       .end((err, res) => {
