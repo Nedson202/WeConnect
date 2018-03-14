@@ -18,15 +18,15 @@ class Reviews {
     *@param {any} res - response value - this is the response gotten after
     interaction with the Api routes
     *@return {status} response object gotten
-    *@memberof Businesses
+    *@memberof Reviews
   */
   static postReview(req, res) {
     const { reviewer, message } = req.body;
     const businessId = parseInt(req.params.businessId, 10);
 
-    for (let i = 0; i < businesses.length; i += 1) {
-      if (businessId === businesses[i].id) {
-        businesses[i].reviews.push({
+    for (let counter = 0; counter < businesses.length; counter += 1) {
+      if (businessId === businesses[counter].id) {
+        businesses[counter].reviews.push({
           reviewer,
           message
         });
@@ -46,14 +46,14 @@ class Reviews {
     *@param {any} res - response value - this is the response gotten after
     interaction with the Api routes
     *@return {status} response object gotten
-    *@memberof Businesses
+    *@memberof Reviews
   */
   static getReview(req, res) {
     const businessId = parseInt(req.params.businessId, 10);
 
-    for (let i = 0; i < businesses.length; i += 1) {
-      if (businessId === businesses[i].id) {
-        return res.status(200).json(businesses[i].reviews);
+    for (let counter = 0; counter < businesses.length; counter += 1) {
+      if (businessId === businesses[counter].id) {
+        return res.status(200).json(businesses[counter].reviews);
       }
     }
 
