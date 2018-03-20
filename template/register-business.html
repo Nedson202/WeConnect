@@ -41,10 +41,10 @@
     </nav>
 
     <main>
-        <div class="row" id="input-text-style">
-            <form class="col s12" method="post" action="/businesses">
+        <div class="row register-form" id="input-text-style">
+            <form class="col s12 form-style" method="post" action="/businesses">
                 <div class="row">
-                    <div class="input-field col s12 m6 l4 offset-l1">
+                  <div class="input-field col s12 m6 l4 offset-l1">
                         <i class="material-icons prefix">account_circle</i>
                         <input id="icon-prefix name" type="text" class="validate" required>
                         <label id="label-color" for="icon-prefix name">Business Name</label>
@@ -55,9 +55,23 @@
                         <label id="label-color" for="icon-prefix email">Email</label>
                     </div>
                     <div class="input-field col s12 m6 l4 offset-l1">
-                        <i class="material-icons prefix">phone</i>
-                        <input id="phone" type="tel" class="validate" required>
-                        <label id="label-color" for="phone">Telephone</label>
+                      <i class="material-icons prefix">arrow_drop_down_circle</i>
+                      <select class="validate" required>
+                        <option value="" disabled selected>choose category</option>
+                        <option value="1">1-health</option>
+                        <option value="2">2-science</option>
+                        <option value="3">3-medicine</option>
+                        <option value="4">4-medicine</option>
+                        <option value="5">5-finance</option>
+                        <option value="6">6-tech</option>
+                        <option value="7">7-food</option>
+                        <option value="8">8-others</option>
+                      </select>
+                    </div>
+                    <div class="input-field col s12 m6 l4 offset-l1">
+                        <i class="material-icons prefix">location_on</i>
+                        <input id="state" type="text" class="validate" required>
+                        <label id="label-color" for="state">State</label>
                     </div>
                     <div class="input-field col s12 m6 l4 offset-l1">
                         <i class="material-icons prefix">add_location</i>
@@ -70,25 +84,17 @@
                         <label id="label-color" for="website">Website url</label>
                     </div>
                     <div class="input-field col s12 m6 l4 offset-l1">
-                        <i class="material-icons prefix">location_on</i>
-                        <input id="state" type="text" class="validate" required>
-                        <label id="label-color" for="state">State</label>
-                    </div>
-                    <div class="input-field col s12 m6 l4 offset-l1">
                         <i class="material-icons prefix">mode_edit</i>
                         <textarea id="icon_prefix2 services" class="materialize-textarea" required></textarea>
                         <label id="label-color" for="icon_prefix2">Services we render</label>
                     </div>
-                    <div class="input-field col s12 m6 l4 offset-l1">
-                        <i class="material-icons prefix">mode_edit</i>
-                        <textarea id="icon_prefix2 goals" class="materialize-textarea" required></textarea>
-                        <label id="label-color" for="icon_prefix2">Company goals</label>
-                    </div>
                 </div>
-                <button class="btn col s2 offset-s5 m1 offset-m5 l1 offset-l5 submit-btn waves-effect
-             waves-light orange darken-4" type="submit" name="action">
+                <div id="button-style">
+                <button class="btn waves-effect
+             waves-light orange darken-4" type="submit" name="action">Submit
              <i class="material-icons right">send</i>
             </button>
+            </div>
             </form>
         </div>
     </main>
@@ -101,7 +107,7 @@
         <div class="footer-copyright blue-grey darken-4">
             <div class="container">
                 © 2018
-                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                <a class="grey-text text-lighten-4 right" href="https://weconnect-api-service.herokuapp.com/api-docs">Api docs</a>
             </div>
         </div>
     </footer>
