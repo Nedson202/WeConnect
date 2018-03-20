@@ -42,8 +42,8 @@
     </header>
 
     <main>
-        <div class="row form-padding" id="input-text-style">
-            <form class="col s12 m12 l6 offset-l3" method="post" action="auth/login">
+        <div class="row login-form" id="input-text-style">
+            <form class="col s12 m12 l6 offset-l3 form-style" method="post" action="auth/login">
                 <div class="row">
                     <div class="input-field col s12 m6 offset-m3 l6 offset-l3">
                         <i class="material-icons prefix">account_circle</i>
@@ -56,10 +56,12 @@
                         <label id="label-color" for="password">password</label>
                     </div>
                 </div>
-                <button class="btn waves-effect col s4 offset-s4 m2 offset-m5 l2 offset-l5
-           waves-light orange darken-4" type="submit" name="action">Login
-           <i class="material-icons right">send</i>
-          </button>
+                <div id="button-style">
+                <button class="btn waves-effect
+             waves-light orange darken-4" type="submit" name="action">Login
+             <i class="material-icons right">send</i>
+            </button>
+            </div>
             </form>
         </div>
     </main>
@@ -71,7 +73,7 @@
         <div class="footer-copyright blue-grey darken-4">
             <div class="container">
                 © 2018
-                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                <a class="grey-text text-lighten-4 right" href="https://weconnect-api-service.herokuapp.com/api-docs">Api docs</a>
             </div>
         </div>
     </footer>
