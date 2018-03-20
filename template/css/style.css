@@ -1,0 +1,125 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    background: rgba(98, 116, 124, 0.3);
+}
+
+.nav-wrapper ul li:hover {
+    background-color: #e65100;
+}
+
+.nav-wrapper ul li.active {
+    background-color: #e65100;
+}
+
+.parallax-text {
+  position: relative;
+  top: 150px;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.explore-btn {
+  position: relative;
+  bottom: 200px;
+}
+
+.explore-btn i {
+  font-weight: 500;
+}
+
+.promo {
+  display: block;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.promo i {
+  display: block;
+  color: #e65100;
+  font-size: 7rem;
+}
+
+.promo-caption {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.form-padding {
+  margin-top: 50px;
+}
+
+@media only screen and (min-width: 773px) {
+  .form-padding {
+    margin-top: 100px;
+  }
+}
+
+.signup-form {
+  margin-top: 30px;
+}
+
+@media only screen and (min-width: 773px) {
+  .signup-form {
+    margin-top: 60px;
+  }
+}
+
+#input-text-style {
+    color: black;
+    font-weight: 600;
+}
+
+#label-color {
+    font-weight: 700;
+    color: #e65100;
+}
+
+
+#business-card {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.custom-card-title {
+    text-align: center;
+}
+
+#action-color {
+    font-size: 12px;
+    font-weight: 500;
+    color: #ff6d00;
+}
+
+#action-color:hover {
+    font-size: 15px;
+    color: #e65100;
+}
+
+
+.submit-btn {
+    margin-left: 25px;
+    margin-top: 20px;
+}
+
+.searchbar {
+    width: 20%;
+}
+
+.scrollspy-float {
+    position: fixed;
+    top: 700px;
+}
+
+#scrollspy-text li a {
+    color: #e65100;
+    font-weight: 600;
+}
