@@ -1,64 +1,81 @@
-import businesses from '../model/business';
+import models from '../models/index';
+import errorMessage from '../middlewares/error-message';
+import checkAuth from '../middlewares/check-auth';
 
-const errorMessage = res => res.status(404).json({
-  message: 'Business not found, no review gotten',
-  error: true
-});
+const Reviews = models.Review;
+const Businesses = models.Business;
 /**
   *
   *Review class to handle review posting and getting all reviews for a business
   *@class
   *
 */
-class Reviews {
+class businessReviews {
   /**
     *
-    *post reviews for a business
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
+    *@param {any} req - request value
+    *@param {any} res - response value
     *@return {status} response object gotten
-    *@memberof Reviews
+    *@memberof businessReviews
   */
   static postReview(req, res) {
-    const { reviewer, message } = req.body;
-    const businessId = parseInt(req.params.businessId, 10);
+    const [message, businessId] = [req.body.message, req.params.businessId];
 
-    for (let counter = 0; counter < businesses.length; counter += 1) {
-      if (businessId === businesses[counter].id) {
-        businesses[counter].reviews.push({
-          reviewer,
-          message
-        });
-        return res.status(201).json({
-          message: 'Review posted successfully',
-          error: false
-        });
-      }
-    }
+    checkAuth(req, res);
 
-    return errorMessage(res);
+    Businesses.findById(businessId)
+      .then((business) => {
+        if (business === null) {
+          return errorMessage(res);
+        }
+
+        Reviews.create({
+          reviewer: checkAuth(req, res).username,
+          message,
+          businessId
+        })
+          .then(() => res.status(201).json({
+            message: 'Review posted successfully',
+            error: false
+          }));
+      });
   }
   /**
     *
-    *gets all reviews under a business
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
+    *@param {any} req - request value
+    *@param {any} res - response value
     *@return {status} response object gotten
-    *@memberof Reviews
+    *@memberof businessReviews
   */
   static getReview(req, res) {
-    const businessId = parseInt(req.params.businessId, 10);
+    const { businessId } = req.params;
 
-    for (let counter = 0; counter < businesses.length; counter += 1) {
-      if (businessId === businesses[counter].id) {
-        return res.status(200).json(businesses[counter].reviews);
-      }
-    }
+    Businesses.findById(businessId)
+      .then((business) => {
+        if (business === null) {
+          return errorMessage(res);
+        }
 
-    return errorMessage(res);
+        Reviews.findAll({
+          where: {
+            businessId
+          }
+        })
+          .then((reviews) => {
+            if (reviews.length < 1) {
+              return res.status(404).json({
+                message: 'No reviews yet',
+                error: false
+              });
+            }
+
+            return res.status(200).json({
+              reviews,
+              error: false
+            });
+          });
+      });
   }
 }
 
-export default Reviews;
+export default businessReviews;
