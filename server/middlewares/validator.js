@@ -4,15 +4,10 @@
 */
 class validator {
   /**
-    *
-    *Validates user input during signup
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@param {any} next - next value - this is a middleware reserved keyword
-    responsible for allowing other methods or action in line to act only after this pressent
-    action has taken place
-    *@return {status} this is a validator, return statement is unavailable
+    *- handles data coming from the user
+    *@param {any} res - response value
+    *@param {any} next - next value
+    *@return {status} validator
     *@memberof validator
   */
   static userSignup(req, res, next) {
@@ -26,14 +21,10 @@ class validator {
   }
   /**
     *
-    *Validates user input during login
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@param {any} next - next value - this is a middleware reserved keyword
-    responsible for allowing other methods or action in line to act only after this pressent
-    action has taken place
-    *@return {status} this is a validator, return statement is unavailable
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@param {any} next
+    *@return {status} validator
     *@memberof validator
   */
   static userLogin(req, res, next) {
@@ -45,14 +36,10 @@ class validator {
   }
   /**
     *
-    *Register business
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@param {any} next - next value - this is a middleware reserved keyword
-    responsible for allowing other methods or action in line to act only after this pressent
-    action has taken place
-    *@return {status} this is a validator, return statement is unavailable
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@param {any} next - next value
+    *@return {status} validator
     *@memberof validateBusiness
   */
   static registerBusiness(req, res, next) {
@@ -68,18 +55,13 @@ class validator {
   }
   /**
     *
-    *Validates user input before posting a review
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@param {any} next - next value - this is a middleware reserved keyword
-    responsible for allowing other methods or action in line to act only after this pressent
-    action has taken place
-    *@return {status} this is a validator, return statement is unavailable
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@param {any} next - next value
+    *@return {status} validator
     *@memberof validator
   */
   static reviews(req, res, next) {
-    req.check('reviewer', 'reviewers name is required').isLength({ min: 1 });
     req.check('message', 'message is required').isLength({ min: 1 });
 
     next();
