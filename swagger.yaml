@@ -12,29 +12,31 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "weconnect-api-service.herokuapp.com"
+host: "localhost:4000"
 basePath: "/api/v1"
 tags:
 - name: "User"
-  description: "Everything about your users"
+  description: "Everything about users"
 - name: "Business"
   description: "Access to all business methods"
 - name: "Reviews"
   description: "Access to all review methods"
+schemes:
+- "http"
 paths:
   /auth/signup:
     post:
       tags:
       - "User"
       summary: "User signup"
-      description: "This endpoint registers a user if all field is filled, a check will be done to make sure your username
-      and email is unique, lastly email should be in the proper format."
+      description: "**This endpoint registers a user if all field is filled, a check will be done to make sure your username
+      and email are unique, lastly email should be in the proper format.**"
       operationId: "addUser"
       consumes:
       - "application/json"
-      - "application/xml"
+
       produces:
-      - "application/xml"
+
       - "application/json"
       parameters:
       - in: "body"
@@ -46,20 +48,27 @@ paths:
       responses:
         201:
           description: "User signup successful"
+          schema:
+            $ref: "#/definitions/successMessage"
         400:
-          description: "Invalid input, user exists"
+          description: "Invalid or no input"
+        409:
+          description: "User with name already exists"
   /auth/login:
     post:
       tags:
       - "User"
       summary: "Login"
-      description: "You can login to become authenticated, no field should be missing"
+      description: "**You need login to become authenticated, no field should be missing**
+      On successful login, you'll be provided a token which you'll need to perform actions like,
+      * **Register business,**
+      * **Update your business,**
+      * **Delete your business,**
+      * **Post a review,**"
       operationId: "addUser"
       consumes:
       - "application/json"
-      - "application/xml"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - in: "body"
@@ -80,15 +89,31 @@ paths:
       tags:
       - "Business"
       summary: "Register a business"
-      description: "Register your Businesses with this endpoint, duplicate registration is not allowed"
+      description: "**Register your Businesses with this endpoint, duplicate registration is not allowed**
+      **NOTE: For the category field**
+      ***LIST of available categories are as follows***
+      * **1-health,**
+      * **2-science,**
+      * **3-medicine,**
+      * **4-sport**
+      * **5-finance,**
+      * **6-tech**
+      * **7-food,**
+      * **8-others**
+      **To register a business, you have to be a registered user so that
+      you can get a token to use during business registration
+      If your token no longer works, get a new one by login in.**"
       operationId: "createBusiness"
       consumes:
       - "application/json"
-      - "application/xml"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
+      - in: "header"
+        name: "x-access-token"
+        description: "Enter your access token"
+        type: "string"
+        required: true
       - in: "body"
         name: "body"
         description: "user object to add to database"
@@ -96,42 +121,50 @@ paths:
         schema:
           $ref: "#/definitions/createBusiness"
       responses:
+        409:
+          description: "Business with name or email exists"
         400:
-          description: "Invalid input, business exists"
+          description: "Invalid or no input at all"
         201:
           description: "Business registered successful"
+          schema:
+            $ref: "#/definitions/successMessage"
 
     get:
       tags:
       - "Business"
       summary: "Get all business"
-      description: "Displays all registered business"
+      description: "**Displays all registered business**"
       operationId: "getBusiness"
       produces:
       - "application/json"
       parameters: []
       responses:
         200:
-          description: "successful operation"
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/responseObject"
 
   /businesses?location=location:
     get:
       tags:
       - "Business"
       summary: "Filter businesses by location"
-      description: "Filter all businesses by location, if no business with your specified location is available,
-      you'll be notified"
+      description: "**Filter all businesses by location, if no business with your specified location is available,
+      you'll be notified**"
       produces:
       - "application/json"
       parameters:
         - name: "location"
           in: "query"
           description: "location to filter business"
-          schema:
-            type: "string"
+          required: true
+          type: "string"
       responses:
         200:
-          description: "successful operation"
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/responseObject"
         404:
           description: "Business not foound"
 
@@ -140,20 +173,33 @@ paths:
       tags:
       - "Business"
       summary: "Filter businesses by category"
-      description: "Filter all businesses by category, if no business with your specified category is available,
-      you'll be notified"
+      description: "**Filter all businesses by category, if no business with your specified category is available,
+      you'll be notified.**
+      ***LIST of available categories you can search for are as follows***
+      * **1-health,**
+      * **2-science,**
+      * **3-medicine,**
+      * **4-sport**
+      * **5-finance,**
+      * **6-tech**
+      * **7-food,**
+      * **8-others**
+      ***ONE cool thing is that you don't have to complete your query***
+      **For instance fin should give you all businesses with finance
+      as category**"
       produces:
       - "application/json"
       parameters:
         - name: "category"
           in: "query"
           description: "category to filter businesses by"
-
-          schema:
-            type: "string"
+          required: true
+          type: "string"
       responses:
         200:
-          description: "successful operation"
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/responseObject"
         404:
           description: "Business not found"
 
@@ -162,7 +208,8 @@ paths:
       tags:
       - "Business"
       summary: "Get a business by ID"
-      description: "Displays business whose ID is specified"
+      description: "**Displays business whose ID is specified
+      You can get any ID from the GET ALL BUSINESS section.**"
       operationId: "getBusinessById"
       produces:
       - "application/json"
@@ -172,11 +219,9 @@ paths:
           description: "ID of the business to get"
           required: true
           type: "integer"
-          minimum: 1.0
-          format: "int64"
       responses:
         200:
-          description: "successful operation"
+          description: "Operation successful"
         404:
           description: "Business not found"
 
@@ -184,19 +229,24 @@ paths:
       tags:
       - "Business"
       summary: "Update a business by ID"
-      description: "Queries business model by id and update business"
+      description: "**Queries businesses by provided id  and allows only the owner of the business to perform the update.
+      You need your business ID and a token, before you can proceed.**
+      ***Your business ID is provided to you after successfully registering your business,
+      To generate a token, you need to login to your account and get a token.***"
       operationId: "updateBusiness"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
+      - in: "header"
+        name: "x-access-token"
+        description: "Enter your access token"
+        type: "integer"
+        required: true
       - name: "businessId"
         in: "path"
         description: "ID of the business that needs to be updated"
         required: true
         type: "integer"
-        minimum: 1.0
-        format: "int64"
       - in: "body"
         name: "body"
         description: "business object to update business with"
@@ -205,7 +255,11 @@ paths:
           $ref: "#/definitions/updateBusiness"
       responses:
         201:
-          description: "Business updated successful"
+          description: "Business updated successfully"
+          schema:
+            $ref: "#/definitions/successMessage"
+        403:
+          description: "No write access to business"
         404:
           description: "Business not found"
 
@@ -213,23 +267,32 @@ paths:
       tags:
       - Business
       summary: "Delete a business by ID"
-      description: "For valid response try integer IDs with positive integer value.
-       Negative or non-integer values will generate API errors"
+      description: "**Queries businesses by provided id  and allows only the owner of the business to perform the deletion.
+      You need your business ID and a token, before you can proceed.**
+      ***Your business ID is provided to you after successfully registering your business,
+      To generate a token, you need to login to your account and get a token.***"
       operationId: "deleteBusiness"
       produces:
-      - "application/xml"
+
       - "application/json"
       parameters:
+      - in: "header"
+        name: "x-access-token"
+        description: "Enter your access token"
+        type: "string"
+        required: true
       - name: "businessId"
         in: "path"
         description: "ID of the business that needs to be deleted"
         required: true
         type: "integer"
-        minimum: 1.0
-        format: "int64"
       responses:
-        204:
-          description: "No content, successful"
+        200:
+          description: "Business deleted successfully"
+          schema:
+            $ref: "#/definitions/successMessage"
+        403:
+          description: "No access for modification"
         404:
           description: "Business not found"
 
@@ -238,22 +301,27 @@ paths:
       tags:
       - "Reviews"
       summary: "post review"
-      description: "Post reviews under a business gotten by ID"
+      description: "**Queries businesses by provided id to post a review under that business.**
+      ***You need the business ID and access token to post a review,
+      You can get the business ID by going to the GET ALL BUSINESSES section
+      or to FILTER THE BUSINESS by LOCATION OR CATEGORY
+      To generate a token, you need to login to your account and get a token.***"
       operationId: "postReview"
       consumes:
       - "application/json"
-      - "application/xml"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
+      - in: "header"
+        name: "x-access-token"
+        description: "Enter your access token"
+        type: "string"
+        required: true
       - name: "businessId"
         in: "path"
-        description: "ID of the business that needs to be deleted"
+        description: "ID of the business to post a review to"
         required: true
         type: "integer"
-        minimum: 1.0
-        format: "int64"
       - in: "body"
         name: "body"
         description: "user object to add to database"
@@ -267,6 +335,8 @@ paths:
           description: "Invalid input"
         201:
           description: "Review posted successful"
+          schema:
+            $ref: "#/definitions/successMessage"
 
     get:
       tags:
@@ -282,11 +352,11 @@ paths:
           description: "ID of the business whose reviews to get"
           required: true
           type: "integer"
-          minimum: 1.0
-          format: "int64"
       responses:
         200:
-          description: "successful operation"
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/reviewResponseObject"
         404:
           description: "Business not found"
 definitions:
@@ -338,24 +408,64 @@ definitions:
         type: "string"
       category:
         type: "string"
-    xml:
-      name: "updateBusiness"
   postReview:
     type: "object"
     properties:
+      message:
+        type: "string"
+  responseObject:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      address:
+        type: "string"
+      location:
+        type: "string"
+      category:
+        type: "string"
+      createdAt:
+        type: "string"
+      updatedAt:
+        type: "string"
+      categoryId:
+        type: "string"
+      userId:
+        type: "string"
+  reviewResponseObject:
+    type: "object"
+    properties:
+      id:
+        type: "string"
       reviewer:
         type: "string"
       message:
         type: "string"
-    xml:
-      name: "postReview"
-  ApiResponse:
+      createdAt:
+        type: "string"
+      updatedAt:
+        type: "string"
+      businessId:
+        type: "string"
+  successMessage:
     type: "object"
     properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
       message:
+        type: "string"
+      error:
+        type: "string"
+  loginResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+      tokenMessage:
+        type: "string"
+      error:
+        type: "string"
+      token:
         type: "string"
