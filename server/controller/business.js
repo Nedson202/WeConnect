@@ -1,142 +1,167 @@
-import businesses from '../model/business';
+import models from '../models/index';
+import errorMessage from '../middlewares/error-message';
+import regex from '../middlewares/regex';
+import checkAuth from '../middlewares/check-auth';
+
+const Businesses = models.Business;
+const Categories = models.Category;
 /**
-  *
-  *Business class to handle actions like registration, business filtering
-  *updating business, retrieving business, deletion of business
-  *@class
-  *
-*/
-class Businesses {
+
+ *@class
+ *
+ */
+class BusinessMethods {
   /**
-    *
-    *Register business
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@return {json} response object gotten
-    *@memberof Businesses
-  */
+      *
+      *@param {any} req - request value
+      *@param {any} res - response value
+      *@return {json} response object gotten
+      *@memberof BusinessMethods
+    */
   static createBusiness(req, res) {
     const {
-      name, email, address, location, category
+      name,
+      email,
+      address,
+      location,
+      category
     } = req.body;
 
-    const filteredBusiness = businesses.filter(business => business.name === name)[0];
+    checkAuth(req, res);
+    regex(res, category);
 
-    if (filteredBusiness) {
-      return res.status(400).json({
-        message: 'Business with name, is already taken',
-        error: true
+    Categories.findById(parseInt(category.replace(/[^0-9]/g, ''), 10))
+      .then((businessCategory) => {
+        if (businessCategory === null) {
+          return res.status(404).json({
+            message: 'Business with category provided is not available yet',
+            help: 'Register under 8 instead which is others',
+            error: true
+          });
+        }
+
+        Businesses.create({
+          name: name.toLowerCase(),
+          email: email.toLowerCase(),
+          address: address.toLowerCase(),
+          location: location.toLowerCase(),
+          category: businessCategory.category,
+          categoryId: businessCategory.id,
+          userId: checkAuth(req, res).userId
+        })
+          .then(business => res.status(201).json({
+            message: 'Business registration successful',
+            error: false,
+            businessId: business.id
+          }))
+          .catch(error => res.status(409).json({
+            message: error.errors[0].message,
+            error: true
+          }));
       });
-    }
-
-    if (!filteredBusiness) {
-      businesses.push({
-        id: businesses[businesses.length - 1].id + 1,
-        name,
-        email,
-        address,
-        location,
-        category
-      });
-    }
-
-    res.status(201).json({
-      message: 'Business registration successful',
-      error: 'false'
-    });
   }
   /**
     *
-    *Display all business
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
+    *@param {any} req - request value
+    *@param {any} res - response value
     *@return {json} response object gotten
-    *@memberof Businesses
+    *@memberof BusinessMethods
   */
   static getBusiness(req, res) {
-    return res.status(200).json({
-      businesses,
-      error: 'false'
-    });
+    return Businesses
+      .findAll()
+      .then(businesses => res.status(200).json({
+        businesses,
+        error: 'false'
+      }))
+      .catch(error => res.status(400).json(error));
   }
   /**
-    *
-    *Get a business by id
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@return {json} response object gotten
-    *@memberof filterBusiness
-  */
+          *
+          *@param {any} req - request value
+          *@param {any} res - response value
+          *@return {json} response object gotten
+          *@memberof filterBusiness
+        */
   static getOneBusiness(req, res) {
-    const businessId = parseInt(req.params.businessId, 10);
-    const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
+    Businesses.findById(req.params.businessId)
+      .then((business) => {
+        if (business === null) {
+          errorMessage(res);
+        }
 
-    if (!filteredBusiness) {
-      return res.status(404).json({
-        messsage: 'Business not found',
-        error: true
+        return res.status(200).json({
+          business,
+          error: 'false'
+        });
       });
-    }
-
-    res.status(200).json(filteredBusiness);
   }
   /**
     *
-    *Update a business by id
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
+    *@param {any} req - request value
+    *@param {any} res - response value
     *@return {json} response object gotten
     *@memberof Businesses
   */
   static updateBusiness(req, res) {
-    const {
-      name, email, address, location, category
-    } = req.body;
+    Businesses.findById(req.params.businessId)
+      .then((business) => {
+        if (!business) {
+          errorMessage(res);
+        }
 
-    const businessId = parseInt(req.params.businessId, 10);
-    const filteredBusiness = businesses.filter(business => business.id === businessId)[0];
+        if (business.userId !== checkAuth(req, res).userId) {
+          return res.status(403).json({
+            message: 'Sorry, you do not have write access to this business',
+            error: true
+          });
+        }
 
-    if (!filteredBusiness) {
-      return res.status(404).json({
-        messsage: 'Business not found',
-        error: true
+        business.update({
+          name: req.body.name || business.name,
+          email: req.body.email || business.email,
+          address: req.body.address || business.address,
+          location: req.body.location || business.location,
+          category: req.body.category || business.category
+        })
+          .then(() => res.status(200).json({
+            message: 'Business updated successfully',
+            error: 'false'
+          }));
       });
-    }
-
-    filteredBusiness.name = name || filteredBusiness.name;
-    filteredBusiness.email = email || filteredBusiness.email;
-    filteredBusiness.address = address || filteredBusiness.address;
-    filteredBusiness.location = location || filteredBusiness.location;
-    filteredBusiness.category = category || filteredBusiness.category;
-
-    return res.status(201).json({
-      message: 'Business profile updated',
-      error: false
-    });
   }
   /**
     *
-    *Delete a business by id
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
+    *@param {any} req - request value
+    *@param {any} res - response value
     *@return {status} response object gotten
     *@memberof Businesses
   */
   static deleteBusiness(req, res) {
-    const businessId = parseInt(req.params.businessId, 10);
+    Businesses.findById(req.params.businessId)
+      .then((business) => {
+        if (!business) {
+          errorMessage(res);
+        }
 
-    for (let counter = 0; counter <= businesses.length; counter += 1) {
-      if (businessId === businesses[counter].id) {
-        businesses.splice(counter, 1);
-        return res.sendStatus(204);
-      }
-    }
+        if (business.userId !== checkAuth(req, res).userId) {
+          return res.status(403).json({
+            message: 'Unable to delete, you do not have access to modify this business',
+            error: true
+          });
+        }
+
+        Businesses.destroy({
+          where: {
+            id: req.params.businessId
+          }
+        })
+          .then(() => res.status(200).json({
+            message: 'Business deleted successfully',
+            error: false
+          }));
+      });
   }
 }
 
-export default Businesses;
+export default BusinessMethods;
