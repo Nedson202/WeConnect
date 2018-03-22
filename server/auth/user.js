@@ -1,74 +1,86 @@
-import users from '../model/user';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import models from '../models/index';
+import config from '../config/config';
 
+const Users = models.User;
 /**
-  *Represents user authentication
-  *@class
-*/
+ *Represents user authentication
+ *@class
+ */
 class Auth {
   /**
-    *
-    *Register user
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@return {json} response object gotten
-    *@memberof Auth
-  */
+      *
+      *@param {any} req - request value
+      *@param {any} res - response value
+      *@return {json} response object gotten
+      *@memberof Auth
+    */
   static createUser(req, res) {
-    const userId = users[users.length - 1].id + 1;
     const { username, email, password } = req.body;
 
-    const filterUsername = users.filter(user => user.username === username)[0];
-    const filterEmail = users.filter(user => email === user.email)[0];
-
-    if (filterUsername || filterEmail) {
-      return res.status(400).json({
-        message: 'username or email is taken',
+    Users.create({
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
+      password: password.toLowerCase()
+    })
+      .then((user) => {
+        const passwordHash = bcrypt.hashSync(user.password, 10);
+        user.update({
+          password: passwordHash
+        });
+        return res.status(201).json({
+          message: 'Signup successful',
+          error: false,
+        });
+      }).catch(error => res.status(409).json({
+        message: error.errors[0].message,
         error: true
-      });
-    }
-
-    if (!filterEmail && !filterUsername) {
-      users.push({
-        id: userId,
-        username,
-        email,
-        password
-      });
-    }
-
-    return res.status(201).json({
-      message: 'Signup successful',
-      error: 'false'
-    });
+      }));
   }
 
   /**
-    *
-    *Method responsible for logging in user
-    *@param {any} req - request value - handles data coming from the user
-    *@param {any} res - response value - this is the response gotten after
-    interaction with the Api routes
-    *@return {json} response object goten
-    *@memberof Auth
-  */
+      *
+      *@param {any} req - request value
+      *@param {any} res - response value
+      *@return {json} response object goten
+      *@memberof Auth
+    */
   static logUser(req, res) {
-    const { username, password } = req.body;
+    const { username } = req.body;
 
-    const filterUser = users.filter(user => user.username === username
-      && password === user.password)[0];
+    Users.findOne({
+      where: {
+        username: username.toLowerCase()
+      }
+    })
+      .then((user) => {
+        if (!(user && bcrypt.compareSync((req.body.password).toLowerCase(), user.password))) {
+          return res.status(401).json({
+            message: 'Unathorised, check your username or password',
+            error: true
+          });
+        }
 
-    if (filterUser) {
-      return res.status(200).send({
-        message: 'Login successful',
-        error: false
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            username,
+            email: user.email
+          },
+          config.secretkey,
+          {
+            expiresIn: '10h'
+          }
+        );
+
+        return res.status(200).json({
+          message: 'login successful',
+          tokenMessage: 'Generated token expires in 10 hours time',
+          error: false,
+          token
+        });
       });
-    }
-
-    return res.status(401).json({
-      message: 'Unathorised, check your username or password',
-      error: true
-    });
   }
 }
 
