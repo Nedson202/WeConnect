@@ -84,10 +84,13 @@ main {
 .form-style div .input-field {
   margin-top: 25px;
   margin-bottom: 10px;
+<<<<<<< HEAD
 }
 
 .container .row {
   margin-top: 50px;
+=======
+>>>>>>> 2001621514d956fa1850e21b31583c137f3d3da1
 }
 
 @media only screen and (min-width: 773px) {
@@ -133,6 +136,7 @@ main {
     color: #e65100;
 }
 
+<<<<<<< HEAD
 .align1 {
   padding-left:34px;
 }
@@ -150,6 +154,13 @@ main {
   padding-top: 10px;
 }
 
+=======
+#action-color:hover {
+  font-size: 15px;
+  color: #e65100;
+}
+
+>>>>>>> 2001621514d956fa1850e21b31583c137f3d3da1
 .register-form {
   margin-top: 20px;
 }
