@@ -6,7 +6,6 @@ const Reviews = models.Review;
 const Businesses = models.Business;
 /**
   *
-  *Review class to handle review posting and getting all reviews for a business
   *@class
   *
 */

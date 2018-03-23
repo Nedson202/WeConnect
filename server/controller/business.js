@@ -87,7 +87,7 @@ class BusinessMethods {
     Businesses.findById(req.params.businessId)
       .then((business) => {
         if (business === null) {
-          errorMessage(res);
+          return errorMessage(res);
         }
 
         return res.status(200).json({
@@ -106,17 +106,6 @@ class BusinessMethods {
   static updateBusiness(req, res) {
     Businesses.findById(req.params.businessId)
       .then((business) => {
-        if (!business) {
-          errorMessage(res);
-        }
-
-        if (business.userId !== checkAuth(req, res).userId) {
-          return res.status(403).json({
-            message: 'Sorry, you do not have write access to this business',
-            error: true
-          });
-        }
-
         business.update({
           name: req.body.name || business.name,
           email: req.body.email || business.email,
@@ -138,29 +127,16 @@ class BusinessMethods {
     *@memberof Businesses
   */
   static deleteBusiness(req, res) {
-    Businesses.findById(req.params.businessId)
-      .then((business) => {
-        if (!business) {
-          errorMessage(res);
-        }
-
-        if (business.userId !== checkAuth(req, res).userId) {
-          return res.status(403).json({
-            message: 'Unable to delete, you do not have access to modify this business',
-            error: true
-          });
-        }
-
-        Businesses.destroy({
-          where: {
-            id: req.params.businessId
-          }
-        })
-          .then(() => res.status(200).json({
-            message: 'Business deleted successfully',
-            error: false
-          }));
-      });
+    const businessId = parseInt(req.params.businessId, 10);
+    Businesses.destroy({
+      where: {
+        id: businessId
+      }
+    })
+      .then(() => res.status(200).json({
+        message: 'Business deleted successfully',
+        error: false
+      }));
   }
 }
 
