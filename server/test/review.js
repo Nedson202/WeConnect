@@ -1,7 +1,6 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../index';
-import models from '../models/index';
 
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
@@ -42,7 +41,7 @@ describe('Review posting', () => {
 
   it('should return status 400 if message is empty', (done) => {
     chai.request(app)
-      .post(`/api/v1/businesses/3/reviews`)
+      .post('/api/v1/businesses/3/reviews')
       .set('x-access-token', token)
       .send({
         message: null
@@ -55,7 +54,7 @@ describe('Review posting', () => {
 
   it('should return status 403 if token is absent', (done) => {
     chai.request(app)
-      .post(`/api/v1/businesses/2/reviews`)
+      .post('/api/v1/businesses/2/reviews')
       .send({
         message: 'Too bad'
       })
@@ -92,11 +91,11 @@ describe('Get reviews', () => {
 
   it('should return status of 200 on success', (done) => {
     chai.request(app)
-    .get(`/api/v1/businesses/${availableBusinessId}/reviews/`)
-    .end((err, res) => {
-      expect(res.status).to.equal(200);
-      done();
-    });
+      .get(`/api/v1/businesses/${availableBusinessId}/reviews/`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
   });
 
   it('should return 404 if no specified business is found', (done) => {
