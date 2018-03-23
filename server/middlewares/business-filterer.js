@@ -1,4 +1,7 @@
 import models from '../models/index';
+import checkAuth from '../middlewares/check-auth';
+import regex from '../middlewares/regex';
+import errorMessage from '../middlewares/error-message';
 
 const Businesses = models.Business;
 
@@ -22,7 +25,6 @@ class sorter {
     if (location || category) {
       Businesses.findAll({
         where: {
-          // $or: [{ location }, { category }]
           $or: [
             {
               location: {
@@ -53,6 +55,38 @@ class sorter {
     }
 
     next();
+  }
+  /**
+    *
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@param {any} next
+    *@memberof sorter
+    *@return {json} response object gotten
+  */
+  static filterBusiness(req, res, next) {
+    const businessId = parseInt(req.params.businessId, 10)
+
+    checkAuth(req, res);
+
+    Businesses.findOne({
+      where: {
+        id: businessId
+      }
+    })
+    .then((business) => {
+      if (!business) {
+        return errorMessage(res);
+      }
+
+      if (business.userId !== checkAuth(req, res).userId) {
+        return res.status(403).json({
+          message: 'Forbidden, you do not have access to modify this business',
+          error: true
+        });
+      }
+      next();
+    });
   }
 }
 
