@@ -42,7 +42,7 @@ describe('Review posting', () => {
 
   it('should return status 400 if message is empty', (done) => {
     chai.request(app)
-      .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
+      .post(`/api/v1/businesses/3/reviews`)
       .set('x-access-token', token)
       .send({
         message: null
@@ -55,7 +55,7 @@ describe('Review posting', () => {
 
   it('should return status 403 if token is absent', (done) => {
     chai.request(app)
-      .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
+      .post(`/api/v1/businesses/2/reviews`)
       .send({
         message: 'Too bad'
       })
