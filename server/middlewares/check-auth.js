@@ -6,7 +6,7 @@ const checkAuth = (req, res) => {
 
   if (!token) {
     return res.status(403).json({
-      message: 'Invalid token or no token provided',
+      message: 'Please provide a token',
       help: 'Login to regenerate a token',
       error: true
     });
