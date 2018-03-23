@@ -15,7 +15,7 @@ env:
   - NODE_ENV=test DB_USERNAME=askit DB_PASSWORD=password JWT_SECRET=secret
 
 before_script:
-  - npm i nyc --save-dev
+  - npm i nyc dotenv --save
   - psql -c 'create database weconnect_test;' -U postgres
   - psql -c "CREATE USER askit WITH PASSWORD 'password';" -U postgres
 
