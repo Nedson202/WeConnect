@@ -158,9 +158,8 @@ main {
   width: 20%;
 }
 
-.scrollspy-float {
-  position: fixed;
-  top: 700px;
+.file-field .btn {
+  background-color: #e65100;
 }
 
 #scrollspy-text li a {
