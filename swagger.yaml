@@ -144,6 +144,8 @@ paths:
           description: "Operation successful"
           schema:
             $ref: "#/definitions/responseObject"
+        404:
+          description: "No business registered yet"
 
   /businesses?location=location:
     get:
