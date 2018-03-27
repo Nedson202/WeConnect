@@ -12,7 +12,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:4000"
+host: "weconnect-api-service.herokuapp.com"
 basePath: "/api/v1"
 tags:
 - name: "User"
@@ -22,7 +22,7 @@ tags:
 - name: "Reviews"
   description: "Access to all review methods"
 schemes:
-- "http"
+- "https"
 paths:
   /auth/signup:
     post:
