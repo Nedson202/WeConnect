@@ -123,6 +123,8 @@ paths:
       responses:
         409:
           description: "Business with name or email exists"
+        404:
+          description: "Business with category is unavailable"
         400:
           description: "Invalid or no input at all"
         201:
