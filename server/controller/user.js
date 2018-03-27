@@ -70,7 +70,7 @@ class Auth {
           },
           config.secretkey,
           {
-            expiresIn: '3h'
+            expiresIn: '10h'
           }
         );
 
