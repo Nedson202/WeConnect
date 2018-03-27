@@ -22,7 +22,7 @@ class sorter {
     const { location, category } = req.query;
 
     if (location || category) {
-      Businesses.findAll({
+      return Businesses.findAll({
         where: {
           $or: [
             {
@@ -68,7 +68,7 @@ class sorter {
 
     checkAuth(req, res);
 
-    Businesses.findOne({
+    return Businesses.findOne({
       where: {
         id: businessId
       }
