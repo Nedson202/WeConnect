@@ -17,5 +17,8 @@ module.exports = {
     port: "5432",
     dialect: "postgres"
   },
+  production: {
+    use_env_variable: 'DATABASE_URL'
+  }
   secretkey: process.env.JWT_SECRET
 }
