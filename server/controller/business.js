@@ -70,10 +70,17 @@ class BusinessMethods {
   static getBusiness(req, res) {
     return Businesses
       .findAll()
-      .then(businesses => res.status(200).json({
-        businesses,
-        error: 'false'
-      }));
+      .then(businesses => {
+        if(businesses.length === 0) {
+          return res.status(404).json({
+            message: 'No business registered yet'
+          })
+        }
+        return res.status(200).json({
+          businesses,
+          error: false
+        })
+      });
   }
   /**
           *
