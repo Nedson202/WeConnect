@@ -19,6 +19,6 @@ module.exports = {
   },
   production: {
     use_env_variable: 'DATABASE_URL'
-  }
+  },
   secretkey: process.env.JWT_SECRET
 }
