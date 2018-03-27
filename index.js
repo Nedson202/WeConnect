@@ -4,7 +4,9 @@ import expressValidator from 'express-validator';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import logger from 'morgan';
-import route from './server/routes/index';
+import userRoute from './server/routes/user';
+import businessRoute from './server/routes/business';
+import reviewRoute from './server/routes/reviews';
 import models from './server/models/index';
 
 const swaggerDocument = yaml.load(`${process.cwd()}/swagger.yaml`);
@@ -23,7 +25,9 @@ app.use(expressValidator());
 
 app.use(logger('dev'));
 
-route(app);
+userRoute(app);
+businessRoute(app);
+reviewRoute(app);
 // route for api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
