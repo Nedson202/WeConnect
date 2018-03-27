@@ -30,7 +30,7 @@ class BusinessMethods {
     checkAuth(req, res);
     regex(res, category);
 
-    Categories.findById(parseInt(category.replace(/[^0-9]/g, ''), 10))
+    return Categories.findById(parseInt(category.replace(/[^0-9]/g, ''), 10))
       .then((businessCategory) => {
         if (businessCategory === null) {
           return res.status(404).json({
@@ -73,18 +73,17 @@ class BusinessMethods {
       .then(businesses => res.status(200).json({
         businesses,
         error: 'false'
-      }))
-      .catch(error => res.status(400).json(error));
+      }));
   }
   /**
           *
           *@param {any} req - request value
           *@param {any} res - response value
           *@return {json} response object gotten
-          *@memberof filterBusiness
+          *@memberof BusinessMethods
         */
   static getOneBusiness(req, res) {
-    Businesses.findById(req.params.businessId)
+    return Businesses.findById(req.params.businessId)
       .then((business) => {
         if (business === null) {
           return errorMessage(res);
@@ -101,10 +100,10 @@ class BusinessMethods {
     *@param {any} req - request value
     *@param {any} res - response value
     *@return {json} response object gotten
-    *@memberof Businesses
+    *@memberof BusinessMethods
   */
   static updateBusiness(req, res) {
-    Businesses.findById(req.params.businessId)
+    return Businesses.findById(req.params.businessId)
       .then((business) => {
         business.update({
           name: req.body.name || business.name,
@@ -124,11 +123,11 @@ class BusinessMethods {
     *@param {any} req - request value
     *@param {any} res - response value
     *@return {status} response object gotten
-    *@memberof Businesses
+    *@memberof BusinessMethods
   */
   static deleteBusiness(req, res) {
     const businessId = parseInt(req.params.businessId, 10);
-    Businesses.destroy({
+    return Businesses.destroy({
       where: {
         id: businessId
       }

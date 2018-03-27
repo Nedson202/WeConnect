@@ -22,7 +22,7 @@ class businessReviews {
 
     checkAuth(req, res);
 
-    Businesses.findById(businessId)
+    return Businesses.findById(businessId)
       .then((business) => {
         if (business === null) {
           return errorMessage(res);
@@ -49,7 +49,7 @@ class businessReviews {
   static getReview(req, res) {
     const { businessId } = req.params;
 
-    Businesses.findById(businessId)
+    return Businesses.findById(businessId)
       .then((business) => {
         if (business === null) {
           return errorMessage(res);
