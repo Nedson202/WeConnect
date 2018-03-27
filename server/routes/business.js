@@ -1,4 +1,3 @@
-import Auth from '../controller/user';
 import Businesses from '../controller/business';
 import Reviews from '../controller/review';
 import validator from '../middlewares/validator';
