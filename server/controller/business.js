@@ -1,6 +1,5 @@
 import models from '../models/index';
 import errorMessage from '../middlewares/error-message';
-import regex from '../middlewares/regex';
 import checkAuth from '../middlewares/check-auth';
 
 const Businesses = models.Business;
@@ -28,37 +27,24 @@ class BusinessMethods {
     } = req.body;
 
     checkAuth(req, res);
-    regex(res, category);
 
-    return Categories.findById(parseInt(category.replace(/[^0-9]/g, ''), 10))
-      .then((businessCategory) => {
-        if (businessCategory === null) {
-          return res.status(404).json({
-            message: 'Business with category provided is not available yet',
-            help: 'Register under 8 instead which is others',
-            error: true
-          });
-        }
-
-        Businesses.create({
-          name: name.toLowerCase(),
-          email: email.toLowerCase(),
-          address: address.toLowerCase(),
-          location: location.toLowerCase(),
-          category: businessCategory.category,
-          categoryId: businessCategory.id,
-          userId: checkAuth(req, res).userId
-        })
-          .then(business => res.status(201).json({
-            message: 'Business registration successful',
-            error: false,
-            businessId: business.id
-          }))
-          .catch(error => res.status(409).json({
-            message: error.errors[0].message,
-            error: true
-          }));
-      });
+    return Businesses.create({
+      name: name.toLowerCase(),
+      email: email.toLowerCase(),
+      address: address.toLowerCase(),
+      location: location.toLowerCase(),
+      category: category.toLowerCase(),
+      userId: checkAuth(req, res).userId
+    })
+      .then(business => res.status(201).json({
+        message: 'Business registration successful',
+        error: false,
+        businessId: business.id
+      }))
+      .catch(error => res.status(409).json({
+        message: error.errors[0].message,
+        error: true
+      }));
   }
   /**
     *
@@ -70,16 +56,16 @@ class BusinessMethods {
   static getBusiness(req, res) {
     return Businesses
       .findAll()
-      .then(businesses => {
-        if(businesses.length === 0) {
+      .then((businesses) => {
+        if (businesses.length === 0) {
           return res.status(404).json({
             message: 'No business registered yet'
-          })
+          });
         }
         return res.status(200).json({
           businesses,
           error: false
-        })
+        });
       });
   }
   /**
