@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 
 process.env.NODE_ENV = 'test';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIxNjk5NzQsImV4cCI6MTUyMjE4MDc3NH0.SrT47kw-YV3sVXYQhhXEnkSyITULDpeGeeZCAejHDUA'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIyMTM4MDYsImV4cCI6MTUyMjI0OTgwNn0.1VoncNl5gRtoXx5zHo3MZZ9ev41Pi3f-CD9AY8Qw5OU'
 const invalidToken = `{token}l`;
 const noWriteAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxsZW4iLCJlbWFpbCI6Im1pa2VvZEBtYS55YSIsImlhdCI6MTUyMTU3OTYwNSwiZXhwIjoxNTIxNjE1NjA1fQ.AuYLQU_PdcDMvIfrDDcjH8DJI1MkLuCR74UXzu4BEQI'; // eslint-disable-line no-max-len
 
@@ -19,23 +19,8 @@ describe(('Tests'), () => {
       .then(() => done());
   });
 
-  // describe('before hook', () => {
-  //   before((done) => {
-  //     chai.request(app)
-  //       .post('/api/v1/auth/login')
-  //       .send({
-  //         username: 'moses',
-  //         password: 'israel'
-  //       })
-  //       .end((err, res) => {
-  //         token = res.body.token;
-  //         invalidToken = `${token}je`;
-  //         done();
-  //       });
-  //   });
-
   describe('Register business', () => {
-    it('should return 404 if category is not available', (done) => {
+    it('should return 400 if category any field is missing', (done) => {
       chai.request(app)
         .post('/api/v1/businesses')
         .set('x-access-token', token)
@@ -44,10 +29,10 @@ describe(('Tests'), () => {
           email: 'odin@fine.net',
           address: '12 payne avenue',
           location: 'lagos',
-          category: '30'
+          category: null
         })
         .end((res) => {
-          expect(res).to.have.status(404);
+          expect(res).to.have.status(400);
           done();
         });
     });
@@ -60,8 +45,8 @@ describe(('Tests'), () => {
           name: 'thor',
           email: 'odin@fine.net',
           address: '12 payne avenue',
-          location: 'lagos',
-          category: '5-finance'
+          location: 'ondo',
+          category: 'finance'
         })
         .end((err, res) => {
           expect(res.status).to.equal(201);
@@ -78,7 +63,7 @@ describe(('Tests'), () => {
           email: 'thoin@fine.net',
           address: '12 payne avenue',
           location: 'lagos',
-          category: '5-finance'
+          category: 'finance'
         })
         .end((err, res) => {
           expect(res.status).to.equal(201);
@@ -94,7 +79,7 @@ describe(('Tests'), () => {
           email: 'odinfy@fine.net',
           address: '12 payne avenue',
           location: 'lagos',
-          category: '8-others'
+          category: 'others'
         })
         .end((err, res) => {
           expect(res.status).to.equal(201);
@@ -111,27 +96,10 @@ describe(('Tests'), () => {
           email: 'crack@fine.net',
           address: '12 payne avenue',
           location: 'lagos',
-          category: '8-others'
+          category: 'health'
         })
         .end((res) => {
           expect(res.status).to.equal(409);
-          done();
-        });
-    });
-
-    it('should return 400 if category pattern is incorrect', (done) => {
-      chai.request(app)
-        .post('/api/v1/businesses')
-        .set('x-access-token', token)
-        .send({
-          name: 'thoroso',
-          email: 'cracksdie@fine.net',
-          address: '12 payne avenue',
-          location: 'lagos',
-          category: 'others'
-        })
-        .end((res) => {
-          expect(res.status).to.equal(400);
           done();
         });
     });
@@ -144,7 +112,7 @@ describe(('Tests'), () => {
           email: 'crack@fine.net',
           address: '12 payne avenue',
           location: 'lagos',
-          category: '5-finance'
+          category: 'fashion'
         })
         .end((err, res) => {
           expect(res.status).to.equal(403);
@@ -164,6 +132,15 @@ describe(('Tests'), () => {
     });
 
     it('should return a status of 200', (done) => {
+      chai.request(app)
+        .get('/api/v1/businesses')
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          done();
+        });
+    });
+
+    it('should return a status of 404 if no business is registered yet', (done) => {
       chai.request(app)
         .get('/api/v1/businesses')
         .end((err, res) => {
@@ -221,7 +198,7 @@ describe(('Tests'), () => {
     it('should return a 404 if no business with provided category is found', (done) => {
       chai.request(app)
         .get('/api/v1/businesses')
-        .query({ category: 'sports' })
+        .query({ category: 'religion' })
         .end((res) => {
           expect(res).to.have.status(404);
           done();
