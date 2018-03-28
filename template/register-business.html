@@ -54,8 +54,8 @@
                     </div>
                     <div class="input-field col s12 m6 l4 offset-l1">
                       <i class="material-icons prefix">arrow_drop_down_circle</i>
-                      <select required id="category">
-                        <option value="">choose category</option>
+                      <select class="validate" required>
+                        <option value="" disabled selected>choose category</option>
                         <option value="1">1-health</option>
                         <option value="2">2-science</option>
                         <option value="3">3-medicine</option>
@@ -85,15 +85,6 @@
                         <i class="material-icons prefix">mode_edit</i>
                         <textarea id="icon_prefix2 services" class="materialize-textarea" required></textarea>
                         <label id="label-color" for="icon_prefix2">Services we render</label>
-                    </div>
-                    <div class="file-field input-field col s12 m6 l4 offset-l1">
-                      <div class="btn">
-                        <span>File</span>
-                        <input type="file">
-                        </div>
-                        <div class="file-path-wrapper">
-                          <input class="file-path validate" type="text">
-                        </div>
                     </div>
                 </div>
                 <div id="button-style">

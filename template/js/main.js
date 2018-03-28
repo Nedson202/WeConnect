@@ -2,7 +2,6 @@ $('.button-collapse').sideNav({
     closeOnClick: true,
     draggable: true,
 });
-$(".dropdown-button").dropdown();
 $('.parallax').parallax();
 $('.modal').modal();
 $('#textarea1').trigger('autoresize');

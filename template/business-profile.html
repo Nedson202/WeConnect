@@ -40,28 +40,14 @@
 
 
     <div class="row">
-        <div class="col s12 offset-m2 m7 offset-l3 l7">
-            <div class="card">
-                <div class="card-content">
-                    <span class="card-title"><strong>Business profile for: Landaf</strong></span>
-                    <div class="black-text">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col s12 offset-m2 m7 offset-l3 l7">
+      <div class="col s12 offset-m2 m7 offset-l3 l7">
             <div id="basic-details"  class="section scrollspy">
                 <div class="card">
                     <div id="basic-details" class="section scrollspy">
                         <div class="card-content">
-                            <span class="card-title"><strong>Basic details</strong></span>
+                            <span class="card-title"><strong>Leah's place</strong></span>
                             <div class="black-text">
                                 <div class="divider"></div>
-                                <div class="section">
-                                    <h6><strong>Name</strong></h6>
-                                    <p>Anagespor petroleum Inc</p>
-                                </div>
                                 <div class="divider"></div>
                                 <div class="section">
                                     <h6><strong>Email</strong></h6>
@@ -98,68 +84,73 @@
             <ul class="section table-of-contents" id="scrollspy-text">
                 <li><a href="#basic-details">Basic details</a></li>
                 <li><a href="#services">Services</a></li>
-                <li><a href="#post-reviews">Post reviews</a></li>
                 <li><a href="#reviews">Reviews</a></li>
             </ul>
         </div>
 
-        <div class="col s12 offset-m2 m7 offset-l3 l7">
-            <div id="post-reviews" class="section scrollspy">
-                <h5 style="color: #e65100;">Post a review</h5>
-                <div class="card-panel">
-                    <div class="row">
-                        <div>
-                            <form method="post" action="/business/:id/reviews">
-                                <div class="row">
-                                    <div class="input-field">
-                                        <i class="material-icons prefix">account_circle</i>
-                                        <textarea id="textarea1" class="materialize-textarea"></textarea>
-                                        <label id="label-color" for="textarea1">Review</label>
-                                    </div>
-                                    <button class="btn submit-btn waves-effect waves-light orange darken-4" type="submit" name="action">
-                                        <i class="material-icons right">send</i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+       <div class="col s12 offset-m2 m7 offset-l3 l7">
+         <button data-target="modal1" class="btn submit-btn waves-effect waves-light orange darken-4 modal-trigger">Add a review</button>
+         <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h5>Post a review</h5>
+          <form method="post" action="api/v1">
+              <div class="row">
+                  <div class="input-field col l10">
+                      <i class="material-icons prefix">account_circle</i>
+                      <input id=" name" type="text" class="validate" required>
+                      <label for="icon-prefix name" id="label-color">Review</label>
+                  </div>
+              </div>
+          </form>
         </div>
+        <div class="modal-footer">
+          <button class="btn submit-review waves-effect waves-light orange darken-4" type="submit" name="action">
+              <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div>
+       </div>
 
         <div class="col s12 offset-m2 m7 offset-l3 l7">
             <div id="reviews" class="section scrollspy">
                 <h5 style="color: #e65100;">Reviews</h5>
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">username</strong></span>
-                        <div class="divider"></div>
-                        <div class="black-text" style="margin-top:20px; margin-left:45px;">
-                            Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada. Aliquam eu nunc. Praesent nec nisl a purus blandit viverra. Pellentesque posuere. Vestibulum
-                            ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; elit erat euismod orci, ac placerat dolor lectus quis orci.
+                    <!-- <div class="card">
+                        <div class="card-content">
+                            <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">Michael</strong></span>
+                            <div class="divider"></div>
+                            <div class="black-text" style="margin-top:20px; margin-left:45px;">
+                                Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada. Aliquam eu nunc. Praesent nec nisl a purus blandit viverra. Pellentesque posuere. Vestibulum
+                                ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; elit erat euismod orci, ac placerat dolor lectus quis orci.
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">username</strong></span>
-                        <div class="divider"></div>
-                        <div class="black-text" style="margin-top:20px; margin-left:45px;">
-                            Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada. Aliquam eu nunc. Praesent nec nisl a purus blandit viverra. Pellentesque posuere. Vestibulum
-                            ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; elit erat euismod orci, ac placerat dolor lectus quis orci.
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">Michael</strong></span>
+                            <div class="divider"></div>
+                            <div class="black-text" style="margin-top:20px; margin-left:45px;">
+                                Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada. Aliquam eu nunc. Praesent nec nisl a purus blandit viverra. Pellentesque posuere. Vestibulum
+                                ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; elit erat euismod orci, ac placerat dolor lectus quis orci.
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">Michael</strong></span>
+                            <div class="divider"></div>
+                            <div class="black-text" style="margin-top:20px; margin-left:45px;">
+                                Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada.
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">Michael</strong></span>
+                            <div class="divider"></div>
+                            <div class="black-text" style="margin-top:20px; margin-left:45px;">
+                                Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada.
                         </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title"><i class="material-icons">account_circle</i><strong style="margin-left:20px;">username</strong></span>
-                        <div class="divider"></div>
-                        <div class="black-text" style="margin-top:20px; margin-left:45px;">
-                            Quisque libero metus, condimentum nec, tempor a, commodo mollis, magna. Fusce pharetra convallis urna. Ut non enim eleifend felis pretium feugiat. Maecenas malesuada. Aliquam eu nunc. Praesent nec nisl a purus blandit viverra. Pellentesque posuere. Vestibulum
-                            ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; elit erat euismod orci, ac placerat dolor lectus quis orci.
-                        </div>
-                    </div>
-                </div>
+                  </div>
             </div>
         </div>
     </div>

@@ -4,14 +4,15 @@ body {
     flex-direction: column;
 }
 
-.nav-wrapper {
-  margin-left: 80px;
-  margin-right: 80px;
+@media only screen and (min-width: 773px) {
+  .nav-wrapper {
+    margin-left: 80px;
+    margin-right: 80px;
+  }
 }
 
 main {
     flex: 1 0 auto;
-    background: rgba(84, 106, 124, 0.3);
 }
 
 .nav-wrapper ul .hover-effect:hover {
@@ -141,8 +142,8 @@ main {
   padding-left:36px;
 }
 
-.align3 {
-  padding-left:20px;
+.bizcard {
+  padding-left: 20px;
 }
 
 .icon-medium {
@@ -165,4 +166,39 @@ main {
 #scrollspy-text li a {
   color: #e65100;
   font-weight: 600;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.card-title {
+  text-align: center;
+}
+
+.card-content ul li {
+  float: left;
+  padding-right: 20px;
+  font-size: 1.5em;
+}
+
+#bizcard-color li a {
+  color: #e65100;
+}
+
+.card-content ul {
+  padding-left: 35%;
+  padding-bottom: 8px;
+}
+
+hr {
+  margin-top: 20px;
+}
+
+.modal {
+  border-radius: 10px;
+}
+
+.modal-content form {
+  padding-top: 20px;
 }
