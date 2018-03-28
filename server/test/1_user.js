@@ -13,8 +13,6 @@ before((done) => {
     .then(() => done());
 });
 
-const availableBusinessId = 2;
-
 describe('User signup authenticator', () => {
   it('should return status 201 on successful signup', (done) => {
     chai.request(app)

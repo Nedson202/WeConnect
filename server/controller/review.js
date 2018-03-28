@@ -6,7 +6,6 @@ const Reviews = models.Review;
 const Businesses = models.Business;
 /**
   *
-  *Review class to handle review posting and getting all reviews for a business
   *@class
   *
 */
@@ -23,7 +22,7 @@ class businessReviews {
 
     checkAuth(req, res);
 
-    Businesses.findById(businessId)
+    return Businesses.findById(businessId)
       .then((business) => {
         if (business === null) {
           return errorMessage(res);
@@ -50,7 +49,7 @@ class businessReviews {
   static getReview(req, res) {
     const { businessId } = req.params;
 
-    Businesses.findById(businessId)
+    return Businesses.findById(businessId)
       .then((business) => {
         if (business === null) {
           return errorMessage(res);

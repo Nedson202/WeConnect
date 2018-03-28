@@ -32,11 +32,6 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Business.associate = (models) => {
-    Business.belongsTo(models.Category, {
-      foreignKey: 'categoryId',
-      onDelete: 'cascade',
-      hooks: true
-    });
     Business.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'cascade',

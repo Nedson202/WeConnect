@@ -68,7 +68,10 @@ class Auth {
             username,
             email: user.email
           },
-          config.secretkey
+          config.secretkey,
+          {
+            expiresIn: '10h'
+          }
         );
 
         return res.status(200).json({

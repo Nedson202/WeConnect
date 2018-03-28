@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "6"
+  - "stable"
 notifications:
   email: false
 
@@ -8,16 +8,19 @@ cache:
   directories:
     - node_modules
 
+services:
+  - postgresql
+
+env:
+  - NODE_ENV=test DB_USERNAME=askit DB_PASSWORD=password
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
-  - npm i nyc --save-dev
+  - npm i nyc dotenv --save
+  - psql -c 'create database weconnect_api_test;' -U postgres
+  - psql -c "CREATE USER askit WITH PASSWORD 'password';" -U postgres
 
 script:
-  - npm run test server/test/
+  - npm test
 
 after_success:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   - npm run coverage
   - npm run coveralls

@@ -1,14 +1,12 @@
 /**
-  *Represents user input validation
   *@class
 */
 class validator {
   /**
-    *- handles data coming from the user
+    *@param {any} req - resquest value
     *@param {any} res - response value
     *@param {any} next - next value
     *@return {status} validator
-    *@memberof validator
   */
   static userSignup(req, res, next) {
     req.check('username', 'Username is required').notEmpty();
@@ -25,7 +23,6 @@ class validator {
     *@param {any} res - response value
     *@param {any} next
     *@return {status} validator
-    *@memberof validator
   */
   static userLogin(req, res, next) {
     req.check('username', 'Username is required').notEmpty();
@@ -40,7 +37,6 @@ class validator {
     *@param {any} res - response value
     *@param {any} next - next value
     *@return {status} validator
-    *@memberof validateBusiness
   */
   static registerBusiness(req, res, next) {
     req.check('name', 'name is required').notEmpty();
@@ -59,7 +55,6 @@ class validator {
     *@param {any} res - response value
     *@param {any} next - next value
     *@return {status} validator
-    *@memberof validator
   */
   static reviews(req, res, next) {
     req.check('message', 'message is required').isLength({ min: 1 });
