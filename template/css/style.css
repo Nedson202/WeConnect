@@ -139,7 +139,7 @@ main {
 }
 
 .bizcard {
-  padding-left: 20px;
+  padding-left: 25px;
 }
 
 .icon-medium {
@@ -178,12 +178,16 @@ main {
   font-size: 1.5em;
 }
 
+.card-content i {
+  font-size: 20px;
+}
+
 #bizcard-color li a {
   color: #e65100;
 }
 
 .card-content ul {
-  padding-left: 35%;
+  padding-left: 30%;
   padding-bottom: 8px;
 }
 
@@ -197,4 +201,8 @@ hr {
 
 .modal-content form {
   padding-top: 20px;
+}
+
+.next-page {
+  padding-left: 13%;
 }
