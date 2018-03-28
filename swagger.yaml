@@ -90,16 +90,6 @@ paths:
       - "Business"
       summary: "Register a business"
       description: "**Register your Businesses with this endpoint, duplicate registration is not allowed**
-      **NOTE: For the category field**
-      ***LIST of available categories are as follows***
-      * **1-health,**
-      * **2-science,**
-      * **3-medicine,**
-      * **4-sport**
-      * **5-finance,**
-      * **6-tech**
-      * **7-food,**
-      * **8-others**
       **To register a business, you have to be a registered user so that
       you can get a token to use during business registration
       If your token no longer works, get a new one by login in.**"
@@ -179,15 +169,6 @@ paths:
       summary: "Filter businesses by category"
       description: "**Filter all businesses by category, if no business with your specified category is available,
       you'll be notified.**
-      ***LIST of available categories you can search for are as follows***
-      * **1-health,**
-      * **2-science,**
-      * **3-medicine,**
-      * **4-sport**
-      * **5-finance,**
-      * **6-tech**
-      * **7-food,**
-      * **8-others**
       ***ONE cool thing is that you don't have to complete your query***
       **For instance fin should give you all businesses with finance
       as category**"
