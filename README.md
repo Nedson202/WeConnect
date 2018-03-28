@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Nedson202/WeConnect.svg?branch=server)](https://travis-ci.org/Nedson202/WeConnect)
+[![Build Status](https://travis-ci.org/Nedson202/WeConnect.svg?branch=setup-travis-challenge3)](https://travis-ci.org/Nedson202/WeConnect)
 [![Coverage Status](https://coveralls.io/repos/github/Nedson202/WeConnect/badge.svg?branch=api-documentation)](https://coveralls.io/github/Nedson202/WeConnect?branch=api-documentation)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6808b37fda49d6be7e63/maintainability)](https://codeclimate.com/github/Nedson202/WeConnect/maintainability)
 
@@ -9,10 +9,11 @@ WeConnect provides a platform that brings businesses and individuals together. T
 1. [Tech stack used](https://github.com/Nedson202/WeConnect#tech-stack-used)
 2. [Getting started](https://github.com/Nedson202/WeConnect#getting-started)
 3. [API endpoints](https://github.com/Nedson202/WeConnect#api-endpoints)
-2. [License](https://github.com/Nedson202/WeConnect#license)
+4. [JWT ](https://github.com/Nedson202/WeConnect#jwt)
+5. [License](https://github.com/Nedson202/WeConnect#license)
 
 ## Tech stack used
-Weconnect currently uses [MaterializeCss](https://materializecss.com) for its template coupled with NodeJs/ExpressJs, Postgresql and Sequelize on the back-end. 
+Weconnect currently uses [MaterializeCss](https://materializecss.com) for its template coupled with NodeJs/ExpressJs, Postgresql and Sequelize on the back-end and JWT(jsonwebtoken) for route protection.
 The template is currently hosted on github using gh-pages and the API documentation on heroku. See links below
 * [View the template live](https://nedson202.github.io/WeConnect/template/index.html)
 * [Api documentation](https://weconnect-api-service.herokuapp.com/api-docs)
@@ -43,20 +44,30 @@ To get this project up and running on your local machine is pretty easy. Follow 
     
 * **Run the tests**
 
-      npm test server/test
+      npm test
       
 * **Open postman**
 
       GET http://localhost:4000
       
+## JWT 
+
+JWT is used to secure routes only authenticated should have access to. During login, some user data (payload) is signed which returns a generated token to the user.
+This token can then be provided as header during business registration, business update, business deletion and to post reviews. Below are the endpoints that require a token as header.
+
+      POST localhost:4000/api/v1/businesses                           [Register a business] 
+      PUT  localhost:4000/api/v1/businesses/:businessId               [Update a business by its id]        
+    DELETE localhost:4000/api/v1/businesses/:businessId               [Delete a business by its id]
+      POST localhost:4000/api/v1/businesses/:businessId/reviews       [Post a review for a business]
+      
 ## API endpoints
-      POST localhost:4000/api/v1/auth/signup      [User signup]
-      POST localhost:4000/api/v1/auth/login       [User login
-      POST localhost:4000/api/v1/businesses       [Register a business]
-      GET  localhost:4000/api/v1/businesses       [Get all business]
-      GET  localhost:4000/api/v1/businesses/:businessId       [Get a business by its id]
-      PUT  localhost:4000/api/v1/businesses/:businessId       [Update a business by its id]        
-    DELETE localhost:4000/api/v1/businesses/:businessId       [Delete a business by its id]
+      POST localhost:4000/api/v1/auth/signup                          [User signup]
+      POST localhost:4000/api/v1/auth/login                           [User login
+      POST localhost:4000/api/v1/businesses                           [Register a business]
+      GET  localhost:4000/api/v1/businesses                           [Get all business]
+      GET  localhost:4000/api/v1/businesses/:businessId               [Get a business by its id]
+      PUT  localhost:4000/api/v1/businesses/:businessId               [Update a business by its id]        
+    DELETE localhost:4000/api/v1/businesses/:businessId               [Delete a business by its id]
       GET  localhost:4000/api/v1/businesses?location=location         [Get a business by location]
       GET  localhost:4000/api/v1/businesses?category=category         [Get a business by category]
       POST localhost:4000/api/v1/businesses/:businessId/reviews       [Post a review for a business]
