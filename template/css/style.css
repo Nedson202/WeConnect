@@ -36,6 +36,10 @@ main {
 .explore-btn {
   position: relative;
   bottom: 200px;
+  display: block;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .explore-btn i {
@@ -132,14 +136,6 @@ main {
 #action-color {
     font-weight: 500;
     color: #e65100;
-}
-
-.align1 {
-  padding-left:34px;
-}
-
-.align2 {
-  padding-left:36px;
 }
 
 .bizcard {
