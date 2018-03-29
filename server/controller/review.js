@@ -20,8 +20,6 @@ class businessReviews {
   static postReview(req, res) {
     const [message, businessId] = [req.body.message, req.params.businessId];
 
-    checkAuth(req, res);
-
     return Businesses.findById(businessId)
       .then((business) => {
         if (business === null) {
@@ -29,15 +27,19 @@ class businessReviews {
         }
 
         Reviews.create({
-          reviewer: checkAuth(req, res).username,
+          reviewer: req.decoded.username,
           message,
           businessId
         })
-          .then(() => res.status(201).json({
+          .then((review) => res.status(201).json({
             message: 'Review posted successfully',
-            error: false
-          }));
-      });
+            error: false,
+            review
+          }))
+      }).catch(error => res.status(500).json({
+        message: error.message,
+        error: true
+      }));
   }
   /**
     *
@@ -73,7 +75,10 @@ class businessReviews {
               error: false
             });
           });
-      });
+      }).catch(error => res.status(500).json({
+        message: error.message,
+        error: true
+      }));
   }
 }
 
