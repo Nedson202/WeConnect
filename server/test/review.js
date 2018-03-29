@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 process.env.NODE_ENV = 'test';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjE3MDUxODN9.ttpWh2Ju4h9pBURJQQHfc2bqii5-py7zS2VSIOugeSU'; // eslint-disable-line no-max-len
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIyOTc5NjcsImV4cCI6MTUyMjMzMzk2N30.UjgIqVQ67Pn4N3ZIeYpiQE--028EBc79a0NlofFriqg'; // eslint-disable-line no-max-len
 const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxsZW4iLCJlbWFpbCI6Im1pa2VvZEBtYS55YSIsImlhdCI6MTUyMTU3OTYwNSwiZXhwIjoxNTIxNjE1NjA1fQ.AuYLQU_PdcDMvIfrDDcjH8DJI1MkLuCR74UXzu4BEQI'; // eslint-disable-line no-max-len
 const availableBusinessId = 2;
 
@@ -77,6 +77,16 @@ describe('Review posting', () => {
         done();
       });
   });
+
+  it('should return status of 500 for invalid businessId', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses/11111111132222222222222224333333')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        done();
+      });
+  });
 });
 
 describe('Get reviews', () => {
@@ -104,6 +114,16 @@ describe('Get reviews', () => {
       .get(`/api/v1/businesses/${businessId}/reviews/`)
       .end((res) => {
         expect(res.status).to.equal(404);
+        done();
+      });
+  });
+
+  it('should return status of 500 for invalid businessId', (done) => {
+    chai.request(app)
+      .get('/api/v1/businesses/11111111132222222222222224333333')
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        expect(res.body.error).to.equal(true);
         done();
       });
   });
