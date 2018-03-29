@@ -1,0 +1,204 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+@media only screen and (min-width: 773px) {
+  .nav-wrapper {
+    margin-left: 80px;
+    margin-right: 80px;
+  }
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.nav-wrapper ul .hover-effect:hover {
+    background-color: #e65100;
+}
+
+.nav-wrapper ul li.active {
+    background-color: #e65100;
+}
+
+.parallax-text {
+  position: relative;
+  top: 150px;
+  color: #ffffff;
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  font-family: 'Krona One', sans-serif;
+}
+
+.explore-btn {
+  position: relative;
+  bottom: 200px;
+  display: block;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.explore-btn i {
+  font-weight: 500;
+}
+
+.promo {
+  display: block;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.promo i {
+  display: block;
+  color: #e65100;
+  font-size: 7rem;
+}
+.brand-logo{
+  font-family: 'Libre Baskerville', serif;
+}
+
+.promo-caption {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.login-form {
+  margin-top: 100px;
+}
+
+.signup-form {
+  margin-top: 80px;
+}
+
+@media only screen and (min-width: 773px) {
+  .login-form {
+    margin-top: 120px;
+  }
+}
+
+.form-style {
+  background-color: white;
+  opacity: 0.6;
+}
+
+.form-style div .input-field {
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.container .row {
+  margin-top: 50px;
+}
+
+@media only screen and (min-width: 773px) {
+  .signup-form {
+    margin-top: 100px;
+  }
+}
+
+@media only screen and (max-width: 773px) {
+  .parallax-text {
+    position: relative;
+    top: 80px;
+    font-size: 30px;
+  }
+}
+
+#input-text-style {
+    color: black;
+    font-weight: 600;
+}
+
+#label-color {
+    font-weight: 700;
+    color: black;
+}
+
+#business-card {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.custom-card-title {
+    text-align: center;
+}
+
+#button-style {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+#action-color {
+    font-weight: 500;
+    color: #e65100;
+}
+
+.bizcard {
+  padding-left: 25px;
+}
+
+.icon-medium {
+  font-size: 40px;
+  padding-top: 10px;
+}
+
+.register-form {
+  margin-top: 20px;
+}
+
+.searchbar {
+  width: 20%;
+}
+
+.file-field .btn {
+  background-color: #e65100;
+}
+
+#scrollspy-text li a {
+  color: #e65100;
+  font-weight: 600;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.card-title {
+  text-align: center;
+}
+
+.card-content ul li {
+  float: left;
+  padding-right: 20px;
+  font-size: 1.5em;
+}
+
+.card-content i {
+  font-size: 20px;
+}
+
+#bizcard-color li a {
+  color: #e65100;
+}
+
+.card-content ul {
+  padding-left: 30%;
+  padding-bottom: 8px;
+}
+
+hr {
+  margin-top: 20px;
+}
+
+.modal {
+  border-radius: 10px;
+}
+
+.modal-content form {
+  padding-top: 20px;
+}
