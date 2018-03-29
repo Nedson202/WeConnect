@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/config';
 
-const checkAuth = (req, res) => {
+const checkAuth = (req, res, next) => {
   const token = req.body.token || req.headers['x-access-token'];
 
   if (!token) {
@@ -21,10 +21,12 @@ const checkAuth = (req, res) => {
       });
     }
 
-    return decoded;
+    req.decoded = decoded;
+    next();
+
   });
 
-  return decodeToken;
+  // return decodeToken;
 };
 
 export default checkAuth;
