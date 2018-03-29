@@ -26,6 +26,13 @@ class businessReviews {
           return errorMessage(res);
         }
 
+        if (business.userId === req.decoded.userId) {
+          return res.status(403).json({
+            message: 'Owner of a business can not post a review',
+            error: true
+          });
+        }
+
         Reviews.create({
           reviewer: req.decoded.username,
           message,
