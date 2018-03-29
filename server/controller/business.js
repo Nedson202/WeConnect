@@ -26,20 +26,18 @@ class BusinessMethods {
       category
     } = req.body;
 
-    checkAuth(req, res);
-
     return Businesses.create({
       name: name.toLowerCase(),
       email: email.toLowerCase(),
       address: address.toLowerCase(),
       location: location.toLowerCase(),
       category: category.toLowerCase(),
-      userId: checkAuth(req, res).userId
+      userId: req.decoded.userId
     })
       .then(business => res.status(201).json({
         message: 'Business registration successful',
         error: false,
-        businessId: business.id
+        business
       }))
       .catch(error => res.status(409).json({
         message: error.errors[0].message,
@@ -86,7 +84,11 @@ class BusinessMethods {
           business,
           error: 'false'
         });
-      });
+      })
+      .catch(error => res.status(500).json({
+        message: error.message,
+        error: true
+      }));
   }
   /**
     *
@@ -107,7 +109,8 @@ class BusinessMethods {
         })
           .then(() => res.status(200).json({
             message: 'Business updated successfully',
-            error: 'false'
+            error: false,
+            business
           }));
       });
   }

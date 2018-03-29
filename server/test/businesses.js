@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 
 process.env.NODE_ENV = 'test';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIyMTM4MDYsImV4cCI6MTUyMjI0OTgwNn0.1VoncNl5gRtoXx5zHo3MZZ9ev41Pi3f-CD9AY8Qw5OU'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIyOTc5NjcsImV4cCI6MTUyMjMzMzk2N30.UjgIqVQ67Pn4N3ZIeYpiQE--028EBc79a0NlofFriqg'
 const invalidToken = `{token}l`;
 const noWriteAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxsZW4iLCJlbWFpbCI6Im1pa2VvZEBtYS55YSIsImlhdCI6MTUyMTU3OTYwNSwiZXhwIjoxNTIxNjE1NjA1fQ.AuYLQU_PdcDMvIfrDDcjH8DJI1MkLuCR74UXzu4BEQI'; // eslint-disable-line no-max-len
 
@@ -189,6 +189,15 @@ describe(('Tests'), () => {
         .get(`/api/v1/businesses/${businessId}`)
         .end((err, res) => {
           expect(res.status).to.equal(200);
+          done();
+        });
+    });
+
+    it('should return status of 500 for invalid businessId', (done) => {
+      chai.request(app)
+        .get(`/api/v1/businesses/11111111132222222222222224333333`)
+        .end((err, res) => {
+          expect(res.status).to.equal(500);
           done();
         });
     });

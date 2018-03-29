@@ -32,9 +32,10 @@ class Auth {
         return res.status(201).json({
           message: 'Signup successful',
           error: false,
+          user
         });
       }).catch(error => res.status(409).json({
-        message: error.errors[0].message,
+        message: error.message,
         error: true
       }));
   }
@@ -79,6 +80,36 @@ class Auth {
           tokenMessage: 'Generated token expires in 10 hours time',
           error: false,
           token
+        });
+      });
+  }
+  /**
+      *
+      *@param {any} req - request value
+      *@param {any} res - response value
+      *@return {json} response object goten
+      *@memberof Auth
+    */
+  static getAllUser(req, res) {
+    return Users
+      .findAll()
+      .then((users) => {
+        if (users.length === 0) {
+          return res.status(404).json({
+            message: 'No user registered yet'
+          });
+        }
+
+        if (req.decoded.username !== 'admin' && req.decoded.email !== 'admin@aladmin.com') {
+          return res.status(403).json({
+            message: 'Forbidden, you do not have access to view all users',
+            error: true
+          });
+        }
+
+        return res.status(200).json({
+          users,
+          error: false
         });
       });
   }
