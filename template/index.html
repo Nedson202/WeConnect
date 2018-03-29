@@ -19,13 +19,46 @@
                 <a href="#!" class="brand-logo">WeConnect</a>
                 <a href="#!" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
-                    <li style="width: 550px; padding-right:80px;">
+                    <li>
                       <form class="col s12" method="get" action="/businesses">
-                        <div class="input-field col s12 m6 offset-m3 l4 offset-l4">
+                        <div class="row">
+                          <div class="input-field col l4">
+                            <select>
+                              <option value="" disabled selected>Location</option>
+                              <option id="change" value="1">Lagos</option>
+                              <option value="2">Port harcourt</option>
+                              <option value="3">Ondo</option>
+                              <option value="4">Las vegas</option>
+                              <option value="5">Lao</option>
+                              <option value="6">Westchester</option>
+                              <option value="7">Abuja</option>
+                              <option value="8">Ikoyi</option>
+                            </select>
+                          </div>
+                          <div class="input-field col l4">
+                            <select class="validate" required>
+                              <option value="" disabled selected>Category</option>
+                              <option value="1">health</option>
+                              <option value="2">science</option>
+                              <option value="3">medicine</option>
+                              <option value="4">fashion</option>
+                              <option value="5">finance</option>
+                              <option value="6">tech</option>
+                              <option value="7">food</option>
+                              <option value="8">others</option>
+                            </select>
+                          </div>
+                          <div class="col l2">
+                          <button class="btn waves-effect
+                       waves-light orange darken-4" type="submit" name="action">Search
+                      </button>
+                      </div>
+                        </div>
+                        <!-- <div class="input-field col s12 m6 offset-m3 l4 offset-l4">
                           <i class="material-icons prefix">search</i>
                           <input id="icon-prefix search" type="text" required>
                           <label  id="label-color" for="icon-prefix name">Filter by location or category</label>
-                        </div>
+                        </div> -->
                       </form>
                     </li>
                     <li class="hover-effect"><a href="login.html">Login</a></li>
