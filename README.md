@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Nedson202/WeConnect.svg?branch=setup-travis-challenge3)](https://travis-ci.org/Nedson202/WeConnect)
+[![Build Status](https://travis-ci.org/Nedson202/WeConnect.svg?branch=develop)](https://travis-ci.org/Nedson202/WeConnect)
 [![Coverage Status](https://coveralls.io/repos/github/Nedson202/WeConnect/badge.svg?branch=api-documentation)](https://coveralls.io/github/Nedson202/WeConnect?branch=api-documentation)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6808b37fda49d6be7e63/maintainability)](https://codeclimate.com/github/Nedson202/WeConnect/maintainability)
 
