@@ -36,8 +36,8 @@ app.listen(port, () => {
 });
 
 // setup a default catch-all route for undef-route
-app.get('*', (req, res) => res.status(405).json({
-  message: 'Welcome to the WeConnect api, this route is unavailable',
+app.get('*', (req, res) => res.status(200).json({
+  message: 'Welcome to the WeConnect api',
   error: true
 }));
 
