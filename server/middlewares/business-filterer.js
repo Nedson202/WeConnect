@@ -26,15 +26,10 @@ class sorter {
         where: {
           $or: [
             {
-              location: {
-                ilike: `%${location}%`
-              }
+              location
             },
             {
-              category: {
-                ilike: `%${category}%`
-              }
-            }
+              category
           ]
         }
       })
