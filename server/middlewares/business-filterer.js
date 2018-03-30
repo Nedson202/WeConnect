@@ -1,5 +1,4 @@
 import models from '../models/index';
-import checkAuth from '../middlewares/check-auth';
 import errorMessage from '../middlewares/error-message';
 
 const Businesses = models.Business;
@@ -61,9 +60,9 @@ class sorter {
     *@return {json} response object gotten
   */
   static checkBusiness(req, res, next) {
-    const businessId = req.params.businessId;
+    const { businessId } = req.params;
 
-    let { id, userId } = req.body;
+    const { id, userId } = req.body;
 
     return Businesses.findOne({
       where: {
@@ -82,7 +81,7 @@ class sorter {
           });
         }
 
-        if(id || userId) {
+        if (id || userId) {
           return res.status(400).json({
             message: 'UserId and business id can not be updated',
             error: true
