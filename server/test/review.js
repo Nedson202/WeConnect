@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 process.env.NODE_ENV = 'test';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIyOTc5NjcsImV4cCI6MTUyMjMzMzk2N30.UjgIqVQ67Pn4N3ZIeYpiQE--028EBc79a0NlofFriqg'; // eslint-disable-line no-max-len
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjI0MjU0ODgsImV4cCI6MTUyMjQ2MTQ4OH0.-awkLcbxRdMNOi_mjdKU6_PYNtag2EzM4g06D-tlSFM'; // eslint-disable-line no-max-len
 const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxsZW4iLCJlbWFpbCI6Im1pa2VvZEBtYS55YSIsImlhdCI6MTUyMTU3OTYwNSwiZXhwIjoxNTIxNjE1NjA1fQ.AuYLQU_PdcDMvIfrDDcjH8DJI1MkLuCR74UXzu4BEQI'; // eslint-disable-line no-max-len
 const availableBusinessId = 2;
 
@@ -35,6 +35,20 @@ describe('Review posting', () => {
       })
       .end((err, res) => {
         expect(res.status).to.equal(201);
+        done();
+      });
+  });
+
+  it('should return forbidden if reviewer is the business owner', (done) => {
+    chai.request(app)
+      .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
+      .set('x-access-token', token)
+      .send({
+        message: 'Business is great'
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
+        res.body.message.should.eql('Owner of a business can not post a review')
         done();
       });
   });

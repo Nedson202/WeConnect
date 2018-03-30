@@ -7,11 +7,11 @@ const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no
 chai.use(chaiHttp);
 
 describe('Api test', () => {
-  it('should return status 405 as default for unavailable routes', (done) => {
+  it('should return welcome message', (done) => {
     chai.request(app)
-      .get('/')
+      .get('/api/v1')
       .end((res) => {
-        expect(res).to.have.status(405);
+        res.body.message.should.eql('Welcome to the WeConnect api');
         done();
       });
   });

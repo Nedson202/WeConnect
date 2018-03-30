@@ -3,13 +3,14 @@ import chai from 'chai';
 import app from '../../index';
 import models from '../models/index';
 
+process.env.NODE_ENV = 'test';
+
 const [should, expect, businesses] = [chai.should(), chai.expect, models.Business]; // eslint-disable-line no-unused-vars
 
 chai.use(chaiHttp);
 
-process.env.NODE_ENV = 'test';
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjIyOTc5NjcsImV4cCI6MTUyMjMzMzk2N30.UjgIqVQ67Pn4N3ZIeYpiQE--028EBc79a0NlofFriqg'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjI0MjU0ODgsImV4cCI6MTUyMjQ2MTQ4OH0.-awkLcbxRdMNOi_mjdKU6_PYNtag2EzM4g06D-tlSFM'
 const invalidToken = `{token}l`;
 const noWriteAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxsZW4iLCJlbWFpbCI6Im1pa2VvZEBtYS55YSIsImlhdCI6MTUyMTU3OTYwNSwiZXhwIjoxNTIxNjE1NjA1fQ.AuYLQU_PdcDMvIfrDDcjH8DJI1MkLuCR74UXzu4BEQI'; // eslint-disable-line no-max-len
 
@@ -17,6 +18,17 @@ describe(('Tests'), () => {
   before((done) => {
     businesses.sync({ force: true })
       .then(() => done());
+  });
+
+  describe('Display all business', () => {
+    it('should return a status of 404 if no business is registered yet', (done) => {
+      chai.request(app)
+        .get('/api/v1/businesses')
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+    });
   });
 
   describe('Register business', () => {
@@ -195,7 +207,7 @@ describe(('Tests'), () => {
 
     it('should return status of 500 for invalid businessId', (done) => {
       chai.request(app)
-        .get(`/api/v1/businesses/11111111132222222222222224333333`)
+        .get('/api/v1/businesses/11111111132222222222222224333333')
         .end((err, res) => {
           expect(res.status).to.equal(500);
           done();
@@ -248,6 +260,21 @@ describe(('Tests'), () => {
         });
     });
 
+    it('should return 400 if user tries to update businessId or userId', (done) => {
+      const businessId = 1;
+      chai.request(app)
+        .put(`/api/v1/businesses/${businessId}`)
+        .set('x-access-token', token)
+        .send({
+          id: 10
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          res.body.message.should.eql('UserId and business id can not be updated');
+          done();
+        });
+    });
+
     it('should return a 403 if user has no write access to business', (done) => {
       const businessId = 1;
       chai.request(app)
@@ -291,30 +318,11 @@ describe(('Tests'), () => {
         });
     });
 
-    it('should return a 403 if user has no write access to business', (done) => {
-      const businessId = 1;
-      chai.request(app)
-        .delete(`/api/v1/businesses/${businessId}`)
-        .set('x-access-token', noWriteAccess)
-        .send({
-          name: 'Hi tech',
-          address: '42 close limo concl'
-        })
-        .end((res) => {
-          expect(res).to.have.status(403);
-          done();
-        });
-    });
-
     it('should return a 403 if token is not valid', (done) => {
       const businessId = 1;
       chai.request(app)
         .delete(`/api/v1/businesses/${businessId}`)
         .set('x-access-token', invalidToken)
-        .send({
-          name: 'Hi tech',
-          address: '42 close limo concl'
-        })
         .end((res) => {
           expect(res).to.have.status(403);
           done();
@@ -326,12 +334,19 @@ describe(('Tests'), () => {
       chai.request(app)
         .delete(`/api/v1/businesses/${businessId}`)
         .set('x-access-token', token)
-        .send({
-          name: 'Hi tech',
-          address: '42 close limo concl'
-        })
         .end((err, res) => {
           expect(res.status).to.equal(200);
+          done();
+        });
+    });
+
+    it('should return 500 if businessId is invalid', (done) => {
+      const businessId = '1afdf';
+      chai.request(app)
+        .delete(`/api/v1/businesses/${businessId}`)
+        .set('x-access-token', token)
+        .end((err, res) => {
+          expect(res.status).to.equal(500);
           done();
         });
     });

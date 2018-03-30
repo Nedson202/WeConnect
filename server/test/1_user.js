@@ -3,6 +3,11 @@ import chai from 'chai';
 import app from '../../index';
 import models from '../models/index';
 
+process.env.NODE_ENV = 'test';
+
+const noReadAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjI0MjU0ODgsImV4cCI6MTUyMjQ2MTQ4OH0.-awkLcbxRdMNOi_mjdKU6_PYNtag2EzM4g06D-tlSFM'
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxhZG1pbiIsImVtYWlsIjoiYWRtaW5AYWxhZG1pbi5jb20iLCJpYXQiOjE1MjI0MjQ0NjgsImV4cCI6MTUyMjQ2MDQ2OH0.FoEmC2OTNYvl-jshWzQcCeGbaUVp__uYjUuaAjVqlqU';
+
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
 chai.use(chaiHttp);
@@ -24,9 +29,26 @@ describe('User signup authenticator', () => {
       })
       .end((err, res) => {
         expect(res.status).to.equal(201);
+        res.body.message.should.eql('Signup successful');
         done();
       });
   });
+
+  it('should return status 201 on successful signup', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        username: 'alan',
+        email: 'alan@width.com',
+        password: 'israel'
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        res.body.message.should.eql('Signup successful');
+        done();
+      });
+  });
+
   it('should return status 409/conflict if user already exists', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
@@ -90,6 +112,60 @@ describe('User Login authenticator', () => {
       })
       .end((err, res) => {
         expect(res.body).to.have.property('token');
+        res.body.message.should.eql('login successful');
+        done();
+      });
+  });
+});
+
+describe('User administrator test', () => {
+  it('should return status 403 if token is absent', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/users')
+      .end((res) => {
+        expect(res.status).to.equal(403);
+        done();
+      });
+  });
+
+  it('should return message if not admin', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/users')
+      .set('x-access-token', noReadAccess)
+      .end((res) => {
+        expect(res.status).to.equal(403);
+        done();
+      });
+  });
+
+  it('should return object if successful', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/users')
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        done();
+      });
+  });
+
+  it('should return 200 and message if delete is successful', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/admin/users/2`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        res.body.message.should.eql('User deleted successfully');
+        done();
+      });
+  });
+
+  it('should return 404 and message if user is not registered', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/admin/users/50`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        res.body.message.should.eql('User not found');
         done();
       });
   });
