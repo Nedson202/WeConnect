@@ -82,7 +82,7 @@ class BusinessMethods {
 
         return res.status(200).json({
           business,
-          error: 'false'
+          error: false
         });
       })
       .catch(error => res.status(500).json({
@@ -99,7 +99,8 @@ class BusinessMethods {
     *@memberof BusinessMethods
   */
   static updateBusiness(req, res) {
-    return Businesses.findById(req.params.businessId)
+    const businessId = parseInt(req.params.businessId, 10);
+    return Businesses.findById(businessId)
       .then((business) => {
         business.update({
           name: req.body.name || business.name,
