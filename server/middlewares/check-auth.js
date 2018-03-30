@@ -12,7 +12,7 @@ const checkAuth = (req, res, next) => {
     });
   }
 
-  const decodeToken = jwt.verify(token, config.secretkey, (err, decoded) => {
+  jwt.verify(token, config.secretkey, (err, decoded) => {
     if (err) {
       return res.status(403).json({
         message: 'Token is invalid',
@@ -23,7 +23,6 @@ const checkAuth = (req, res, next) => {
 
     req.decoded = decoded;
     next();
-
   });
 
   // return decodeToken;
