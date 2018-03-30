@@ -1,9 +1,7 @@
 import models from '../models/index';
 import errorMessage from '../middlewares/error-message';
-import checkAuth from '../middlewares/check-auth';
 
 const Businesses = models.Business;
-const Categories = models.Category;
 /**
 
  *@class

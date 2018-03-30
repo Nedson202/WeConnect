@@ -17,9 +17,10 @@ class Auth {
       *@memberof Auth
     */
   static createUser(req, res) {
-    let { username, email, password } = req.body;
+    const { username, email } = req.body;
+    let { password } = req.body;
 
-    if(typeof(password) === 'number') {
+    if (typeof (password) === 'number') {
       password = password.toString();
     }
 
@@ -53,7 +54,7 @@ class Auth {
             username: user.username,
             email: user.email
           },
-          token: token
+          token
         });
       }).catch(error => res.status(409).json({
         message: error.message,
@@ -69,9 +70,10 @@ class Auth {
       *@memberof Auth
     */
   static logUser(req, res) {
-    let { username, password } = req.body;
+    const { username } = req.body;
+    let { password } = req.body;
 
-    if(typeof(password) === 'number') {
+    if (typeof (password) === 'number') {
       password = password.toString();
     }
 

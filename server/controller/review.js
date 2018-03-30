@@ -1,6 +1,5 @@
 import models from '../models/index';
 import errorMessage from '../middlewares/error-message';
-import checkAuth from '../middlewares/check-auth';
 
 const Reviews = models.Review;
 const Businesses = models.Business;
@@ -38,11 +37,11 @@ class businessReviews {
           message,
           businessId
         })
-          .then((review) => res.status(201).json({
+          .then(review => res.status(201).json({
             message: 'Review posted successfully',
             error: false,
             review
-          }))
+          }));
       }).catch(error => res.status(500).json({
         message: error.message,
         error: true
