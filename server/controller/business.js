@@ -1,9 +1,7 @@
 import models from '../models/index';
 import errorMessage from '../middlewares/error-message';
-import checkAuth from '../middlewares/check-auth';
 
 const Businesses = models.Business;
-const Categories = models.Category;
 /**
 
  *@class
@@ -82,11 +80,12 @@ class BusinessMethods {
 
         return res.status(200).json({
           business,
-          error: 'false'
+          error: false
         });
       })
       .catch(error => res.status(500).json({
         message: error.message,
+        help: 'No space, only an integer is allowed',
         error: true
       }));
   }
@@ -98,7 +97,8 @@ class BusinessMethods {
     *@memberof BusinessMethods
   */
   static updateBusiness(req, res) {
-    return Businesses.findById(req.params.businessId)
+    const businessId = parseInt(req.params.businessId, 10);
+    return Businesses.findById(businessId)
       .then((business) => {
         business.update({
           name: req.body.name || business.name,

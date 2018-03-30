@@ -1,6 +1,5 @@
 import models from '../models/index';
 import errorMessage from '../middlewares/error-message';
-import checkAuth from '../middlewares/check-auth';
 
 const Reviews = models.Review;
 const Businesses = models.Business;
@@ -26,16 +25,23 @@ class businessReviews {
           return errorMessage(res);
         }
 
+        if (business.userId === req.decoded.userId) {
+          return res.status(403).json({
+            message: 'Owner of a business can not post a review',
+            error: true
+          });
+        }
+
         Reviews.create({
           reviewer: req.decoded.username,
           message,
           businessId
         })
-          .then((review) => res.status(201).json({
+          .then(review => res.status(201).json({
             message: 'Review posted successfully',
             error: false,
             review
-          }))
+          }));
       }).catch(error => res.status(500).json({
         message: error.message,
         error: true

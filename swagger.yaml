@@ -24,6 +24,59 @@ tags:
 schemes:
 - "https"
 paths:
+  /admin/users:
+    get:
+      tags:
+      - "User"
+      summary: "Admin"
+      description: "**Admin access only.**"
+      operationId: "addUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        name: "x-access-token"
+        description: "Enter your access token"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "Login successful"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorised, incorrect details"
+  /admin/users/{userId}:
+    delete:
+      tags:
+      - "User"
+      summary: "Delete a user by ID"
+      description: "**This endpoint is accessible to an admin only**"
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        name: "x-access-token"
+        description: "Enter your access token"
+        type: "string"
+        required: true
+      - name: "userId"
+        in: "path"
+        description: "ID of the user that needs to be deleted"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "User deleted successfully"
+          schema:
+            $ref: "#/definitions/successMessage"
+        403:
+          description: "No access for modification"
+        404:
+          description: "User not found"
   /auth/signup:
     post:
       tags:
@@ -34,9 +87,7 @@ paths:
       operationId: "addUser"
       consumes:
       - "application/json"
-
       produces:
-
       - "application/json"
       parameters:
       - in: "body"
@@ -231,7 +282,7 @@ paths:
         in: "path"
         description: "ID of the business that needs to be updated"
         required: true
-        type: "integer"
+        type: "string"
       - in: "body"
         name: "body"
         description: "business object to update business with"

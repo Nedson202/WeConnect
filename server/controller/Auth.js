@@ -17,7 +17,12 @@ class Auth {
       *@memberof Auth
     */
   static createUser(req, res) {
-    const { username, email, password } = req.body;
+    const { username, email } = req.body;
+    let { password } = req.body;
+
+    if (typeof (password) === 'number') {
+      password = password.toString();
+    }
 
     Users.create({
       username: username.toLowerCase(),
@@ -29,10 +34,27 @@ class Auth {
         user.update({
           password: passwordHash
         });
+
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            username,
+            email: user.email
+          },
+          config.secretkey,
+          {
+            expiresIn: '10h'
+          }
+        );
+
         return res.status(201).json({
           message: 'Signup successful',
           error: false,
-          user
+          user: {
+            username: user.username,
+            email: user.email
+          },
+          token
         });
       }).catch(error => res.status(409).json({
         message: error.message,
@@ -49,6 +71,11 @@ class Auth {
     */
   static logUser(req, res) {
     const { username } = req.body;
+    let { password } = req.body;
+
+    if (typeof (password) === 'number') {
+      password = password.toString();
+    }
 
     Users.findOne({
       where: {
@@ -56,7 +83,7 @@ class Auth {
       }
     })
       .then((user) => {
-        if (!(user && bcrypt.compareSync((req.body.password).toLowerCase(), user.password))) {
+        if (!(user && bcrypt.compareSync((password).toLowerCase(), user.password))) {
           return res.status(401).json({
             message: 'Unathorised, check your username or password',
             error: true
@@ -100,7 +127,7 @@ class Auth {
           });
         }
 
-        if (req.decoded.username !== 'admin' && req.decoded.email !== 'admin@aladmin.com') {
+        if (req.decoded.username !== 'aladmin' && req.decoded.email !== 'admin@aladmin.com') {
           return res.status(403).json({
             message: 'Forbidden, you do not have access to view all users',
             error: true
@@ -112,6 +139,25 @@ class Auth {
           error: false
         });
       });
+  }
+  /**
+      *
+      *@param {any} req - request value
+      *@param {any} res - response value
+      *@return {json} response object goten
+      *@memberof Auth
+    */
+  static deleteUser(req, res) {
+    const userId = parseInt(req.params.userId, 10);
+    return Users.destroy({
+      where: {
+        id: userId
+      }
+    })
+      .then(() => res.status(200).json({
+        message: 'User deleted successfully',
+        error: false
+      }));
   }
 }
 
