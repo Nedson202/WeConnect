@@ -51,6 +51,12 @@ class validator {
     req.check('location', 'location is required e.g lagos').notEmpty().trim();
     req.check('category', 'category is required e.g mobile').notEmpty().trim();
 
+    req.sanitizeBody('name');
+    req.sanitizeBody('email');
+    req.sanitizeBody('address');
+    req.sanitizeBody('location');
+    req.sanitizeBody('category');
+
     next();
   }
   /**
@@ -61,7 +67,9 @@ class validator {
     *@return {status} validator
   */
   static reviews(req, res, next) {
+    req.checkParams('businessId', 'Id in params can only be an integer').isInt().trim();
     req.check('message', 'message is required').notEmpty().trim();
+    req.sanitizeBody('message').trim();
 
     next();
   }
