@@ -5,8 +5,8 @@ import models from '../models/index';
 
 process.env.NODE_ENV = 'test';
 
-const noReadAccess = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoibW9zZXMiLCJlbWFpbCI6ImhlaWdodEB3aWR0aC5jb20iLCJpYXQiOjE1MjI0MjU0ODgsImV4cCI6MTUyMjQ2MTQ4OH0.-awkLcbxRdMNOi_mjdKU6_PYNtag2EzM4g06D-tlSFM'
-const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWxhZG1pbiIsImVtYWlsIjoiYWRtaW5AYWxhZG1pbi5jb20iLCJpYXQiOjE1MjI0MjQ0NjgsImV4cCI6MTUyMjQ2MDQ2OH0.FoEmC2OTNYvl-jshWzQcCeGbaUVp__uYjUuaAjVqlqU';
+const { noReadAccess } = process.env;
+const { adminToken } = process.env;
 
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
@@ -150,7 +150,7 @@ describe('User administrator test', () => {
 
   it('should return 200 and message if delete is successful', (done) => {
     chai.request(app)
-      .delete(`/api/v1/admin/users/2`)
+      .delete('/api/v1/admin/users/2')
       .set('x-access-token', adminToken)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -161,7 +161,7 @@ describe('User administrator test', () => {
 
   it('should return 404 and message if user is not registered', (done) => {
     chai.request(app)
-      .delete(`/api/v1/admin/users/50`)
+      .delete('/api/v1/admin/users/50')
       .set('x-access-token', adminToken)
       .end((err, res) => {
         expect(res.status).to.equal(404);
