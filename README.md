@@ -21,7 +21,9 @@ The template is currently hosted on github using gh-pages and the API documentat
 
 ## Getting started
 To get this project up and running on your local machine is pretty easy. Follow the steps below to complete the setup
-* **Install NodeJs:** Skip this step if you already have **NodeJS** installed. For those who don't, you can head to [Download | Node.js](https://nodejs.org/en/download/)
+* **Install postman:** Postman is an app used to test api endpoints. Get its chrome extension [here](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
+    
+* **Install NodeJs:** Skip this step if you already have **NodeJS and postgresql** installed. For those who don't, you can head to [Node.js](https://nodejs.org/en/download/) and [Postgresql](https://www.postgresql.org/download/) to download.
 
 * **Clone this repo:** Open **cmd(command prompt)** for windows users, **terminal** for linux and mac users. 
     
@@ -36,8 +38,10 @@ To get this project up and running on your local machine is pretty easy. Follow 
       cd WeConnect
       npm install
     
-* **Install postman:** Postman is an app used to test api endpoints. Get its chrome extension [here](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
-    
+* **Additional setup:** This app uses the dotenv npm package to load environment variables. For more info visit [dotenv](https://www.npmjs.com/package/dotenv). Rename **.env_example** file to **.env**, open the .env file and rename your username and password according to your postgresql setup, you can also rename your jwt secret. Run on your terminal/cmd
+
+      createdb weconnect_api
+
 * **Start the app:** Enter the following in your terminal/cmd to start the app server
     
       npm start
