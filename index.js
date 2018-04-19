@@ -4,10 +4,15 @@ import expressValidator from 'express-validator';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import logger from 'morgan';
+import webpack from 'webpack';
+import webpackMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import path from 'path';
 import userRoute from './server/routes/user';
 import businessRoute from './server/routes/business';
 import reviewRoute from './server/routes/reviews';
 import models from './server/models/index';
+import webpackConfig from './webpack.config';
 
 const swaggerDocument = yaml.load(`${process.cwd()}/swagger.yaml`);
 
@@ -22,6 +27,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // validator to check user input
 app.use(expressValidator());
 
+const compiler = webpack(webpackConfig);
+
+app.use(webpackMiddleware(compiler, {
+  noInfo: true,
+  publicPath: webpackConfig.output.publicPath,
+  hot: true
+}));
+
+app.use(webpackHotMiddleware(compiler));
 
 app.use(logger('dev'));
 
@@ -31,13 +45,14 @@ reviewRoute(app);
 // route for api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use(express.static(path.resolve(__dirname, './dist')));
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, './dist/index.html'));
+});
+
 app.listen(port, () => {
   models.sequelize.sync();
 });
-
-// setup a default catch-all route for undef-route
-app.get('*', (req, res) => res.status(200).json({
-  message: 'Welcome to the WeConnect api'
-}));
 
 export default app;
