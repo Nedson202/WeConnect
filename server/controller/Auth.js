@@ -2,6 +2,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import models from '../models/index';
 import config from '../config/config';
+import signupValidator from '../validation/signup';
+import loginValidator from '../validation/login';
 
 const Users = models.User;
 /**
@@ -19,6 +21,14 @@ class Auth {
   static createUser(req, res) {
     const { username, email } = req.body;
     let { password } = req.body;
+
+    const conflict = {};
+
+    const { errors, isValid } = signupValidator(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
 
     if (typeof (password) === 'number') {
       password = password.toString();
@@ -41,10 +51,7 @@ class Auth {
             username,
             email: user.email
           },
-          config.secretkey,
-          {
-            expiresIn: '10h'
-          }
+          config.secretkey
         );
 
         return res.status(201).json({
@@ -56,10 +63,16 @@ class Auth {
           },
           token
         });
-      }).catch(error => res.status(409).json({
-        message: error.message,
-        error: true
-      }));
+      }).catch((error) => {
+        if (error.errors[0].path === 'username') {
+          conflict.username = 'Username is already taken';
+        }
+        if (error.errors[0].path === 'email') {
+          conflict.email = 'Email is already taken';
+        }
+
+        return res.status(409).json(conflict);
+      });
   }
 
   /**
@@ -72,6 +85,12 @@ class Auth {
   static logUser(req, res) {
     const { username } = req.body;
     let { password } = req.body;
+
+    const { errors, isValid } = loginValidator(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
 
     if (typeof (password) === 'number') {
       password = password.toString();
@@ -96,10 +115,7 @@ class Auth {
             username,
             email: user.email
           },
-          config.secretkey,
-          {
-            expiresIn: '10h'
-          }
+          config.secretkey
         );
 
         return res.status(200).json({
@@ -127,17 +143,14 @@ class Auth {
           });
         }
 
-        if (req.decoded.username !== 'aladmin' && req.decoded.email !== 'admin@aladmin.com') {
+        if (req.decoded.username !== 'admin' && req.decoded.email !== 'admin@aladmin.com') {
           return res.status(403).json({
             message: 'Forbidden, you do not have access to view all users',
             error: true
           });
         }
 
-        return res.status(200).json({
-          users,
-          error: false
-        });
+        return res.status(200).json({ users });
       });
   }
   /**
@@ -149,6 +162,13 @@ class Auth {
     */
   static deleteUser(req, res) {
     const userId = parseInt(req.params.userId, 10);
+
+    if (req.decoded.userId === userId) {
+      return res.status(400).json({
+        message: 'you cannot delete yourself'
+      });
+    }
+
     return Users.destroy({
       where: {
         id: userId
