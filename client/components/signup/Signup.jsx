@@ -11,7 +11,7 @@ class Signup extends Component {
   componentDidMount() {
     let login = document.getElementById('signup')
     login.classList.add('hide')
-    document.title = 'Signup here'
+    document.title = 'WeConnect Sign-up'
   }
 
   render() {
