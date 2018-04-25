@@ -36,11 +36,23 @@ module.exports = {
       updatedAt: new Date()
     },
     {
+      category: 'fashion',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      category: 'music',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
       category: 'others',
       createdAt: new Date(),
       updatedAt: new Date()
-    }
+    },
   ], {}),
 
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Categories', [null, {}]) // eslint-disable-line no-unused-vars
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Categories', [
+
+    ], {}) // eslint-disable-line no-unused-vars
 };
