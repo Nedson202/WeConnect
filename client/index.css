@@ -1,3 +1,7 @@
+* {
+  list-style-type: none;
+}
+
 a {
   text-decoration: none;
   color: white;
@@ -5,12 +9,23 @@ a {
 
 main {
   flex: 1;
-  background-image: url("images/stones.jpg");
-  background-size: cover;
+  /* background-image: url("images/stones.jpg"); */
+  background-color: #e65100;
+  padding-bottom: 60px;
+}
+
+div .link {
+  text-decoration: none;
+  color: white;
 }
 
 .container {
   margin-bottom: 30px;
+}
+
+.card {
+  color: white;
+  background-color: #263238;
 }
 
 .card-container {
@@ -70,18 +85,54 @@ main {
   background-color: #263238;
 }
 
+.btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.carousel-indicators li {
+  color: #000000;
+}
+
+@media only screen and (max-width: 849px) {
+  .custom-form-style {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}
+
 @media only screen and (min-width: 850px) {
   .form-inline .form-control {
     width: 350px;
     margin-left: 75px;
   }
 
-  .card-header {
-    display: none;
+  .custom-form-style {
+    margin-left: 15px;
+    margin-right: 15px;
   }
 }
 
-@media only screen and (min-width: 1050px) {
+@media only screen and (min-width: 850px) and (max-width: 1100px) {
+  .form-inline .form-control {
+    width: 250px;
+    margin-left: 80px;
+  }
+}
+
+@media only screen and (min-width: 1101px) {
+  .form-inline .form-control {
+    width: 300px;
+    margin-left:90px;
+  }
+
+  .custom-form-style {
+    margin-left: 300px;
+    margin-right: 300px;
+  }
+}
+
+@media only screen and (min-width: 1250px) {
   .form-inline .form-control {
     width: 450px;
     margin-left: 140px;
@@ -104,7 +155,7 @@ main {
 }
 
 .custom-form-style {
-  margin-top: 90px;
+  margin-top: 60px;
   display: block;
   background-color: #ffffff;
   opacity: 0.6;
@@ -115,8 +166,8 @@ main {
 }
 
 .business-form-style {
-  margin-top: 90px;
-  margin-bottom: 90px;
+  margin-top: 60px;
+  margin-bottom: 60px;
   display: block;
   background-color: #ffffff;
   opacity: 0.8;
@@ -160,6 +211,48 @@ main {
   margin-top: 15px;
 }
 
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 14px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 14px solid #263238;
+  border-bottom: 14px solid #263238;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+#form-spinner {
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid #263238;
+  border-bottom: 6px solid #263238;
+  width: 10px;
+  height: 10px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .custom-form-style .form-group {
   padding-bottom: 10px;
 }
@@ -188,24 +281,15 @@ main {
     margin-top: 70px;
   }
 
-  .business-card img {
-    display: none;
+  .search-result-title {
+    font-size: 20px;
+    font-weight: bold;
   }
-
-  .card-name {
-    display: none;
-  }
-}
-
-.permission-button {
-  margin-top: 10px;
-  margin-bottom: 20px;
 }
 
 .card-header {
   padding-top: 10px;
   padding-bottom: 0;
-  margin-bottom: 20px;
 }
 
 .card-title {
@@ -226,7 +310,7 @@ main {
 }
 
 .business-card {
-  width: 18rem;
+  width: 17rem;
   display: block;
   margin-right: auto;
   margin-left: auto;
@@ -242,6 +326,10 @@ main {
   color: #263238;
 }
 
+.card-icon-style p i {
+  color: #e65100;
+}
+
 .fa-stack-1x {
   color: #e65100;
 }
@@ -250,11 +338,25 @@ main {
   width: 30px;
 }
 
+#permission-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  background-color:  #263238;
+  color: white;
+  border-radius: 5px;
+}
+
+#permission-button:hover {
+  color: #e65100;
+}
+
 #submit-button {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 }
 
 .textcase {
@@ -265,6 +367,75 @@ main {
   margin-top: 15%;
 }
 
+.active-page {
+  border: 3px solid green;
+  color: red;
+}
+
+.page-numbers {
+  margin-bottom: 15px;
+}
+
+.page-numbers .list-inline-item {
+  background-color: #263238;
+  padding: 5px 10px;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.profile-card {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.profile-details {
+  font-weight: bold;
+  font-size: 18px;
+  padding-right: 15px;
+}
+
+.email-style {
+  margin-right: 29px;
+}
+
+.profile-address {
+  margin-right: 5px;
+}
+
+.profile-location {
+  margin-right: 4px;
+}
+
+.card-info li h4 {
+  font-size: 17px;
+}
+
+.address {
+  padding-left: 6px;
+}
+
+.location {
+  padding-left: 3px;
+}
+
+.list-group-item {
+  color: black;
+}
+
+.user-avatar {
+  margin-right: 15px;
+}
+
+.reviewer {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.blockquote-footer, .review-messgae {
+  padding-left: 44px;
+  font-size: 15px;
+}
 
 footer {
   position: fixed;
@@ -281,5 +452,6 @@ footer .container {
 }
 
 footer .container a {
-  float: right;
+  text-decoration: none;
+  color: #ffffff;
 }
