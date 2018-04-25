@@ -48,6 +48,7 @@ class SignupForm extends Component {
     e.preventDefault();
 
     if (this.isValid()) {
+      this.setState({ errors: {}, isLoading: true });
       this.props.userSignupRequest(this.state).then(
         () => {
           this.props.addFlashMessage({
@@ -57,20 +58,20 @@ class SignupForm extends Component {
           this.context.router.history.push('/dashboard');
         },
         (data) => this.setState({ errors: data.response, isLoading: false }),
-        (error) => this.setState({ errors: error, isLoading: false })
+        (error) => this.setState({ errors: error.data.response.data, isLoading: false }),
       )
     }
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors, isLoading } = this.state;
     return (
       <div>
         <form onSubmit={this.onSubmit}>
           <div className="custom-form-style">
             <TextField
               error={errors.username}
-              conflictError={errors.username}
+              conflictError={errors.usernameConflict}
               label="Username"
               onChange={this.onChange}
               value={this.state.username}
@@ -79,7 +80,7 @@ class SignupForm extends Component {
             />
             <TextField
               error={errors.email}
-              conflictError={errors.email}
+              conflictError={errors.emailConflict}
               label="Email address"
               onChange={this.onChange}
               value={this.state.email}
@@ -96,9 +97,10 @@ class SignupForm extends Component {
               field="password"
               placeholder="Password"
             />
-          <button disabled={this.state.isLoading} className="btn btn-outline-success"
-            type="submit" id="submit-button">Sign up</button>
-          <p className="text-center account-block">have an account? <Link to="/login">login</Link></p>
+          <button disabled={isLoading} className="btn btn-outline-success"
+            type="submit" id="submit-button">{isLoading ? (<span>
+            processing <i class="fa fa-spinner fa-spin"></i></span>) : <span>Sign up</span>}</button>
+          <p className="text-center account-block">have an account? <Link to="/login" className="link">login</Link></p>
           </div>
         </form>
       </div>
