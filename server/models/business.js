@@ -11,11 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      required: true,
-      unique: {
-        args: true,
-        msg: 'Email is already taken'
-      }
+      required: true
     },
     address: {
       type: DataTypes.STRING,
@@ -34,7 +30,10 @@ module.exports = (sequelize, DataTypes) => {
   Business.associate = (models) => {
     Business.belongsTo(models.User, {
       foreignKey: 'userId',
-      onDelete: 'cascade',
+      hooks: true
+    });
+    Business.belongsTo(models.Category, {
+      foreignKey: 'categoryId',
       hooks: true
     });
     Business.hasMany(models.Review, {

@@ -9,13 +9,9 @@ class validator {
     *@return {status} validator
   */
   static userSignup(req, res, next) {
-    req.check('username', 'Username is required').notEmpty();
-    req.check('email', 'email is not valid').isEmail().trim();
-    req
-      .check('password', 'minimun password length is 5 chars')
-      .isLength({ min: 5 }).trim();
     req.sanitizeBody('username').trim();
     req.sanitizeBody('email').trim();
+    req.sanitizeBody('password').trim();
 
     next();
   }
@@ -27,11 +23,8 @@ class validator {
     *@return {status} validator
   */
   static userLogin(req, res, next) {
-    req.check('username', 'Username is required').notEmpty().trim();
-    req.check('password', 'minimun password length is 5 chars')
-      .isLength({ min: 5 }).trim();
     req.sanitizeBody('username').trim();
-
+    req.sanitizeBody('password').trim();
 
     next();
   }
@@ -43,19 +36,11 @@ class validator {
     *@return {status} validator
   */
   static registerBusiness(req, res, next) {
-    req.check('name', 'name is required').notEmpty().trim();
-    req.check('email', 'email is not valid, format--yourname@example.com').isEmail().trim();
-    req
-      .check('address', 'address is required')
-      .isLength({ min: 1 }).trim();
-    req.check('location', 'location is required e.g lagos').notEmpty().trim();
-    req.check('category', 'category is required e.g mobile').notEmpty().trim();
-
-    req.sanitizeBody('name');
-    req.sanitizeBody('email');
-    req.sanitizeBody('address');
-    req.sanitizeBody('location');
-    req.sanitizeBody('category');
+    req.sanitizeBody('name').trim();
+    req.sanitizeBody('email').trim();
+    req.sanitizeBody('address').trim();
+    req.sanitizeBody('location').trim();
+    req.sanitizeBody('category').trim();
 
     next();
   }
@@ -68,7 +53,7 @@ class validator {
   */
   static reviews(req, res, next) {
     req.checkParams('businessId', 'Id in params can only be an integer').isInt().trim();
-    req.check('message', 'message is required').notEmpty().trim();
+    req.check('message', 'This field is required').notEmpty();
     req.sanitizeBody('message').trim();
 
     next();

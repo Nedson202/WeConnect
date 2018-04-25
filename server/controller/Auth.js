@@ -65,10 +65,10 @@ class Auth {
         });
       }).catch((error) => {
         if (error.errors[0].path === 'username') {
-          conflict.username = 'Username is already taken';
+          conflict.usernameConflict = error.errors[0].message;
         }
         if (error.errors[0].path === 'email') {
-          conflict.email = 'Email is already taken';
+          conflict.emailConflict = error.errors[0].message;
         }
 
         return res.status(409).json(conflict);

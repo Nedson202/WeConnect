@@ -34,17 +34,18 @@ class sorter {
           ]
         }
       })
-        .then((business) => {
-          if (business.length < 1) {
+        .then((businesses) => {
+          if (businesses.length < 1) {
             return res.status(404).json({
-              message: 'Business not found',
-              error: true
+              error: {
+                message: 'Business not found',
+                error: true
+              }
             });
           }
 
           return res.status(200).json({
-            business,
-            error: false
+            businesses
           });
         });
     }
@@ -74,12 +75,12 @@ class sorter {
           return errorMessage(res);
         }
 
-        if (business.userId !== req.decoded.userId) {
-          return res.status(403).json({
-            message: 'Forbidden, you do not have access to modify this business',
-            error: true
-          });
-        }
+        // if (business.userId !== req.decoded.userId) {
+        //   return res.status(403).json({
+        //     message: 'Forbidden, you do not have access to modify this business',
+        //     error: true
+        //   });
+        // }
 
         if (id || userId) {
           return res.status(400).json({
@@ -119,7 +120,7 @@ class sorter {
           });
         }
 
-        if (req.decoded.username !== 'aladmin' && req.decoded.email !== 'admin@aladmin.com') {
+        if (req.decoded.username !== 'admin' && req.decoded.email !== 'admin@aladmin.com') {
           return res.status(403).json({
             message: 'Forbidden, you do not have access to view all users',
             error: true
