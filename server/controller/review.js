@@ -19,7 +19,7 @@ class businessReviews {
   static postReview(req, res) {
     const [message, businessId] = [req.body.message, req.params.businessId];
 
-    return Businesses.findById(businessId)
+    return Businesses.findById(parseInt(businessId))
       .then((business) => {
         if (business === null) {
           return errorMessage(res);
@@ -28,7 +28,12 @@ class businessReviews {
         if (business.userId === req.decoded.userId) {
           return res.status(403).json({
             message: 'Owner of a business can not post a review',
-            error: true
+          });
+        }
+
+        if (req.decoded.username === 'admin') {
+          return res.status(403).json({
+            message: 'An admin can not post a review',
           });
         }
 
@@ -66,7 +71,10 @@ class businessReviews {
         Reviews.findAll({
           where: {
             businessId
-          }
+          },
+          order: [
+            ['updatedAt', 'DESC']
+          ]
         })
           .then((reviews) => {
             if (reviews.length < 1) {
@@ -85,6 +93,27 @@ class businessReviews {
         message: error.message,
         error: true
       }));
+  }
+  /**
+    *
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@return {status} response object gotten
+    *@memberof businessReviews
+  */
+  static deleteReview(req, res) {
+    const { reviewId } = req.params;
+
+
+    return Reviews.destroy({
+      where: {
+        id: reviewId
+      }
+    }).then(() => {
+      return res.status(200).json({
+        message: 'Review deleted successfully'
+      })
+    })
   }
 }
 
