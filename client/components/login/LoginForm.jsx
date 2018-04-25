@@ -13,7 +13,8 @@ class LoginForm extends Component {
     this.state = {
       username: '',
       password: '',
-      errors: {}
+      errors: {},
+      isLoading: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -47,6 +48,7 @@ class LoginForm extends Component {
     e.preventDefault();
 
     if (this.isValid()) {
+      this.setState({ errors: {}, isLoading: true });
       this.props.userLoginRequest(this.state).then(
         () => {
           this.props.addFlashMessage({
@@ -66,7 +68,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors, isLoading } = this.state;
     return (
       <div>
         <FlashMessagesList />
@@ -91,8 +93,10 @@ class LoginForm extends Component {
               field="password"
               placeholder="Password"
             />
-            <button class="btn btn-outline-success" type="submit" id="submit-button">Login</button>
-            <p className="text-center account-block">don't have an account? <Link to="/signup">signup</Link></p>
+            <button disabled={isLoading} class="btn btn-outline-success"
+              type="submit" id="submit-button">{isLoading ? (<span>
+              processing <i class="fa fa-spinner fa-spin"></i></span>) : <span>Login</span>}</button>
+            <p className="text-center account-block">don't have an account? <Link to="/signup" className="link">signup</Link></p>
           </div>
         </form>
       </div>
