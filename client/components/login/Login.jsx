@@ -9,7 +9,7 @@ import { addFlashMessage } from '../../actions/flashMessages';
 
 class Login extends Component {
   componentDidMount() {
-    document.title = 'Login here'
+    document.title = 'WeConnect Login'
   }
 
   render() {
