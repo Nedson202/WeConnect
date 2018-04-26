@@ -12,6 +12,7 @@ class Navbar extends Component {
   logout(e) {
     e.preventDefault(e);
     this.props.logout();
+    this.context.router.history.push('/login');
   }
 
   render() {
