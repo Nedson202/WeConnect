@@ -25,14 +25,13 @@ class BusinessCategories {
           });
         }
 
-        for (let counter = 0; counter <= categories.length; counter += 1) {
-          if (categories[counter]) {
-            categoryArray.push({
-              id: categories[counter].id,
-              category: categories[counter].category
-            });
-          }
-        }
+        categories.forEach((category) => {
+          categoryArray.push({
+            id: category.id,
+            category: category.category
+          });
+        })
+
         return res.status(200).json({
           categories: categoryArray
         });

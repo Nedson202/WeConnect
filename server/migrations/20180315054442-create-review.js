@@ -7,9 +7,6 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    reviewer: {
-      type: Sequelize.STRING
-    },
     message: {
       type: Sequelize.STRING
     },
@@ -28,6 +25,15 @@ module.exports = {
         model: 'Businesses',
         key: 'id',
         as: 'businessId',
+      },
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId',
       },
     }
   }),

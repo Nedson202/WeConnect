@@ -1,7 +1,5 @@
-
 module.exports = (sequelize, DataTypes) => {
   const Review = sequelize.define('Review', {
-    reviewer: DataTypes.STRING,
     message: DataTypes.STRING
   });
 
@@ -9,7 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     Review.belongsTo(models.Business, {
       foreignKey: 'businessId',
       onDelete: 'CASCADE',
-      hooks: true
+    });
+
+    Review.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+      as: 'reviewer'      
     });
   };
 

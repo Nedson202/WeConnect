@@ -2,11 +2,12 @@ import Businesses from '../controller/business';
 import Categories from '../controller/category';
 import Locations from '../controller/location';
 import validator from '../middlewares/validator';
+import errorHandler from '../middlewares/error-handler';
 import sorter from '../middlewares/business-filterer';
 import checkAuth from '../middlewares/check-auth';
 
 export default (route) => {
-  route.post('/api/v1/businesses', checkAuth, validator.registerBusiness, Businesses.createBusiness);
+  route.post('/api/v1/businesses', checkAuth, validator.registerBusiness, errorHandler, Businesses.createBusiness);
   route.get('/api/v1/businesses', validator.checkQuery, sorter.sortQuery, Businesses.getBusiness);
   route.get('/api/v1/categories', Categories.getCategories);
   route.get('/api/v1/locations', Locations.getLocations);
