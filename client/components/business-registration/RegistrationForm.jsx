@@ -1,12 +1,45 @@
 import React, { Component } from 'react';
-import businessValidator from '../../../server/validation/business';
 import PropTypes from 'prop-types';
 import classcat from 'classcat';
-import { locations } from '../../select-options/location'
-import { categories } from '../../select-options/categories'
-import '../../index.css';
 
+/**
+ * @class RegistrationForm
+ * 
+ * @extends {Component}
+ */
 class RegistrationForm extends Component {
+  /**
+   * @description Creates an instance of RegistrationForm.
+   * 
+   * @param {object} props 
+   * 
+   * @memberof RegistrationForm
+   */
+  constructor(props){
+    super(props);
+
+    this.state = {
+      name: this.props.business? this.props.business.name : '',
+      email: this.props.business ? this.props.business.email : '',
+      address: this.props.business ? this.props.business.address : '',
+      location: this.props.business ? this.props.business.location : '',
+      category: this.props.business ? this.props.business.category : '',
+      description: this.props.business ? this.props.business.description : '',
+      errors: {},
+      isLoading: false
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  /**
+   * @description Fetch business by it's id
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof RegistrationForm
+   */
   componentDidMount() {
     if(!this.props.params) {
       return null
@@ -15,6 +48,15 @@ class RegistrationForm extends Component {
     this.props.fetchBusinessById(this.props.params.id);
   }
 
+  /**
+   * @description Retrieve business fetched
+   * 
+   * @param {any} nextProps
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof RegistrationForm
+   */
   componentWillReceiveProps(nextProps) {
     if(!this.props.params) {
       return null
@@ -27,80 +69,77 @@ class RegistrationForm extends Component {
         address: nextProps.business.address,
         location: nextProps.business.location,
         category: nextProps.business.category,
+        description: nextProps.business.description,
       })
     }
   }
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      name: this.props.business? this.props.business.name : '',
-      email: this.props.business ? this.props.business.email : '',
-      address: this.props.business ? this.props.business.address : '',
-      location: this.props.business ? this.props.business.kocation : '',
-      category: this.props.business ? this.props.business.category : '',
-      errors: {},
-      isLoading: false
-    };
-
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  onChange(e) {
-    if (!!this.state.errors[e.target.name]) {
+  /**
+   * @description Handles input value 
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof RegistrationForm
+   */
+  onChange(event) {
+    if (this.state.errors[event.target.name]) {
       let errors = Object.assign({}, this.state.errors);
-      delete errors[e.target.name];
+      delete errors[event.target.name];
       this.setState({
-        [e.target.name]: e.target.value.toLowerCase(),
+        [event.target.name]: event.target.value.toLowerCase(),
         errors
       });
     }
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [event.target.name]: event.target.value });
   }
 
-  isValid() {
-    const { errors, isValid } = businessValidator(this.state);
-
-    if (!isValid) {
-      this.setState({ errors });
-    }
-
-    return isValid;
-  }
-
-  onSubmit(e) {
+  /**
+   * @description Handles submission of form data
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof RegistrationForm
+   */
+  onSubmit(event) {
     this.setState({ errors: {} });
-    e.preventDefault();
+    event.preventDefault();
 
-    if(this.isValid()) {
-      this.setState({ errors: {}, isLoading: true });
+    this.setState({ errors: {}, isLoading: true });
 
-      if(!this.props.params) {
-        this.props.businessRegistrationRequest(this.state).then(
-          () => {
-            this.context.router.history.push('/dashboard');
-          },
-          (err) => this.setState({ errors: err.response.data, isLoading: false }),
-          (conflict) => this.setState({ errors: conflict, isLoading: false }),
-        )
-      } else {
-        this.props.businessUpdateRequest(this.props.params.id, this.state).then(
-          () => {
-            this.context.router.history.push(`/profile/${this.props.business.id}`);
-          },
-          (conflict) => this.setState({ errors: conflict.response.data, isLoading: false }),
-        )
-      }
+    if(!this.props.params) {
+      this.props.businessRegistrationRequest(this.state).then(
+        () => {
+          this.context.router.history.push('/dashboard');
+        },
+        (err) => this.setState({ errors: err.response.data, isLoading: false }),
+        (conflict) => this.setState({ errors: conflict, isLoading: false })
+      )
+    } else {
+      this.props.businessUpdateRequest(this.props.params.id, this.state).then(
+        () => {
+          this.context.router.history.push(`/profile/${this.props.business.id}`);
+        },
+        (conflict) => this.setState({ errors: conflict.response.data, isLoading: false })
+      )
     }
   }
 
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof RegistrationForm
+   */
   render() {
     const { errors, isLoading } = this.state;
-    // const { categories } = this.props;
+    const { locations, categories } = this.props;
 
-    const categoryOptions = categories.map(({id, category}) =>
+    const categoryOption = categories.map(({id, category}) =>
       <option key={id} value={category}>{category}</option>
     );
 
@@ -108,108 +147,144 @@ class RegistrationForm extends Component {
       <option key={id} value={location}>{location}</option>
     );
 
+    /**
+     * @description Renders the component to the dom
+     *
+     * @returns {object} JSX object
+     *
+     * @memberof RegistrationForm
+     */
     return (
       <div className="container">
-        <div className="business-form-style">
-          <form onSubmit={this.onSubmit}>
-            <div className="row">
-              <div className="col-lg-12">
-                {errors && <span className="help-block">{errors.message1}</span>}
-              </div>
-              <div className="row col-sm-12 col-lg-12">
-                <div className={classcat(["form-group",
+        <form onSubmit={this.onSubmit}>
+          <div className="business-form-style">
+            <div className="col-lg-12">
+              {errors && <span className="help-block">{errors.message1}</span>}
+            </div>
+            <h3 className="text-center form-header">
+              { !this.props.params ? "Register business" : "Update business" }
+            </h3>                        
+            <div className="row col-lg-12">
+              <div className={classcat(["form-group",
                    { "has-error": errors.name },
                      "col-lg-6",
-                 ])}>
-                  <label for="control-label" id="control-label">Business Name</label>
-                  <input
-                    value={this.state.name}
-                    onChange={this.onChange}
-                    type="text"
-                    name="name"
-                    className="form-control"
-                    id="control-label" placeholder="Business name"/>
-                  {errors && <span className="help-block">{errors.name}</span>}
-                  {errors && <span className="help-block">{errors.businessname}</span>}
-                </div>
-                <div className={classcat(["form-group",
+                 ])}
+              >
+                <label  id="control-label">Business Name</label>
+                <input
+                  value={this.state.name}
+                  onChange={this.onChange}
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  id="control-label"
+                  placeholder="Business name"
+                />
+                {errors && <span className="help-block">{errors.name}</span>}
+                {errors && <span className="help-block">{errors.businessname}</span>}
+              </div>
+              <div className={classcat(["form-group",
                    { "has-error": errors.email },
                      "col-lg-6",
-                 ])}>
-                  <label for="control-label" id="control-label">Email address</label>
-                  <input
-                    value={this.state.email}
-                    onChange={this.onChange}
-                    type="email"
-                    name="email" id="icon-prefix email" class="form-control"
-                    id="control-label" aria-describedby="emailHelp" placeholder="Enter email"/>
-                  {errors && <span className="help-block">{errors.email}</span>}
-                </div>
+                 ])}
+              >
+                <label  id="control-label">Email address</label>
+                <input
+                  value={this.state.email}
+                  onChange={this.onChange}
+                  type="email"
+                  name="email"
+                  id="icon-prefix email"
+                  className="form-control"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter email"
+                />
+                {errors && <span className="help-block">{errors.email}</span>}
               </div>
-              <div className="row col-lg-12">
-                <div className={classcat(["form-group",
+            </div>
+            <div className="row col-lg-12">
+              <div className={classcat(["form-group",
                    { "has-error": errors.address },
                      "col-lg-6",
-                 ])}>
-                  <label for="control-label" id="control-label">Address</label>
-                  <input
-                    value={this.state.address}
-                    onChange={this.onChange}
-                    type="text"
-                    name="address"
-                    className="form-control"
-                    id="control-label" placeholder="Address"/>
-                  {errors && <span className="help-block">{errors.address}</span>}
-                </div>
-                <div className={classcat(["form-group",
+                 ])}
+              >
+                <label  id="control-label">Address</label>
+                <input
+                  value={this.state.address}
+                  onChange={this.onChange}
+                  type="text"
+                  name="address"
+                  className="form-control"
+                  id="control-label"
+                  placeholder="Address"
+                />
+                {errors && <span className="help-block">{errors.address}</span>}
+              </div>
+              <div className={classcat(["form-group",
                    { "has-error": errors.location },
                      "col-lg-6",
-                 ])}>
-                  <label for="control-label" id="control-label">Location</label>
-                  <select className="custom-select"
-                    type="select"
-                    name="location"
-                    onChange={this.onChange}
-                    value={this.state.location}>
-                    <option value="" disabled>choose location</option>
-                    {locationOption}
-                  </select>
-                  {errors && <span className="help-block">{errors.location}</span>}
-                </div>
+                 ])}
+              >
+                <label  id="control-label">Location</label>
+                <select
+                  className="custom-select"
+                  type="select"
+                  name="location"
+                  onChange={this.onChange}
+                  value={this.state.location}
+                >
+                  <option value="" disabled>choose location</option>
+                  {locationOption}
+                </select>
+                {errors && <span className="help-block">{errors.location}</span>}
               </div>
-              <div className="row col-lg-12">
-                <div className={classcat(["form-group",
+            </div>
+            <div className="row col-lg-12">
+              <div className={classcat(["form-group",
                    { "has-error": errors.category },
                      "col-lg-6",
-                 ])}>
-                  <label for="control-label" id="control-label">Category</label>
-                  <select className="custom-select"
-                    type="select"
-                    name="category"
-                    onChange={this.onChange}
-                    value={this.state.category}>
-                    <option value="" disabled>choose category</option>
-                    {categoryOptions}
-                  </select>
-                  {errors && <span className="help-block">{errors.category}</span>}
-                </div>
+                 ])}
+              >
+                <label  id="control-label">Category</label>
+                <select
+                  className="custom-select"
+                  type="select"
+                  name="category"
+                  onChange={this.onChange}
+                  value={this.state.category}
+                >
+                  <option value="" disabled>choose category</option>
+                  {categoryOption}
+                </select>
+                {errors && <span className="help-block">{errors.category}</span>}
+              </div>
+              <div className={classcat(["form-group",
+                    { "has-error": errors.description },
+                      "col-lg-6",
+                  ])}
+              >
+                <label  id="control-label">Description</label>
+                <textarea 
+                  value={this.state.description}
+                  onChange={this.onChange}
+                  type="text"
+                  name="description"
+                  className="form-control"
+                  id="control-label"
+                  placeholder="Description"
+                  rows="3" 
+                />
+                {errors && <span className="help-block">{errors.description}</span>}
               </div>
             </div>
             <button type="submit" className="btn btn-outline-success" id="submit-button">
-              {isLoading ? <span>processing <i class="fa fa-spinner fa-spin"></i></span> : <span>Submit</span>}
+              {isLoading ? <span>processing <i className="fa fa-spinner fa-spin" /></span> : <span>Submit</span>}
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     );
   }
-}
-
-RegistrationForm.propTypes = {
-  businessRegistrationRequest: PropTypes.func.isRequired,
-  businessUpdateRequest: PropTypes.func.isRequired,
-  categories: PropTypes.array.isRequired,
-  business: PropTypes.object.isRequired,
 }
 
 RegistrationForm.contextTypes = {
