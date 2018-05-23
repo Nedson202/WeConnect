@@ -1,182 +1,257 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import classcat from 'classcat';
-import Navbar from '../Navbar.jsx';
-import ReviewModal from './ReviewModal.jsx';
-import ReviewList from './ReviewList.jsx';
+import ReviewModal from './ReviewModal';
+import ReviewList from './ReviewList';
 import FlashMessagesList from '../flash/FlashMessagesList';
-import Footer from '../Footer.jsx';
-import { fetchBusinessById } from '../../actions/fetchBusinessByIdAction';
-import { reviewRequest } from '../../actions/postReviewAction';
+import fetchBusinessById from '../../actions/fetchBusinessByIdAction';
+import reviewRequest from '../../actions/postReviewAction';
 import { addFlashMessage } from '../../actions/flashMessages';
-import { deleteBusiness } from '../../actions/deleteBusinessAction';
-import { fetchReviews } from '../../actions/fetchReviewAction';
-import { deleteReview } from '../../actions/deleteReviewAction';
-import '../../index.css';
+import deleteBusiness from '../../actions/deleteBusinessAction';
+import fetchReviews from '../../actions/fetchReviewAction';
+import deleteReview from '../../actions/deleteReviewAction';
+import BusinessImageUpload from '../BusinessImageUpload';
+import '../../index.scss';
+import green from '../../images/default.jpeg';
 
+/**
+ * @class BusinessProfile
+ * 
+ * @extends {Component}
+ */
 class BusinessProfile extends Component {
-  componentDidMount() {
-    const showButtonToOwner = document.getElementById('owner');
-    const showButtonToAdmin = document.getElementById('showButtonToAdmin');
-    document.title = 'Business profile';
-    this.props.fetchBusinessById(this.props.match.params.id).then(
-      () => {
-        if(this.props.user.userId === this.props.business.userId) {
-          showButtonToOwner.classList.remove('hide');
-        }
-
-        if(this.props.user.username == 'admin') {
-          showButtonToAdmin.classList.remove('hide');
-        }
-      }
-    );
-    this.props.fetchReviews(this.props.match.params.id);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      name: nextProps.business.name,
-      email: nextProps.business.email,
-      address: nextProps.business.address,
-      location: nextProps.business.location,
-      category: nextProps.business.category,
-    })
-  }
-
-  constructor(props){
+  /**
+   * @description Creates an instance of BusinessProfile.
+   * 
+   * @param {object} props 
+   * 
+   * @memberof Profile
+   */
+  constructor(props) {
     super(props);
 
     this.state = {};
-    this.onClick = this.onClick.bind(this);
+    this.onBusinessDelete = this.onBusinessDelete.bind(this);
   }
 
-  onClick(e) {
-    e.preventDefault();
-
-    this.props.deleteBusiness(this.props.match.params.id).then(
-      () => {
-        if(this.props.user.username == 'admin') {
-          this.context.router.history.push('/adminpanel');
-        } else {          
-          this.context.router.history.push('/dashboard');
-        }
+  /**
+   * @description Fetch reviews and business
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof BusinessProfile
+   */
+  componentDidMount() {
+    const showButtonToOwner = document.querySelectorAll('#owner');
+    const showButtonToAdmin = document.getElementById('showButtonToAdmin');
+    document.title = 'Business profile';
+    this.props.fetchBusinessById(this.props.match.params.id).then(() => {
+      if (this.props.user.userId === this.props.business.userId) {
+        showButtonToOwner.forEach((button) => {
+          button.classList.remove('hide');
+        })
       }
-    )
+
+      if (this.props.user.username == 'admin') {
+        showButtonToAdmin.classList.remove('hide');
+      }
+    });
+    this.props.fetchReviews(this.props.match.params.id);
   }
 
+  /**
+   * @description Retrieve business fetched
+   * 
+   * @param {any} nextProps
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof BusinessProfile
+   */
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.business) {
+      this.setState({
+        name: nextProps.business.name,
+        email: nextProps.business.email,
+        address: nextProps.business.address,
+        location: nextProps.business.location,
+        category: nextProps.business.category,
+        description: nextProps.business.description,
+        image: nextProps.business.image,
+      });
+    }
+  }
+
+  /**
+   * @description Deletes business from the database
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof BusinessProfile
+   */
+  onBusinessDelete(event) {
+    event.preventDefault();
+
+    this.props.deleteBusiness(this.props.match.params.id).then(() => {
+      if (this.props.user.username == 'admin') {
+        this.context.router.history.push('/adminpanel');
+      } else {
+        this.context.router.history.push('/dashboard');
+      }
+    });
+  }
+
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof BusinessProfile
+   */
   render() {
-    const { reviewRequest, addFlashMessage, reviews, user, business, deleteReview } = this.props;
-    const { params } = this.props.match;
+    const {
+      reviews, business, params, user 
+    } = this.props;
+
+    const { name, address, location, email, description, category, image } = this.state;
 
     const noReviews = (
-      <h3 className="hide">No reviews</h3>
-    )
+      <h3>No reviews yet</h3>
+    );
 
     const deleteButton = (
-      <button className="dropdown-item" id="permission-button" onClick={this.onClick}><i className="fa fa-trash fa-lg"></i> delete profile</button>
-    )
-
+      <button className="btn btn-danger" data-toggle="modal" data-target="#confirmModal">
+        <i className="fa fa-trash fa-lg" /> delete
+      </button>
+    );
+    
     return (
       <div>
-        <Navbar />
-
         <div className="container">
 
-          <div className="row profile-card">
-            <div className="col-sm-12 col-lg-10 offset-lg-1">
-              <div className="card">
-                <div className="card-header">
-                  <h4 className="text-center">Displaying profile for: { !business ? this.state.name : business.name}</h4>
-                </div>
+          <div className="row">
+            <div className="col-sm-12 col-lg-10 offset-lg-1 profile-icon-style">
+              {/* <img className="business-profile-image" src={green} alt="" /> */}
+              <div className="image-button-holder">
+                <img className="business-profile-image" id="business-image" src={!image ? green : image} alt="" />
+                <button 
+                  className="btn image-edit-button hide" 
+                  id="owner" 
+                  data-toggle="modal" 
+                  data-target="#businessImageModal"
+                >
+                  <i className="fa fa-edit fa-lg" />
+                </button>
+                <BusinessImageUpload params={params} />
+              </div>
+              <h4 className="text-center business-name text-capitalize">{ !business ? name : business.name}</h4>
+              <div className="row">
+                <div className="col-sm-12 col-lg-10 offset-lg-1 text-center">
+                  <ul className="list-unstyled list-inline hide" id="owner">
+                    <li className="list-inline-item">
+                      <Link className="btn" id="permission-button" to={`/registerbusiness/${params.id}`}>
+                        <i className="fa fa-edit fa-lg" /> edit
+                      </Link>
+                    </li>
+                    <li className="list-inline-item">
+                      {deleteButton}
+                    </li>
+                  </ul>
 
-                <div className="card-body">
-                  <ul className="list-group card-info">
-                    <li  className="list-group-item">
-                      <h4><span className="profile-details email-style">Email: </span>{ !business ? this.state.email : business.email}</h4>
-                    </li>
-                    <li  className="list-group-item">
-                      <h4><span className="profile-details profile-address">Address: </span>{ !business ? this.state.address : business.address}</h4>
-                    </li>
-                    <li  className="list-group-item">
-                      <h4><span className="profile-details profile-location">Location: </span>{ !business ? this.state.location : business.location}</h4>
-                    </li>
-                    <li  className="list-group-item">
-                      <h4><span className="profile-details">Category: </span>{ !business ? this.state.category : business.category}</h4>
+                  <ul className="list-unstyled list-inline hide" id="showButtonToAdmin">
+                    <li className="list-inline-item">
+                      {deleteButton}
                     </li>
                   </ul>
                 </div>
-              </div>
+              </div>         
+              <p className="mb-0 small font-weight-medium business-category
+                text-uppercase mb-1 text-muted lts-2px"
+              >
+                { !business ? category : business.category }
+              </p>
+              <h4>Description:</h4>
+              <p>{ !business ? description : business.description }</p>       
+              <p><i className="fa fa-envelope" /><span>{ !business ? email : business.email }</span></p>          
+              <p><i className="fa fa-map-marker" /><span>{ !business ? `${address} ${location}` : `${business.address} ${business.location}` }</span></p>          
             </div>
+
           </div>
 
-          <div className="row">
-            <div className="col-sm-12 col-lg-10 offset-lg-1 text-center">
-              <ul className="list-unstyled list-inline hide" id="owner">
-                <li className="list-inline-item">
-                  <Link className="dropdown-item" id="permission-button" to={`/registerbusiness/${params.id}`}><i className="fa fa-edit fa-lg"></i> edit profile</Link>
-                </li>
-                <li className="list-inline-item">
-                  {deleteButton}
-                </li>
-              </ul>
-
-              <ul className="list-unstyled list-inline hide" id="showButtonToAdmin">
-                <li className="list-inline-item">
-                  {deleteButton}
-                </li>
-              </ul>
-            </div>
+          <div className="col-sm-12 col-lg-10 offset-lg-1">
+            <FlashMessagesList />
+            <ReviewModal 
+              reviewRequest={this.props.reviewRequest} 
+              addFlashMessage={this.props.addFlashMessage} 
+              params={this.props.params} 
+            />
           </div>
 
-          <div className="row">
-            <div className="col-sm-12 col-lg-10 offset-lg-1">
-              <FlashMessagesList />
-              <ReviewModal reviewRequest={reviewRequest} addFlashMessage={addFlashMessage} params={params}/>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-sm-12 col-lg-10 offset-lg-1">
-            { reviews.length === 0 ? noReviews : <div className="card">
-              <div className="card-body">
-                <ul className="list-group list-group-flush">
-                  <ReviewList reviews={reviews} deleteReview={deleteReview}params={params}  />
-                </ul>
-              </div>
-            </div> }
-            </div>
+          <div className="col-sm-12 col-lg-10 offset-lg-1">
+            { reviews.length === 0 ? noReviews : (
+              <ReviewList 
+                reviews={reviews} 
+                deleteReview={this.props.deleteReview} 
+                params={params} 
+                user={user}
+              />
+                )}
           </div>
 
         </div>
 
-        <Footer />
+        <div className="modal fade" id="confirmModal" tabIndex="-1" role="dialog" aria-labelledby="confirmModalTitle" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-body">
+                <h4>Delete business profile?</h4>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-outline-success" data-dismiss="modal">No</button>
+                <button type="button" className="btn btn-outline-success" onClick={this.onBusinessDelete} data-dismiss="modal">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 BusinessProfile.propTypes = {
+  fetchBusinessById: PropTypes.func.isRequired,
   reviewRequest: PropTypes.func.isRequired,
   addFlashMessage: PropTypes.func.isRequired,
-  reviews: PropTypes.array.isRequired,
-  params: PropTypes.object.isRequired,
-  deleteReview: PropTypes.func.isRequired
-}
+  deleteReview: PropTypes.func.isRequired,
+  deleteBusiness: PropTypes.func.isRequired,
+  fetchReviews: PropTypes.func.isRequired,
+};
 
-BusinessProfile.contextTypes= {
+BusinessProfile.contextTypes = {
   router: PropTypes.object.isRequired
-}
+};
 
-function mapStateToProps(state) {
+const mapStateToProps = (state, props) => {
+  const { params } = props.match;
   return {
     reviews: state.reviews,
     user: state.auth.user,
-    business: state.businesses[0]
-  }
-}
+    business: state.businesses[0],
+    params
+  };
+};
 
-export default connect(mapStateToProps,
-  { fetchBusinessById, reviewRequest, addFlashMessage,
-  deleteBusiness, fetchReviews, deleteReview } )(BusinessProfile);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchBusinessById,
+  reviewRequest,
+  deleteBusiness,
+  fetchReviews,
+  deleteReview,
+  addFlashMessage,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(BusinessProfile);
