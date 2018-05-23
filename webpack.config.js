@@ -3,11 +3,11 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-  // mode: 'development',
+  mode: 'development',
   devtool: 'eval',
   entry: [
     'webpack-hot-middleware/client',
-    './client/index.js'
+    './client/index.jsx'
   ],
   output: {
     filename: 'bundle.js',
@@ -36,7 +36,7 @@ module.exports = {
         use: ['babel-loader'],
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|jpeg)$/,
         use: [
           {
             loader: 'file-loader',
@@ -45,8 +45,8 @@ module.exports = {
         ]
       },
       {
-        test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        test: /\.scss$/,
+        use: [ 'style-loader', 'css-loader', 'sass-loader' ]
       },
       {
         test: /\.bundle\.js$/,

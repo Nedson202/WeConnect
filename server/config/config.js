@@ -12,7 +12,7 @@ module.exports = {
   test: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: 'weconnect_api_test',
+    database: 'weconnect-test',
     host: '127.0.0.1',
     port: '5432',
     dialect: 'postgres'
@@ -20,5 +20,5 @@ module.exports = {
   production: {
     use_env_variable: 'DATABASE_URL'
   },
-  secretkey: process.env.JWT_SECRET
+  secretkey: process.env.JWT_SECRET,
 };
