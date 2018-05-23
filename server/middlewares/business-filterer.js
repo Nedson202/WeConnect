@@ -19,9 +19,9 @@ class sorter {
     *@return {json} response object gotten
   */
   static sortQuery(req, res, next) {
-    const { location, category } = req.query;
+    const { location, category, name } = req.query;
 
-    if (location || category) {
+    if (location || category || name) {
       return Businesses.findAll({
         where: {
           $or: [
@@ -30,6 +30,9 @@ class sorter {
             },
             {
               category
+            },
+            {
+              name
             }
           ]
         }
@@ -74,13 +77,6 @@ class sorter {
         if (!business) {
           return errorMessage(res);
         }
-
-        // if (business.userId !== req.decoded.userId) {
-        //   return res.status(403).json({
-        //     message: 'Forbidden, you do not have access to modify this business',
-        //     error: true
-        //   });
-        // }
 
         if (id || userId) {
           return res.status(400).json({

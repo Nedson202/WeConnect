@@ -18,7 +18,7 @@ const checkAuth = (req, res, next) => {
   jwt.verify(token, config.secretkey, (err, decoded) => {
     if (err) {
       return res.status(403).json({
-        message: 'Token is invalid',
+        message: 'Token is invalid, login again to continue',
         message1: "Unable to complete your request, you're not logged in.",
         help: 'Login to generate a new one',
         error: true

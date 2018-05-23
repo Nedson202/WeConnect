@@ -9,9 +9,13 @@ class validator {
     *@return {status} validator
   */
   static userSignup(req, res, next) {
+    req.check('username', 'Username is required').notEmpty();
+    req.check('email', 'Email is not valid').isEmail().trim();
+    req
+      .check('password', 'Minimun password length is 5 chars')
+      .isLength({ min: 6 }).trim();
     req.sanitizeBody('username').trim();
     req.sanitizeBody('email').trim();
-    req.sanitizeBody('password').trim();
 
     next();
   }
@@ -23,8 +27,11 @@ class validator {
     *@return {status} validator
   */
   static userLogin(req, res, next) {
+    req.check('username', 'Username is required').notEmpty();
+    req
+      .check('password', 'Minimun password length is 6 chars')
+      .isLength({ min: 6 }).trim();
     req.sanitizeBody('username').trim();
-    req.sanitizeBody('password').trim();
 
     next();
   }
@@ -36,11 +43,21 @@ class validator {
     *@return {status} validator
   */
   static registerBusiness(req, res, next) {
+    req.check('name', 'This is required').notEmpty();
+    req.check('email', 'Email is not valid').isEmail().trim();
+    req.check('address', 'This field is required').notEmpty().trim();
+    req.check('location', 'This field is required').notEmpty().trim();
+    req.check('category', 'This field is required').notEmpty().trim();
+    req
+      .check('description', 'Minimum character length is 30')
+      .isLength({ min: 30 }).trim();
+
     req.sanitizeBody('name').trim();
     req.sanitizeBody('email').trim();
     req.sanitizeBody('address').trim();
     req.sanitizeBody('location').trim();
     req.sanitizeBody('category').trim();
+    req.sanitizeBody('description').trim();
 
     next();
   }

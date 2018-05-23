@@ -1,11 +1,13 @@
 const errorHandler = (req, res, next) => {
   const errors = req.validationErrors();
+  const errorObject = {};
 
   if (errors) {
-    return res.status(400).json({
-      message: errors[0].msg,
-      error: true
-    });
+    errors.map((err) => {
+      errorObject[err.param] = err.msg;
+    })
+
+    return res.status(400).json(errorObject);
   }
 
   next();
