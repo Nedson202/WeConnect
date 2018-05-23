@@ -136,11 +136,6 @@ module.exports = {
       updatedAt: new Date()
     },
     {
-      location: 'Niger',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
       location: 'Ondo',
       createdAt: new Date(),
       updatedAt: new Date()
