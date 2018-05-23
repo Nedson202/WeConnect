@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
-import validateForm from '../../../server/validation/signup';
+import classcat from 'classcat';
 import TextField from '../common/TextField'
-import '../../index.css';
+import  passwordToggler from '../../utils/passwordToggler';
+import '../../index.scss';
 
+/**
+ * @class SignForm
+ * 
+ * @extends {Component}
+ */
 class SignupForm extends Component {
+  /**
+   * @description Creates an instance of SignForm.
+   * 
+   * @param {object} props 
+   * 
+   * @memberof SignForm
+   */
   constructor(props){
     super(props);
 
@@ -21,34 +34,42 @@ class SignupForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onChange(e) {
-    if (!!this.state.errors[e.target.name]) {
+  /**
+   * @description Handle input change and updates state
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof SignForm
+   */
+  onChange(event) {
+    if (this.state.errors[event.target.name]) {
       let errors = Object.assign({}, this.state.errors);
-      delete errors[e.target.name];
+      delete errors[event.target.name];
       this.setState({
-        [e.target.name]: e.target.value,
+        [event.target.name]: event.target.value,
         errors
       });
     }
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [event.target.name]: event.target.value });
   }
 
-  isValid() {
-    const { errors, isValid } = validateForm(this.state);
-
-    if (!isValid) {
-      this.setState({ errors });
-    }
-
-    return isValid;
-  }
-
-  onSubmit(e) {
+  
+  /**
+   * @description Handles form submission to database
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof SignForm
+   */
+  onSubmit(event) {
+    event.preventDefault();
     this.setState({ errors: {} });
-    e.preventDefault();
 
-    if (this.isValid()) {
-      this.setState({ errors: {}, isLoading: true });
+    this.setState({ errors: {}, isLoading: true });
       this.props.userSignupRequest(this.state).then(
         () => {
           this.props.addFlashMessage({
@@ -57,21 +78,29 @@ class SignupForm extends Component {
           })
           this.context.router.history.push('/dashboard');
         },
-        (data) => this.setState({ errors: data.response, isLoading: false }),
-        (error) => this.setState({ errors: error.data.response.data, isLoading: false }),
-      )
-    }
+        (error) => this.setState({ errors: error.response.data, isLoading: false })
+      ) 
   }
 
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof SignForm
+   */
   render() {
     const { errors, isLoading } = this.state;
     return (
       <div>
         <form onSubmit={this.onSubmit}>
-          <div className="custom-form-style">
+          <div className="custom-form-style signup-form-style">
+            <h3 className="text-center form-header">Sign Up</h3>
+            <h4 className="text-center">
+              {errors && <span className="help-block unauthorised-message">{errors.conflict}</span>}
+            </h4>
             <TextField
               error={errors.username}
-              conflictError={errors.usernameConflict}
               label="Username"
               onChange={this.onChange}
               value={this.state.username}
@@ -80,7 +109,6 @@ class SignupForm extends Component {
             />
             <TextField
               error={errors.email}
-              conflictError={errors.emailConflict}
               label="Email address"
               onChange={this.onChange}
               value={this.state.email}
@@ -88,29 +116,49 @@ class SignupForm extends Component {
               field="email"
               placeholder="Email e.g youremail@example.com"
             />
-            <TextField
-              error={errors.password}
-              label="Password"
-              onChange={this.onChange}
-              value={this.state.password}
-              type="password"
-              field="password"
-              placeholder="Password"
-            />
-          <button disabled={isLoading} className="btn btn-outline-success"
-            type="submit" id="submit-button">{isLoading ? (<span>
-            processing <i class="fa fa-spinner fa-spin"></i></span>) : <span>Sign up</span>}</button>
-          <p className="text-center account-block">have an account? <Link to="/login" className="link">login</Link></p>
+            <div className={classcat(["form-group",
+              { "has-error": errors.password },
+                "col-md-6", "offset-md-3", "col-lg-8", "offset-lg-2",
+              ])}
+            >
+              <label 
+                id="control-label"
+              >Password
+              </label>
+              <input
+                value={this.state.password}
+                onChange={this.onChange}
+                type="password"
+                name="password"
+                id="password" 
+                className="form-control" 
+                placeholder="password"
+              />
+              <div className="input-group-btn">
+                <li className="btn btn-default" onClick={passwordToggler()}>
+                  <i className="fa fa-eye" aria-hidden="true" id="add-hide" />
+                  <i className="fa fa-eye-slash hide" aria-hidden="true" id="remove-hide" />
+                </li>
+              </div>
+              {errors && <span className="help-block">{errors.password}</span>}
+            </div>
+            <button
+              disabled={isLoading}
+              className="btn btn-outline-success"
+              type="submit"
+              id="submit-button"
+            >{isLoading ? (
+              <span>
+                processing 
+                <i className="fa fa-spinner fa-spin" />
+              </span>) : <span>Sign up</span>}
+            </button>
+            <p className="text-center account-block">Have an account? &nbsp; <Link to="/login" className="link">Sign In</Link></p>
           </div>
         </form>
       </div>
     );
   }
-}
-
-SignupForm.propTypes = {
-  userSignupRequest: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired
 }
 
 SignupForm.contextTypes = {

@@ -1,26 +1,41 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Navbar from '../Navbar.jsx';
-import Footer from '../Footer.jsx';
-import SignupForm from './SignupForm.jsx';
-import { userSignupRequest } from '../../actions/signupActions';
+import { bindActionCreators } from 'redux';
+import SignupForm from './SignupForm';
+import userSignupRequest from '../../actions/signupActions';
 import { addFlashMessage } from '../../actions/flashMessages';
 
+/**
+ * @class Signup
+ * 
+ * @extends {Component}
+ */
 class Signup extends Component {
+  /**
+   * @description Set page document title
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof Signup
+   */
   componentDidMount() {
-    let login = document.getElementById('signup')
-    login.classList.add('hide')
     document.title = 'WeConnect Sign-up'
   }
-
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof Login
+   */
   render() {
-    const { userSignupRequest, addFlashMessage } = this.props;
     return (
       <div>
-        <Navbar />
-        <SignupForm userSignupRequest={userSignupRequest} addFlashMessage={addFlashMessage}/>
-        <Footer />
+        <SignupForm 
+          userSignupRequest={this.props.userSignupRequest} 
+          addFlashMessage={this.props.addFlashMessage}
+        />
       </div>
     );
   }
@@ -31,4 +46,9 @@ Signup.propTypes = {
   addFlashMessage: PropTypes.func.isRequired
 }
 
-export default connect(null, { userSignupRequest, addFlashMessage })(Signup);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  userSignupRequest,
+  addFlashMessage
+}, dispatch)
+
+export default connect(null, mapDispatchToProps)(Signup);
