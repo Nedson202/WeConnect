@@ -5,16 +5,21 @@ module.exports = {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.STRING,
-      defaultValue: Sequelize.STRING
+      type: Sequelize.INTEGER,
+      defaultValue: Sequelize.INTEGER
     },
     username: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true
     },
     email: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true
     },
     password: {
+      type: Sequelize.STRING
+    },
+    image: { 
       type: Sequelize.STRING
     },
     createdAt: {

@@ -24,23 +24,26 @@ module.exports = (sequelize, DataTypes) => {
     category: {
       type: DataTypes.STRING,
       required: true
+    },
+    description: {
+      type: DataTypes.STRING,
+      required: true
+    },
+    image: {
+      type: DataTypes.STRING,
     }
   });
 
   Business.associate = (models) => {
     Business.belongsTo(models.User, {
       foreignKey: 'userId',
-      hooks: true
+      as: 'businessOwner'
     });
-    Business.belongsTo(models.Category, {
-      foreignKey: 'categoryId',
-      hooks: true
-    });
+    
     Business.hasMany(models.Review, {
       foreignKey: 'businessId',
       as: 'businessReviews',
       onDelete: 'cascade',
-      hooks: true
     });
   };
 

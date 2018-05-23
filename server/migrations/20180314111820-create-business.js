@@ -8,7 +8,8 @@ module.exports = {
       type: Sequelize.INTEGER
     },
     name: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true
     },
     email: {
       type: Sequelize.STRING
@@ -22,6 +23,9 @@ module.exports = {
     category: {
       type: Sequelize.STRING
     },
+    description: {
+      type: Sequelize.STRING
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -30,7 +34,7 @@ module.exports = {
       allowNull: false,
       type: Sequelize.DATE
     },
-    user_Id: {
+    userId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
@@ -38,6 +42,9 @@ module.exports = {
         key: 'id',
         as: 'userId',
       },
+    },
+    image: {
+      type: Sequelize.STRING
     }
   }),
   down: (queryInterface, Sequelize) => queryInterface.dropTable('Businesses') // eslint-disable-line no-unused-vars
