@@ -1,24 +1,42 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Navbar from '../Navbar.jsx';
-import Footer from '../Footer.jsx';
-import LoginForm from './LoginForm.jsx';
+import { bindActionCreators } from 'redux';
+import LoginForm from './LoginForm';
 import { userLoginRequest } from '../../actions/loginActions';
 import { addFlashMessage } from '../../actions/flashMessages';
 
+/**
+ * @class Login
+ * 
+ * @extends {Component}
+ */
 class Login extends Component {
+  /**
+   * @description Set page document title
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof Login
+   */
   componentDidMount() {
-    document.title = 'WeConnect Login'
+    document.title = 'WeConnect Login';
   }
 
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof Login
+   */
   render() {
-    const { userLoginRequest, addFlashMessage } = this.props;
     return (
       <div>
-        <Navbar />
-        <LoginForm userLoginRequest={userLoginRequest} addFlashMessage={addFlashMessage}/>
-        <Footer />
+        <LoginForm 
+          userLoginRequest={this.props.userLoginRequest}
+          addFlashMessage={this.props.addFlashMessage}   
+        />
       </div>
     );
   }
@@ -26,7 +44,12 @@ class Login extends Component {
 
 Login.propTypes = {
   userLoginRequest: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired
-}
+  addFlashMessage: PropTypes.func.isRequired,
+};
 
-export default connect(null, { userLoginRequest, addFlashMessage })(Login);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  userLoginRequest,
+  addFlashMessage,
+}, dispatch);
+
+export default connect(null, mapDispatchToProps)(Login);
