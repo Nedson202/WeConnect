@@ -1,9 +1,8 @@
 import models from '../models/index';
 import errorMessage from '../middlewares/error-message';
-import errorHandler from '../middlewares/error-handler';
-import businessValidator from '../validation/business';
 
 const Businesses = models.Business;
+const Users = models.User;
 /**
 
  *@class
@@ -23,16 +22,11 @@ class BusinessMethods {
       email,
       address,
       location,
-      category
+      category,
+      description
     } = req.body;
 
     const conflict = {};
-
-    const { errors, isValid } = businessValidator(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
 
     if (req.decoded.username === 'admin') {
       return res.status(403).json({
@@ -47,19 +41,21 @@ class BusinessMethods {
       address: address.toLowerCase(),
       location: location.toLowerCase(),
       category: category.toLowerCase(),
+      description: description.toLowerCase(),
       userId: req.decoded.userId
     })
-      .then(business => res.status(201).json({
-        message: 'Business registration successful',
-        error: false,
-        business
-      }))
+      .then(business => {
+        return res.status(201).json({
+          message: 'Business registration successful',
+          error: false,
+          business
+        })
+      })
       .catch((error) => {
-        if (error.errors[0].path === 'name') {
+        if(error) {
           conflict.businessname = 'Business with name is already registered';
-        }
-
-        return res.status(409).json(conflict);
+          res.status(409).json(conflict);
+        }           
       });
   }
   /**
@@ -71,12 +67,16 @@ class BusinessMethods {
   */
   static getBusiness(req, res) {
     return Businesses
-      .findAll()
+      .findAll({
+        include: [{
+          model: Users,
+          as: 'businessOwner',
+          attributes: ['username']
+        }]
+      })
       .then((businesses) => {
         if (businesses.length === 0) {
-          return res.status(404).json({
-            message: 'No business registered yet'
-          });
+          return res.status(200).json({ businesses });
         }
         return res.status(200).json({ businesses });
       });
@@ -158,7 +158,9 @@ class BusinessMethods {
           email: req.body.email || business.email,
           address: req.body.address || business.address,
           location: req.body.location || business.location,
-          category: req.body.category || business.category
+          category: req.body.category || business.category,
+          description: req.body.description || business.description,
+          image: req.body.image || business.dimage,
         })
           .then(() => res.status(200).json({
             message: 'Business updated successfully',

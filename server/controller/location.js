@@ -25,14 +25,13 @@ class locationOptions {
           });
         }
 
-        for (let counter = 0; counter <= locations.length; counter += 1) {
-          if (locations[counter]) {
-            locationArray.push({
-              id: locations[counter].id,
-              location: locations[counter].location
-            });
-          }
-        }
+        locations.forEach((location) => {
+          locationArray.push({
+            id: location.id,
+            location: location.location
+          });
+        })
+
         return res.status(200).json({
           locations: locationArray
         });

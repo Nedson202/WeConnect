@@ -3,6 +3,7 @@ import errorMessage from '../middlewares/error-message';
 
 const Reviews = models.Review;
 const Businesses = models.Business;
+const Users = models.User;
 /**
   *
   *@class
@@ -38,14 +39,21 @@ class businessReviews {
         }
 
         Reviews.create({
-          reviewer: req.decoded.username,
+          userId: req.decoded.userId,
           message,
           businessId
         })
-          .then(review => res.status(201).json({
+          .then(postedReview => res.status(201).json({
             message: 'Review posted successfully',
             error: false,
-            review
+            review: {
+              id: postedReview.id,
+              message: postedReview.message,
+              createdAt: postedReview.createdAt,
+              reviewer: {
+                username: req.decoded.username
+              }
+            }
           }));
       }).catch(error => res.status(500).json({
         message: error.message,
@@ -74,7 +82,12 @@ class businessReviews {
           },
           order: [
             ['updatedAt', 'DESC']
-          ]
+          ],
+          include: [{
+            model: Users,
+            as: 'reviewer',
+            attributes: ['username', 'image']            
+          }]
         })
           .then((reviews) => {
             if (reviews.length < 1) {
@@ -103,17 +116,14 @@ class businessReviews {
   */
   static deleteReview(req, res) {
     const { reviewId } = req.params;
-
-
+    
     return Reviews.destroy({
       where: {
         id: reviewId
       }
-    }).then(() => {
-      return res.status(200).json({
-        message: 'Review deleted successfully'
-      })
-    })
+    }).then(() => res.status(200).json({
+      message: 'Review deleted successfully'
+    }));
   }
 }
 

@@ -2,8 +2,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import models from '../models/index';
 import config from '../config/config';
-import signupValidator from '../validation/signup';
-import loginValidator from '../validation/login';
 
 const Users = models.User;
 /**
@@ -21,14 +19,6 @@ class Auth {
   static createUser(req, res) {
     const { username, email } = req.body;
     let { password } = req.body;
-
-    const conflict = {};
-
-    const { errors, isValid } = signupValidator(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
 
     if (typeof (password) === 'number') {
       password = password.toString();
@@ -64,14 +54,7 @@ class Auth {
           token
         });
       }).catch((error) => {
-        if (error.errors[0].path === 'username') {
-          conflict.usernameConflict = error.errors[0].message;
-        }
-        if (error.errors[0].path === 'email') {
-          conflict.emailConflict = error.errors[0].message;
-        }
-
-        return res.status(409).json(conflict);
+        return res.status(409).json({conflict: error.errors[0].message});
       });
   }
 
@@ -86,12 +69,6 @@ class Auth {
     const { username } = req.body;
     let { password } = req.body;
 
-    const { errors, isValid } = loginValidator(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
     if (typeof (password) === 'number') {
       password = password.toString();
     }
@@ -104,7 +81,7 @@ class Auth {
       .then((user) => {
         if (!(user && bcrypt.compareSync((password).toLowerCase(), user.password))) {
           return res.status(401).json({
-            message: 'Unathorised, check your username or password',
+            message: 'Unauthorised, check your username or password',
             error: true
           });
         }
@@ -134,6 +111,8 @@ class Auth {
       *@memberof Auth
     */
   static getAllUser(req, res) {
+    const userArray = [];
+
     return Users
       .findAll()
       .then((users) => {
@@ -150,7 +129,80 @@ class Auth {
           });
         }
 
-        return res.status(200).json({ users });
+        users.forEach((user) => {
+          userArray.push({
+            id: user.id,
+            username: user.username
+          })
+        })
+
+        return res.status(200).json({ userArray });
+      });
+  }
+  /**
+      *
+      *@param {any} req - request value
+      *@param {any} res - response value
+      *@return {json} response object goten
+      *@memberof Auth
+    */
+  static updateUser(req, res) {
+    const userId = parseInt(req.params.userId, 10);
+    const conflict = {};
+
+    return Users.findById(userId)
+      .then((user) => {
+        if (user.id !== req.decoded.userId) {
+          return res.status(403).json({
+            message: 'Forbidden, access denied',
+            error: true
+          });
+        }
+
+        if (!user) {
+          return res.status(404).json({
+            message: 'user not found',
+            error: true
+          });
+        }
+
+        user.update({
+          username: req.body.username || user.username,
+          email: req.body.email || user.email,
+          image: req.body.image || user.image
+        })
+          .then(() => {
+            const token = jwt.sign(
+              {
+                userId: user.id,
+                username: user.username,
+                email: user.email,
+                image: user.image
+              },
+              config.secretkey
+            );
+
+            return res.status(200).json({
+              message: 'profile updated successfully',
+              user: {
+                username: user.username,
+                email: user.email,
+                image: user.image
+              },
+              token,
+              error: false,
+            })
+          })
+          .catch((error) => {
+            if (error.errors[0].path === 'username') {
+              conflict.businessname = 'user is already registered';
+            }
+            if (error.errors[0].path === 'email') {
+              conflict.businessname = 'user is already registered';
+            }
+
+            return res.status(409).json(conflict);
+          });
       });
   }
   /**
