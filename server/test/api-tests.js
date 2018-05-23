@@ -11,9 +11,7 @@ describe('Api test', () => {
     chai.request(app)
       .get('/api/v1')
       .end((err, res) => {
-        if (err) throw err;
         expect(res).to.have.status(200);
-        // res.body.message.should.eql('Welcome to the WeConnect api');
         done();
       });
   });
