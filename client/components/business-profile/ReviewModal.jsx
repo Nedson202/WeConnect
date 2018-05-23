@@ -1,95 +1,145 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import classcat from 'classcat';
-import '../../index.css';
+import '../../index.scss';
 
+/**
+ * @class ReviewModal
+ * 
+ * @extends {Component}
+ */
 class ReviewModal extends Component {
-
+  /**
+   * @description Creates an instance of ReviewModal.
+   * 
+   * @param {object} props 
+   * 
+   * @memberof Profile
+   */
   constructor(props){
     super(props);
 
     this.state = {
       message: '',
-      errors: {}
+      image: "",
+      errors: {},
+      isLoading: false
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onChange(e) {
-    if (!!this.state.errors[e.target.name]) {
+  /**
+   * @description Fetch reviews and business
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof ReviewModal
+   */
+  onChange(event) {
+    if (this.state.errors[event.target.name]) {
       let errors = Object.assign({}, this.state.errors);
-      delete errors[e.target.name];
+      delete errors[event.target.name];
       this.setState({
-        [e.target.name]: e.target.value.toLowerCase(),
+        [event.target.name]: event.target.value.toLowerCase(),
         errors
       });
     }
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [event.target.name]: event.target.value });
   }
 
-  onSubmit(e) {
-    this.setState({ errors: {} });
-    e.preventDefault();
-      this.props.reviewRequest(this.props.params.id, this.state).then(
-        () => {
-          this.props.addFlashMessage({
-            type: 'success',
-            message: 'Review posted successfully'
-          });
-          document.getElementById('close').click();
-        },
-        (error) => this.setState({ errors: error.response.data, isLoading: false }),
-      );
+  /**
+   * @description Fetch reviews and business
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof ReviewModal
+   */
+  onSubmit(event) {
+    this.setState({ errors: {}, isLoading: true });
+    event.preventDefault();
+    this.props.reviewRequest(this.props.params.id, this.state).then(
+      () => {
+        this.props.addFlashMessage({
+          type: 'success',
+          message: 'Review posted successfully'
+        });
+        document.getElementById('close-btn').click();
+        this.setState({ message: '', isLoading: false });
+      },
+      (error) => this.setState({ errors: error.response.data, isLoading: false })
+    );
   }
 
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof ReviewModal
+   */
   render() {
-    const { errors } = this.state;
+    const { errors, isLoading } = this.state;
 
     return (
       <div>
-          <button type="button" class="btn btn-outline-success" data-toggle="modal"
-            id="permission-button" data-target="#exampleModalCenter">
-            Add  a review
-          </button>
+        <button
+          type="button"
+          className="btn btn-outline-success"
+          id="permission-button"
+          data-toggle="modal"
+          data-target="#exampleModalCenter"
+        >
+          Add  a review
+        </button>
 
-          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Add review</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                    <form action="submit" onSubmit={this.onSubmit}>
-                      <div className={classcat(["form-group",
+        <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLongTitle">Add review</h5>
+                <button className="close" data-dismiss="modal" aria-label="Close" id="close-btn">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <form action="submit" onSubmit={this.onSubmit}>
+                  <div className={classcat(["form-group",
                          { "has-error": errors.message }
-                       ])}>
-                        <label for="control-label" id="control-label">Message</label>
-                        <input
-                          value={this.state.message}
-                          onChange={this.onChange}
-                          type="text"
-                          name="message"
-                          className="form-control"
-                          id="control-label" placeholder="review"/>
-                        {errors && <span className="help-block">{errors.message}</span>}
-                        <p>Not logged in?
-                        <Link to="/login">login </Link>to continue</p>
-                      </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-success" onClick={this.onSubmit}>Save changes</button>
-                </div>
+                       ])}
+                  >
+                    <label id="control-label">Message</label>
+                    <textarea 
+                      value={this.state.message}
+                      onChange={this.onChange}
+                      type="text"
+                      name="message"
+                      className="form-control"
+                      id="control-label"
+                      placeholder="Add review"
+                      rows="3" 
+                    />
+                    {errors && <span className="help-block">{errors.message}</span>}
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button
+                  disabled={isLoading}
+                  type="button"
+                  className="btn btn-outline-success"
+                  onClick={this.onSubmit}
+                >
+                  {isLoading ? <span>posting...</span> : <span>post review</span>}
+                </button>
               </div>
             </div>
           </div>
-
+        </div>
 
       </div>
     );
@@ -97,27 +147,3 @@ class ReviewModal extends Component {
 }
 
 export default ReviewModal;
-
-// <p>
-//   <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-//     Add review
-//   </button>
-// </p>
-// <div className="collapse col-lg-8 offset-lg-l2" id="collapseExample">
-//   <form action="submit" onSubmit={this.onSubmit}>
-//     <div className={classcat(["form-group",
-//        { "has-error": errors.message }
-//      ])}>
-//       <label for="control-label" id="control-label">Message</label>
-//       <input
-//         value={this.state.message}
-//         onChange={this.onChange}
-//         type="text"
-//         name="message"
-//         className="form-control"
-//         id="control-label" placeholder="review" required/>
-//       {errors && <span className="help-block">{errors.message}</span>}
-//     </div>
-//     <button type="submit" className="btn btn-outline-success" id="submit-button">Submit review</button>
-//   </form>
-// </div>

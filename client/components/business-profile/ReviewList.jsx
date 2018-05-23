@@ -1,36 +1,42 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { getName } from '../../utils/getUsername';
+import React from 'react';
+import moment from 'moment';
 import avatar from '../../images/user-avatar.png';
-import '../../index.css';
+import '../../index.scss';
 
-class ReviewList extends Component {
+/**
+ * @class ReviewList
+ * 
+ * @extends {Component}
+ */
 
-  render() {
-    const { reviews, deleteReview, params } = this.props;
-    const username = getName();
+const ReviewList = ({ reviews, deleteReview, params, user }) => {
+  const { username } = user;
 
-    return (
-      <div>
-        {reviews.map(review => <li  className="list-group-item" key={review._id}>
-        <blockquote class="blockquote mb-0">
-          <li><img src={avatar} className="rounded-circle user-avatar" alt="Avatar" width="30" height="30"/><span className="textcase reviewer">{review.reviewer} </span>
+  return (
+    <div>
+      {reviews.map(review => (
+        <div key={review.id}>
+          { !review.reviewer.image ? <img src={avatar} className="rounded-circle user-avatar" alt="Avatar" width="50" height="50" />
+            : <img src={review.reviewer.image} className="rounded-circle user-avatar" alt="Avatar" width="50" height="50" />
+          }
+          <div className="review-body">
+            <span className="textcase reviewer">{review.reviewer.username} </span>
             {
-              (username !== review.reviewer && username !== 'admin') ? null
-              :  (username === review.reviewer || username === 'admin') ?
-              <button onClick={() => deleteReview(params.id, review.id)} className="close" id='btn-close'><span>&times;</span></button> : null
+              (username !== review.reviewer.username && username !== 'admin') ? null
+              : (username === review.reviewer.username || username === 'admin') ?
+                <button onClick={() => deleteReview(params.id, review.id)} className="close"><span>&times;</span></button> : null
             }
-          </li>
-
-          <p className="review-messgae">{review.message}</p>
-          <p className="blockquote-footer textcase"><cite title="Source Title">{(review.createdAt).split('T')[0]} {(review.createdAt).split('T')[1].split('.')[0]}</cite></p>
-          <a className="hide" id="showDeleteButton"  onClick={() => deleteReview(params.id, review.id)}><i className="fa fa-trash fa-lg"></i> delete</a>
-        </blockquote>
-      </li>)}
-      </div>
-    );
-  }
+            <p>{review.message}</p>
+            <p
+              className="mb-0 small font-weight-medium
+              mb-1 text-muted lts-2px"
+            >
+              {moment(review.createdAt).format('Do MMMM YYYY HH:mm')}
+            </p>
+          </div>
+        </div>))}
+    </div>
+  );
 }
 
 export default ReviewList;
