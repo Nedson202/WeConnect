@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import classcat from 'classcat';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import ImageUpload from './ImageUpload';
-import ImageUploader from '../actions/imageUpload';
-import {addFlashMessage} from '../actions/flashMessages';
 import '../index.scss';
 
 /**
@@ -67,6 +61,10 @@ class UserProfileUpdate extends Component {
     event.preventDefault();    
     this.props.userProfileUpdateRequest(this.props.user.userId, this.state).then(
       () => {
+        this.props.addFlashMessages({
+          type: 'success',
+          text: 'Profile updated successfully'
+        })
         document.getElementById('close').click();        
       }
     )
@@ -96,11 +94,7 @@ class UserProfileUpdate extends Component {
               <div className="modal-body">
                 <form>
                   <div className="row"> 
-                    <div className={classcat(["form-group",
-                        { "has-error": errors.username },
-                        'col-lg-12'
-                      ])}
-                    >
+                    <div className="form-group col-lg-12">
                       <label  id="control-label">Username</label>
                       <input
                         value={this.state.username}
@@ -113,11 +107,7 @@ class UserProfileUpdate extends Component {
                       />
                       {errors && <span className="help-block">{errors.username}</span>}
                     </div>
-                    <div className={classcat(["form-group",
-                        { "has-error": errors.email },
-                        'col-lg-12'
-                      ])}
-                    >
+                    <div className="form-group col-lg-12">
                       <label  id="control-label">Email</label>
                       <input
                         value={this.state.email}
@@ -131,9 +121,9 @@ class UserProfileUpdate extends Component {
                       {errors && <span className="help-block">{errors.email}</span>}
                     </div>
                     <ImageUpload 
-                      ImageUploader={this.props.ImageUploader} 
+                      imageUploader={this.props.imageUploader} 
                       user={this.props.user} 
-                      addFlashMessage={this.props.addFlashMessage}
+                      addFlashMessages={this.props.addFlashMessages}
                     />      
                   </div>
                 </form>
@@ -141,7 +131,6 @@ class UserProfileUpdate extends Component {
               <div className="modal-footer">
                 <button type="button" className="btn btn-outline-success" data-dismiss="modal">No</button>
                 <button 
-                  type="button" 
                   className="btn btn-outline-success" 
                   onClick={this.onSubmit} 
                   data-dismiss="modal"
@@ -156,14 +145,4 @@ class UserProfileUpdate extends Component {
   }
 }
 
-UserProfileUpdate.propTypes = {
-  ImageUploader: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired
-}
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-  ImageUploader,
-  addFlashMessage
-}, dispatch)
-
-export default connect(null, mapDispatchToProps)(UserProfileUpdate);
+export default UserProfileUpdate;
