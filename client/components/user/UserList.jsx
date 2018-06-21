@@ -1,5 +1,5 @@
 import React from 'react';
-import UserCard from './UserCard.jsx';
+import UserCard from './UserCard';
 
 /**
    * @description Creates users list.
