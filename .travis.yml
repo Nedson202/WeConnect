@@ -1,9 +1,12 @@
+os: osx
 language: node_js
 node_js:
-  - "stable"
+  - 8.10.0
 notifications:
   email: false
 
+before_install: 
+  - ./node_modules/.bin/sequelize db:migrate
 cache:
   directories:
     - node_modules
