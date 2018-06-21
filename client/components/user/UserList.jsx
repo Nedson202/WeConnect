@@ -1,34 +1,36 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import UserCard from './UserCard.jsx';
 
-class UserList extends Component {
-  render() {
-    const { users, deleteUser } = this.props;
+/**
+   * @description Creates users list.
+   * 
+   * @param {prop} users
+   * 
+   * @param {prop} deleteUser 
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof UserList
+   */
+const UserList = ({users, deleteUser}) => {
 
-    const noUser = (
-      <h4 className="text-center">No user registered yet</h4>
-    );
+  const noUser = (
+    <h4 className="text-center">No user registered yet</h4>
+  );
 
-    const userList = (
-      <div className="row">
-        { users.map(user => <UserCard user={user} deleteUser={deleteUser} key={user._id} />)}
+  const userList = (
+    <div className="row">
+      { users.map(user => <UserCard user={user} deleteUser={deleteUser} key={user.id} />)}
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="container card-container">
+        {users.length === 0 ? noUser : userList}
       </div>
-    );
-
-    return (
-      <div>
-        <div className="container card-container">
-          {users.length === 0 ? noUser : userList}
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
-UserList.propTypes = {
-  users: PropTypes.array.isRequired,
-  deleteUser: PropTypes.func.isRequired
-}
-
-export default UserList;
+export default UserList

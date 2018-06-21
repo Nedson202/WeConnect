@@ -1,17 +1,19 @@
 import axios from 'axios';
-import { SET_USERS } from './types';
+import { SET_USERS } from './types.js';
 
-export function setUsers(users) {
-  return {
-    type: SET_USERS,
-    users
-  };
-}
+const setUsers = users => ({
+  type: SET_USERS,
+  users
+});
 
+/**
+ * @description function to dispatch an action to filter recipes
+ * 
+ * @return {Object} action dispatched by the action creator
+ */
+const fetchUsers = () => dispatch => axios.get('/api/v1/admin/users').then((res) => {
+  const { userArray } = res.data;
+  dispatch(setUsers(userArray));
+});
 
-export function fetchUsers() {
-  return dispatch => axios.get('http://localhost:4000/api/v1/admin/users').then((res) => {
-    const { data } = res;
-    dispatch(setUsers(data.users));
-  });
-}
+export default fetchUsers;

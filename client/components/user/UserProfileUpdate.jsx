@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ImageUpload from './ImageUpload';
-import '../index.scss';
+import ImageUpload from '../ImageUpload/ImageUpload.jsx';
+import '../../index.scss';
 
 /**
  * @class UserProfileUpdate
@@ -66,6 +66,17 @@ class UserProfileUpdate extends Component {
           text: 'Profile updated successfully'
         })
         document.getElementById('close').click();        
+      },
+      (errors) => {
+        // this.setState({ errors: err.response.data, isLoading: false });
+        if(errors) {
+          errors.response.data.map(error => {
+            this.props.addFlashMessages({
+              type: 'error',
+              text: error
+            })
+          })
+        }
       }
     )
   }
@@ -95,7 +106,7 @@ class UserProfileUpdate extends Component {
                 <form>
                   <div className="row"> 
                     <div className="form-group col-lg-12">
-                      <label  id="control-label">Username</label>
+                      <label id="upload-form-label">Username</label>
                       <input
                         value={this.state.username}
                         onChange={this.onChange}
@@ -108,7 +119,7 @@ class UserProfileUpdate extends Component {
                       {errors && <span className="help-block">{errors.username}</span>}
                     </div>
                     <div className="form-group col-lg-12">
-                      <label  id="control-label">Email</label>
+                      <label id="upload-form-label">Email</label>
                       <input
                         value={this.state.email}
                         onChange={this.onChange}
@@ -133,7 +144,6 @@ class UserProfileUpdate extends Component {
                 <button 
                   className="btn btn-outline-success" 
                   onClick={this.onSubmit} 
-                  data-dismiss="modal"
                 >Yes
                 </button>
               </div>

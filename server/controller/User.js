@@ -54,7 +54,7 @@ class Auth {
           token
         });
       }).catch((error) => {
-        return res.status(409).json({conflict: error.errors[0].message});
+        return res.status(409).json([error.errors[0].message]);
       });
   }
 
@@ -80,10 +80,9 @@ class Auth {
     })
       .then((user) => {
         if (!(user && bcrypt.compareSync((password).toLowerCase(), user.password))) {
-          return res.status(401).json({
-            message: 'Unauthorised, check your username or password',
-            error: true
-          });
+          return res.status(401).json([
+            'Unauthorised, check your username or password'
+          ]);
         }
 
         const token = jwt.sign(
@@ -148,7 +147,7 @@ class Auth {
     */
   static updateUser(req, res) {
     const userId = parseInt(req.params.userId, 10);
-    const conflict = {};
+    const conflict = [];
 
     return Users.findById(userId)
       .then((user) => {
@@ -195,10 +194,10 @@ class Auth {
           })
           .catch((error) => {
             if (error.errors[0].path === 'username') {
-              conflict.businessname = 'user is already registered';
+              conflict.push('user with name is already registered');
             }
             if (error.errors[0].path === 'email') {
-              conflict.businessname = 'user is already registered';
+              conflict.push('user with email is already registered');
             }
 
             return res.status(409).json(conflict);
