@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SET_USERS } from './types';
+import { SET_USERS } from './types.js';
 
 const setUsers = users => ({
   type: SET_USERS,

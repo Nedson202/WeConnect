@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ImageUpload from '../ImageUpload/ImageUpload';
+import ImageUpload from '../ImageUpload/ImageUpload.jsx';
 import '../../index.scss';
 
 /**

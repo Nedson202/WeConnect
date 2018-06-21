@@ -1,7 +1,7 @@
 import React from 'react';
-import Navbar from '../Navbar';
-import Footer from '../Footer';
-import ImageUploader from '../ImageUpload'
+import Navbar from '../Navbar.jsx';
+import Footer from '../Footer.jsx';
+import ImageUploader from '../ImageUpload/ImageUpload.jsx'
 import '../../index.scss';
 
 const UserProfile = () => {
