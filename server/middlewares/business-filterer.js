@@ -21,18 +21,25 @@ class sorter {
   static sortQuery(req, res, next) {
     const { location, category, name } = req.query;
 
+
     if (location || category || name) {
       return Businesses.findAll({
         where: {
           $or: [
             {
-              location
+              location: {
+                $ilike: `${location}%`
+              }
             },
             {
-              category
+              category: {
+                $ilike: `${category}%`
+              }
             },
             {
-              name
+              name: {
+                $ilike: `${name}%`
+              }
             }
           ]
         }
@@ -40,10 +47,7 @@ class sorter {
         .then((businesses) => {
           if (businesses.length < 1) {
             return res.status(404).json({
-              error: {
-                message: 'Business not found',
-                error: true
-              }
+                message: 'Sorry business not found'
             });
           }
 
@@ -68,14 +72,17 @@ class sorter {
 
     const { id, userId } = req.body;
 
-    return Businesses.findOne({
-      where: {
-        id: businessId
-      }
-    })
+    return Businesses.findById(parseInt(businessId, 10))
       .then((business) => {
         if (!business) {
           return errorMessage(res);
+        }
+
+        if (business.userId !== req.decoded.userId) {
+          return res.status(403).json({
+            message: 'Forbidden, you do not have access to modify this business',
+            error: true
+          });
         }
 
         if (id || userId) {
@@ -84,13 +91,15 @@ class sorter {
             error: true
           });
         }
+
+        req.business = business;
         next();
       })
-      .catch(error => res.status(500).json({
-        message: error.message,
-        help: 'Only an integer is allowed',
-        error: true
-      }));
+      .catch(error => {
+        return res.status(500).json({
+          message: error.message,
+          error: true
+      })});
   }
   /**
     *
@@ -103,15 +112,10 @@ class sorter {
   static checkUser(req, res, next) {
     const userId = parseInt(req.params.userId, 10);
 
-    return Users.findOne({
-      where: {
-        id: userId
-      }
-    })
-      .then((user) => {
+    return Users.findById(userId).then((user) => {
         if (!user) {
           return res.status(404).json({
-            message: 'User not found',
+            message: 'user not found',
             error: true
           });
         }
@@ -123,8 +127,13 @@ class sorter {
           });
         }
 
+        req.user = user;
         next();
-      });
+      }).catch(error => {
+          return res.status(500).json({
+          message: error.message,
+          error: true
+      })});
   }
 }
 

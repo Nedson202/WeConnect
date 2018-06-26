@@ -1,14 +1,16 @@
+import 'rc-pagination/assets/index.css';
 import React, { Component } from 'react';
+import Pagination from 'rc-pagination';
 import BusinessCard from './BusinessCard';
 
 /**
- * @class BusinessProfile
+ * @class BusinessList
  * 
  * @extends {Component}
  */
 class BusinessList extends Component {
   /**
-   * @description Creates an instance of BusinessProfile.
+   * @description Creates an instance of BusinessList.
    * 
    * @param {object} props 
    * 
@@ -18,94 +20,34 @@ class BusinessList extends Component {
     super(props);
 
     this.state = {
-      currentPage: 1,
-      businessesPerPage: 6
+      current: 1
     };
 
-    this.toggleList = this.toggleList.bind(this);
-    this.toggleLess = this.toggleLess.bind(this);
-    this.toggleMore = this.toggleMore.bind(this);
-  }
-
-  /**
-   * @description Fetch reviews and business
-   * 
-   * @returns {undefined}
-   * 
-   * @memberof BusinessProfile
-   */
-  componentDidMount() {
-    const active = document.getElementById('current');
-
-    if(this.props.businesses.length > this.state.businessesPerPage) {
-      const li = active.getElementsByClassName('list-inline-item')
-      for (let i = 0; i < li.length; i++) {
-        li[i].addEventListener("click", function() {
-          const current = document.getElementsByClassName("active-page");
-          current[0].className = current[0].className.replace(" active-page", "");
-          this.className += " active-page";
-        });
-      }
-    }
-  }
-
-  /**
-   * @description Fpage number calculator
-   * 
-   * @returns {undefined}
-   * 
-   * @memberof BusinessProfile
-   */
-  calculatePageNumbers() {
-    const pageNumbers = [];
-    for (let counter = 1; counter <= Math.ceil(this.props.businesses.length / this.state.businessesPerPage); counter++) {
-      pageNumbers.push(counter);
-    }
-    return pageNumbers;
+    this.onChange = this.onChange.bind(this);
   }
 
   /**
    * @description Toggler for pagination
    * 
-   * @param {any} event
+   * @param {any} page
    * 
    * @returns {undefined}
    * 
-   * @memberof BusinessProfile
+   * @memberof BusinessList
    */
-  toggleList(event) {
+  onChange(page) {
+    const genPage = `page=${page}`
+    
     this.setState({
-      currentPage: Number(event.target.id)
+      current: page,
     });
-  }
 
-  /**
-   * @description Toggler for pagination
-   * 
-   * @returns {undefined}
-   * 
-   * @memberof BusinessProfile
-   */
-  toggleLess() {
-    if(this.state.currentPage > 1) {
-      this.setState({
-        currentPage: this.state.currentPage - 1
-      });
+    if(location.pathname == '/dashboard') {
+      this.props.fetchBusinessesByUserId(genPage);      
     }
-  }
 
-  /**
-   * @description Toggler for pagination
-   * 
-   * @returns {undefined}
-   * 
-   * @memberof BusinessProfile
-   */
-  toggleMore() {
-    if(this.state.currentPage < this.calculatePageNumbers().length) {
-      this.setState({
-        currentPage: this.state.currentPage + 1
-      });
+    if(location.pathname == '/businesses') {
+      this.props.fetchBusinesses(genPage);
     }
   }
 
@@ -114,59 +56,56 @@ class BusinessList extends Component {
    * 
    * @returns {object} JSX object
    * 
-   * @memberof BusinessProfile
+   * @memberof BusinessList
    */
   render() {
-    const { businesses } = this.props;
-    const { currentPage, businessesPerPage } = this.state;
+    const { businesses, paginate } = this.props;
 
-    const indexOfLastBusiness = currentPage * businessesPerPage;
-    const indexOfFirstBusiness = indexOfLastBusiness - businessesPerPage;
-    const currentBusinesses = businesses.slice(indexOfFirstBusiness, indexOfLastBusiness);
+    let noBusiness;
+    
+    if(location.pathname !== '/searchresult') {
+      noBusiness = (
+        <h2 className="text-center" id="no-business-found">No business registered yet</h2>
+      );
+    }
 
-    const noBusiness = (
-      <h2 className="text-center" id="no-business-found">No business registered yet</h2>
-    );
+
+    if(location.pathname === '/searchresult') {
+      noBusiness = (
+        <h2 className="text-center" id="no-business-found">No search request</h2>
+      );
+    }
 
     const businessList = (
       <div className="row">
-        { currentBusinesses.map(business => <BusinessCard business={business} key={business.id} />)}
+        { businesses.map(business => <BusinessCard business={business} key={business.id} />)}
       </div>
     );
 
-    const renderPageNumbers = this.calculatePageNumbers().map(number => {
-      return (
-        <li
-          key={number}
-          id={number}
-          onClick={this.toggleList}
-          className="list-inline-item"
-        >
-          {number}
-        </li>
-      );
-    });
+    const paginateAll = (
+      <div>{ businesses.length > 0 ?
+        <div className="d-flex justify-content-center">
+          { paginate && paginate.limit === undefined ? null : 
+          <Pagination 
+            onChange={this.onChange} 
+            current={this.state.current} 
+            total={!paginate ? null : paginate.totalBusinesses} 
+            defaultCurrent={this.state.current}
+            defaultPageSize={!paginate ?  null : paginate.limit}
+          />
+          }
+        </div> : null}
+      </div>
+    );
 
     return (
       <div>
         <div className="container card-container">
           {businesses.length === 0 ? noBusiness : businessList}
         </div>
-        {businesses.length > businessesPerPage ? (
-          <ul className="list-unstyled list-inline page-numbers text-center" id="current">
-            <li
-              className="list-inline-item active-page"
-              onClick={this.toggleLess}
-            ><i className="fa fa-angle-left" />
-            </li>
-            {renderPageNumbers}
-            <li
-              className="list-inline-item"
-              onClick={this.toggleMore}
-            ><i className="fa fa-angle-right" />
-            </li>
-          </ul>
-        ) : null}
+
+        { !paginate ? null
+          : paginate.totalBusinesses <= paginate.limit ? null :  paginateAll}
       </div>
     );
   }

@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classcat from 'classcat';
 
 /**
  * @class RegistrationForm
- * 
+ *
  * @extends {Component}
  */
 class RegistrationForm extends Component {
   /**
    * @description Creates an instance of RegistrationForm.
-   * 
-   * @param {object} props 
-   * 
+   *
+   * @param {object} props
+   *
    * @memberof RegistrationForm
    */
   constructor(props){
@@ -26,7 +25,10 @@ class RegistrationForm extends Component {
       category: this.props.business ? this.props.business.category : '',
       description: this.props.business ? this.props.business.description : '',
       errors: {},
-      isLoading: false
+      isLoading: false,
+      changeValue: 0,
+      defaultTotal: 250,
+      color: 'red'
     };
 
     this.onChange = this.onChange.bind(this);
@@ -35,9 +37,9 @@ class RegistrationForm extends Component {
 
   /**
    * @description Fetch business by it's id
-   * 
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof RegistrationForm
    */
   componentDidMount() {
@@ -50,11 +52,11 @@ class RegistrationForm extends Component {
 
   /**
    * @description Retrieve business fetched
-   * 
+   *
    * @param {any} nextProps
-   * 
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof RegistrationForm
    */
   componentWillReceiveProps(nextProps) {
@@ -75,12 +77,12 @@ class RegistrationForm extends Component {
   }
 
   /**
-   * @description Handles input value 
-   * 
+   * @description Handles input value
+   *
    * @param {any} event
-   * 
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof RegistrationForm
    */
   onChange(event) {
@@ -93,15 +95,27 @@ class RegistrationForm extends Component {
       });
     }
     this.setState({ [event.target.name]: event.target.value });
+
+    if(event.target.name === 'description') {
+      this.setState({ changeValue: event.target.value.length });
+    }
+
+    if(event.target.name === 'description' && event.target.value.length > 29) {
+      this.setState({ color: 'white' });
+    }
+
+    if(event.target.name === 'description' && event.target.value.length > 250) {
+      this.setState({ color: 'red' });
+    }
   }
 
   /**
    * @description Handles submission of form data
-   * 
+   *
    * @param {any} event
-   * 
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof RegistrationForm
    */
   onSubmit(event) {
@@ -113,30 +127,69 @@ class RegistrationForm extends Component {
     if(!this.props.params) {
       this.props.businessRegistrationRequest(this.state).then(
         () => {
+          this.props.addFlashMessage({
+            type: 'success',
+            text: 'Business registration successful'
+          });
           this.context.router.history.push('/dashboard');
         },
-        (err) => this.setState({ errors: err.response.data, isLoading: false }),
+        (err) => {
+          this.setState({ errors: err.response.data, isLoading: false });
+          this.state.errors.map(error => {
+            this.props.addFlashMessage({
+              type: 'error',
+              text: error
+            })
+          })
+        },
         (conflict) => this.setState({ errors: conflict, isLoading: false })
+      ).catch(
+        () => {
+          this.props.addFlashMessage({
+            type: 'error',
+            text: 'Business registration failed'
+          });
+          this.setState({ isLoading: false })
+        }
       )
     } else {
-      this.props.businessUpdateRequest(this.props.params.id, this.state).then(
-        () => {
-          this.context.router.history.push(`/profile/${this.props.business.id}`);
-        },
-        (conflict) => this.setState({ errors: conflict.response.data, isLoading: false })
-      )
-    }
-  }
+        this.props.businessUpdateRequest(this.props.params.id, this.state).then(
+          () => {
+            this.props.addFlashMessage({
+              type: 'success',
+              text: 'Business registration successful'
+            });
+            this.context.router.history.push(`/profile/${this.props.business.id}`);
+          },
+          (err) => {
+            this.setState({ errors: err.response.data, isLoading: false });
+            if(typeof(err.response.data) == 'object') {
+              this.state.errors.map(error => {
+                this.props.addFlashMessage({
+                  type: 'error',
+                  text: error
+                })
+              })
+            } else {
+              this.props.addFlashMessage({
+                type: 'error',
+                text: this.state.errors.businessname
+              })
+            }
+          }
+        )}
+      }
+
 
   /**
    * @description Renders the component to the dom
-   * 
+   *
    * @returns {object} JSX object
-   * 
+   *
    * @memberof RegistrationForm
    */
   render() {
-    const { errors, isLoading } = this.state;
+    const { isLoading, changeValue, defaultTotal, color } = this.state;
     const { locations, categories } = this.props;
 
     const categoryOption = categories.map(({id, category}) =>
@@ -158,18 +211,11 @@ class RegistrationForm extends Component {
       <div className="container">
         <form onSubmit={this.onSubmit}>
           <div className="business-form-style">
-            <div className="col-lg-12">
-              {errors && <span className="help-block">{errors.message1}</span>}
-            </div>
             <h3 className="text-center form-header">
               { !this.props.params ? "Register business" : "Update business" }
-            </h3>                        
-            <div className="row col-lg-12">
-              <div className={classcat(["form-group",
-                   { "has-error": errors.name },
-                     "col-lg-6",
-                 ])}
-              >
+            </h3>
+            <div className="row">
+              <div className="form-group col-lg-6">
                 <label  id="control-label">Business Name</label>
                 <input
                   value={this.state.name}
@@ -180,14 +226,8 @@ class RegistrationForm extends Component {
                   id="control-label"
                   placeholder="Business name"
                 />
-                {errors && <span className="help-block">{errors.name}</span>}
-                {errors && <span className="help-block">{errors.businessname}</span>}
               </div>
-              <div className={classcat(["form-group",
-                   { "has-error": errors.email },
-                     "col-lg-6",
-                 ])}
-              >
+              <div className="form-group col-lg-6">
                 <label  id="control-label">Email address</label>
                 <input
                   value={this.state.email}
@@ -199,15 +239,10 @@ class RegistrationForm extends Component {
                   aria-describedby="emailHelp"
                   placeholder="Enter email"
                 />
-                {errors && <span className="help-block">{errors.email}</span>}
               </div>
             </div>
-            <div className="row col-lg-12">
-              <div className={classcat(["form-group",
-                   { "has-error": errors.address },
-                     "col-lg-6",
-                 ])}
-              >
+            <div className="row">
+              <div className="form-group col-lg-6">
                 <label  id="control-label">Address</label>
                 <input
                   value={this.state.address}
@@ -218,16 +253,11 @@ class RegistrationForm extends Component {
                   id="control-label"
                   placeholder="Address"
                 />
-                {errors && <span className="help-block">{errors.address}</span>}
               </div>
-              <div className={classcat(["form-group",
-                   { "has-error": errors.location },
-                     "col-lg-6",
-                 ])}
-              >
+              <div className="form-group col-lg-6">
                 <label  id="control-label">Location</label>
                 <select
-                  className="custom-select"
+                  className="form-control custom-select"
                   type="select"
                   name="location"
                   onChange={this.onChange}
@@ -236,18 +266,13 @@ class RegistrationForm extends Component {
                   <option value="" disabled>choose location</option>
                   {locationOption}
                 </select>
-                {errors && <span className="help-block">{errors.location}</span>}
               </div>
             </div>
-            <div className="row col-lg-12">
-              <div className={classcat(["form-group",
-                   { "has-error": errors.category },
-                     "col-lg-6",
-                 ])}
-              >
+            <div className="row">
+              <div className="form-group col-lg-6">
                 <label  id="control-label">Category</label>
                 <select
-                  className="custom-select"
+                  className="form-control custom-select"
                   type="select"
                   name="category"
                   onChange={this.onChange}
@@ -256,15 +281,10 @@ class RegistrationForm extends Component {
                   <option value="" disabled>choose category</option>
                   {categoryOption}
                 </select>
-                {errors && <span className="help-block">{errors.category}</span>}
               </div>
-              <div className={classcat(["form-group",
-                    { "has-error": errors.description },
-                      "col-lg-6",
-                  ])}
-              >
+              <div className="form-group col-lg-6">
                 <label  id="control-label">Description</label>
-                <textarea 
+                <textarea
                   value={this.state.description}
                   onChange={this.onChange}
                   type="text"
@@ -272,13 +292,13 @@ class RegistrationForm extends Component {
                   className="form-control"
                   id="control-label"
                   placeholder="Description"
-                  rows="3" 
+                  rows="3"
                 />
-                {errors && <span className="help-block">{errors.description}</span>}
+                <p><span style={{ 'color': color}}>{changeValue}</span><span style={{ 'color': 'white'}}>/{defaultTotal}</span></p>
               </div>
             </div>
             <button type="submit" className="btn btn-outline-success" id="submit-button">
-              {isLoading ? <span>processing <i className="fa fa-spinner fa-spin" /></span> : <span>Submit</span>}
+              {isLoading ? <span className="processing-info">processing <i className="fa fa-spinner fa-spin" /></span> : <span>Submit</span>}
             </button>
           </div>
         </form>

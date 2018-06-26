@@ -1,137 +1,69 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Navbar from './Navbar.jsx';
-import BusinessList from './BusinessList.jsx';
-import Footer from './Footer.jsx';
+import { bindActionCreators } from 'redux';
+import BusinessList from './BusinessList';
 import { fetchBusinesses } from '../actions/fetchBusinessAction';
+import Spinner from './Spinner';
 
+/**
+ * @class AllBusiness
+ *
+ * @extends {Component}
+ */
 class AllBusiness extends Component {
-  constructor(props){
-    super(props);
-
-    this.state = {
-      isLoading: false
-    };
-  }
-
+  /**
+   * @description Fetch reviews and business
+   *
+   * @returns {undefined}
+   *
+   * @memberof AllBusiness
+   */
   componentWillMount() {
     document.title = 'Business list'
-    this.setState({isLoading: true})
 
-    this.props.fetchBusinesses().then(
-      () => {
-        this.setState({isLoading: false})
-      }
-    );
+    this.props.fetchBusinesses();
   }
-
+  /**
+   * @description Renders the component to the dom
+   *
+   * @returns {object} JSX object
+   *
+   * @memberof BusinessProfile
+   */
   render() {
-    const { businesses } = this.props;
-    const { isLoading } = this.state;
-
+    const { businesses, paginate, isLoading } = this.props;
+    
     if(isLoading) {
-      return (
-        <div>
-          <Navbar />
-
-          <div id="loader"></div>
-
-          <Footer />
-        </div>
-      );
+      return <Spinner />
     }
 
     return (
       <div>
-        <Navbar />
-
-        <BusinessList businesses={businesses}/>
-
-        <Footer />
+        <BusinessList
+          businesses={businesses}
+          paginate={paginate}
+          fetchBusinesses={this.props.fetchBusinesses}
+        />
       </div>
     );
   }
 }
 
 AllBusiness.propTypes = {
-  businesses: PropTypes.array.isRequired,
   fetchBusinesses: PropTypes.func.isRequired,
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-    businesses: state.businesses
+    businesses: state.businesses,
+    paginate: state.paginationResult,
+    isLoading: state.loaderToggler.isLoading
   }
 }
 
-export default connect(mapStateToProps, { fetchBusinesses })(AllBusiness);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchBusinesses
+}, dispatch);
 
-// import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-// import Navbar from './Navbar.jsx';
-// import BusinessList from './BusinessList.jsx';
-// import Footer from './Footer.jsx';
-// import { fetchBusinesses } from '../actions/fetchBusinessAction';
-//
-// class AllBusiness extends Component {
-//   constructor(props){
-//     super(props);
-//
-//     this.state = {
-//       isLoading: false
-//     };
-//   }
-//
-//   componentWillMount() {
-//     document.title = 'Business list'
-//     this.setState({isLoading: true})
-//
-//     this.props.fetchBusinesses().then(
-//       () => {
-//         this.setState({isLoading: false})
-//       }
-//     );
-//   }
-//
-//   render() {
-//     const { businesses } = this.props;
-//     const { isLoading } = this.state;
-//
-//     if(isLoading) {
-//       return (
-//         <div>
-//           <Navbar />
-//
-//           <div id="loader"></div>
-//
-//           <Footer />
-//         </div>
-//       );
-//     }
-//
-//     return (
-//       <div>
-//         <Navbar />
-//
-//         <BusinessList businesses={businesses}/>
-//
-//         <Footer />
-//       </div>
-//     );
-//   }
-// }
-//
-// AllBusiness.propTypes = {
-//   businesses: PropTypes.array.isRequired,
-//   fetchBusinesses: PropTypes.func.isRequired,
-// }
-//
-// function mapStateToProps(state) {
-//   return {
-//     businesses: state.businesses
-//   }
-// }
-//
-// export default connect(mapStateToProps, { fetchBusinesses })(AllBusiness);
+export default connect(mapStateToProps, mapDispatchToProps)(AllBusiness);

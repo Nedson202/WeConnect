@@ -18,47 +18,37 @@ class businessReviews {
     *@memberof businessReviews
   */
   static postReview(req, res) {
-    const [message, businessId] = [req.body.message, req.params.businessId];
+    const { businessId } = req.params;
+    const { message, rating } = req.body;
 
-    return Businesses.findById(parseInt(businessId))
-      .then((business) => {
-        if (business === null) {
-          return errorMessage(res);
+    // return Businesses.findById(parseInt(businessId))
+    //   .then((business) => {
+    //     if (business === null) {
+    //       return errorMessage(res);
+    //     }
+
+    return Reviews.create({
+      userId: req.decoded.userId,
+      message,
+      rating: parseInt(rating, 10),
+      businessId,
+    })
+      .then(postedReview => res.status(201).json({
+        message: 'Review posted successfully',
+        error: false,
+        review: {
+          id: postedReview.id,
+          message: postedReview.message,
+          createdAt: postedReview.createdAt,
+          reviewer: {
+            username: req.decoded.username
+          }
         }
-
-        if (business.userId === req.decoded.userId) {
-          return res.status(403).json({
-            message: 'Owner of a business can not post a review',
-          });
-        }
-
-        if (req.decoded.username === 'admin') {
-          return res.status(403).json({
-            message: 'An admin can not post a review',
-          });
-        }
-
-        Reviews.create({
-          userId: req.decoded.userId,
-          message,
-          businessId
-        })
-          .then(postedReview => res.status(201).json({
-            message: 'Review posted successfully',
-            error: false,
-            review: {
-              id: postedReview.id,
-              message: postedReview.message,
-              createdAt: postedReview.createdAt,
-              reviewer: {
-                username: req.decoded.username
-              }
-            }
-          }));
-      }).catch(error => res.status(500).json({
-        message: error.message,
-        error: true
       }));
+    // .catch(error => res.status(500).json({
+    //   message: error.message,
+    //   error: true
+    // }));
   }
   /**
     *
@@ -70,42 +60,61 @@ class businessReviews {
   static getReview(req, res) {
     const { businessId } = req.params;
 
+    const limit = 6;
+    let page = req.query.page || 1;
+    const offset = limit * (page - 1);
+
+    page = parseInt(page, 10);
+
+
     return Businesses.findById(businessId)
       .then((business) => {
         if (business === null) {
           return errorMessage(res);
         }
 
-        Reviews.findAll({
+        Reviews.findAndCountAll({
           where: {
             businessId
           },
           order: [
             ['updatedAt', 'DESC']
           ],
+          limit,
+          offset,
           include: [{
             model: Users,
             as: 'reviewer',
-            attributes: ['username', 'image']            
+            attributes: ['username', 'image']
           }]
         })
           .then((reviews) => {
-            if (reviews.length < 1) {
-              return res.status(404).json({
-                message: 'No reviews yet',
-                error: false
-              });
+            if (reviews.rows.length === 0) {
+              return res.status(200).json({ reviews: reviews.rows });
             }
 
+            const { count } = reviews;
+            const totalPages = Math.ceil(count / limit);
+
             return res.status(200).json({
-              reviews,
+              allData: {
+                reviews: reviews.rows,
+                paginatedReviewResult: {
+                  limit,
+                  totalPages,
+                  totalReviews: count,
+                  page,
+                  ReviewsOnPage: reviews.rows.length
+                }
+              },
               error: false
             });
           });
-      }).catch(error => res.status(500).json({
-        message: error.message,
-        error: true
-      }));
+      }).catch(error => {
+          return res.status(500).json({
+            message: error.message,
+            error: true
+      })});
   }
   /**
     *
@@ -116,7 +125,7 @@ class businessReviews {
   */
   static deleteReview(req, res) {
     const { reviewId } = req.params;
-    
+
     return Reviews.destroy({
       where: {
         id: reviewId

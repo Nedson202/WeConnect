@@ -53,9 +53,7 @@ class Auth {
           },
           token
         });
-      }).catch((error) => {
-        return res.status(409).json([error.errors[0].message]);
-      });
+      }).catch(error => res.status(409).json([error.errors[0].message]));
   }
 
   /**
@@ -132,8 +130,8 @@ class Auth {
           userArray.push({
             id: user.id,
             username: user.username
-          })
-        })
+          });
+        });
 
         return res.status(200).json({ userArray });
       });
@@ -146,62 +144,46 @@ class Auth {
       *@memberof Auth
     */
   static updateUser(req, res) {
-    const userId = parseInt(req.params.userId, 10);
+    const user = req.user;
+    // const userId = parseInt(req.params.userId, 10);
     const conflict = [];
 
-    return Users.findById(userId)
-      .then((user) => {
-        if (user.id !== req.decoded.userId) {
-          return res.status(403).json({
-            message: 'Forbidden, access denied',
-            error: true
-          });
+    user.update({
+      username: req.body.username || user.username,
+      email: req.body.email || user.email,
+      image: req.body.image || user.image
+    })
+      .then(() => {
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            username: user.username,
+            email: user.email,
+            image: user.image
+          },
+          config.secretkey
+        );
+
+        return res.status(200).json({
+          message: 'profile updated successfully',
+          user: {
+            username: user.username,
+            email: user.email,
+            image: user.image
+          },
+          token,
+          error: false,
+        });
+      })
+      .catch((error) => {
+        if (error.errors[0].path === 'username') {
+          conflict.push('user with name is already registered');
+        }
+        if (error.errors[0].path === 'email') {
+          conflict.push('user with email is already registered');
         }
 
-        if (!user) {
-          return res.status(404).json({
-            message: 'user not found',
-            error: true
-          });
-        }
-
-        user.update({
-          username: req.body.username || user.username,
-          email: req.body.email || user.email,
-          image: req.body.image || user.image
-        })
-          .then(() => {
-            const token = jwt.sign(
-              {
-                userId: user.id,
-                username: user.username,
-                email: user.email,
-                image: user.image
-              },
-              config.secretkey
-            );
-
-            return res.status(200).json({
-              message: 'profile updated successfully',
-              user: {
-                username: user.username,
-                email: user.email,
-                image: user.image
-              },
-              token,
-              error: false,
-            })
-          })
-          .catch((error) => {
-            if (error.errors[0].path === 'username') {
-              conflict.push('user with name is already registered');
-            }
-            if (error.errors[0].path === 'email') {
-              conflict.push('user with email is already registered');
-            }
-
-            return res.status(409).json(conflict);
-          });
+        return res.status(409).json(conflict);
       });
   }
   /**

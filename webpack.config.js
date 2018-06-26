@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -19,6 +20,11 @@ module.exports = {
     new UglifyJsPlugin({
       test: /\.js($|\?)/i
     }),
+    // new HtmlWebpackPlugin({
+    //   title: 'HtmlWebpackPlugin example',
+    //   favicon: 'client/images/favicon.ico',
+    //   filename: 'index.html'
+    // }),
   ],
   // optimization: {
   //   splitChunks: {
@@ -45,7 +51,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss|css)$/,
         use: [ 'style-loader', 'css-loader', 'sass-loader' ]
       },
       {

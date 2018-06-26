@@ -2,7 +2,6 @@ import React from 'react';
 
 /**
  * @description react stateless component for card template
- * 
  * @return {Object} action dispatched by the action creator
  */
 export default function UserCard({ user, deleteUser }) {

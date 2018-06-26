@@ -3,13 +3,9 @@ import UserCard from './UserCard';
 
 /**
    * @description Creates users list.
-   * 
    * @param {prop} users
-   * 
    * @param {prop} deleteUser 
-   * 
    * @returns {object} JSX object
-   * 
    * @memberof UserList
    */
 const UserList = ({users, deleteUser}) => {

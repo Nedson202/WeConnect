@@ -8,28 +8,17 @@ const checkAuth = (req, res, next) => {
   if (authHeader) {
     token = authHeader.split(' ')[1];
   } else {
-    return res.status(403).json({
-      message: "Unable to complete your request, you're not logged in.",
-      help: 'Login to regenerate a token',
-      error: true
-    });
+    return res.status(403).json(["Unable to complete your request, you're not logged in."]);
   }
 
   jwt.verify(token, config.secretkey, (err, decoded) => {
     if (err) {
-      return res.status(403).json({
-        message: 'Token is invalid, login again to continue',
-        message1: "Unable to complete your request, you're not logged in.",
-        help: 'Login to generate a new one',
-        error: true
-      });
+      return res.status(403).json(["Unable to complete your request, you're not logged in."]);
     }
 
     req.decoded = decoded;
     next();
   });
-
-  // return decodeToken;
 };
 
 export default checkAuth;

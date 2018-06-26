@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import 'rc-pagination/assets/index.css';
 import { Link } from 'react-router-dom';
+import StarRatingComponent from 'react-star-rating-component';
 import PropTypes from 'prop-types';
 import ReviewModal from './ReviewModal';
-import ReviewList from './ReviewList';
-import FlashMessagesList from '../flash/FlashMessagesList';
+import ReviewList from '../ReviewList';
 import fetchBusinessById from '../../actions/fetchBusinessByIdAction';
 import reviewRequest from '../../actions/postReviewAction';
-import { addFlashMessage } from '../../actions/flashMessages';
+import addFlashMessage from '../../actions/flashMessages';
 import deleteBusiness from '../../actions/deleteBusinessAction';
 import fetchReviews from '../../actions/fetchReviewAction';
 import deleteReview from '../../actions/deleteReviewAction';
-import BusinessImageUpload from '../BusinessImageUpload';
+import BusinessImageUpload from '../ImageUpload/BusinessImageUpload';
 import '../../index.scss';
 import green from '../../images/default.jpeg';
-
+import businessImageUploader from '../../actions/businessImageUpload';
 /**
  * @class BusinessProfile
  * 
@@ -58,13 +59,13 @@ class BusinessProfile extends Component {
         showButtonToAdmin.classList.remove('hide');
       }
     });
-    this.props.fetchReviews(this.props.match.params.id);
+    this.props.fetchReviews(this.props.match.params.id, 'page=1');
   }
 
   /**
-   * @description Retrieve business fetched
+   * @description Fetch reviews and business
    * 
-   * @param {any} nextProps
+   * @param{any} nextProps
    * 
    * @returns {undefined}
    * 
@@ -72,15 +73,17 @@ class BusinessProfile extends Component {
    */
   componentWillReceiveProps(nextProps) {
     if(nextProps.business) {
+      const { business } = nextProps;
       this.setState({
-        name: nextProps.business.name,
-        email: nextProps.business.email,
-        address: nextProps.business.address,
-        location: nextProps.business.location,
-        category: nextProps.business.category,
-        description: nextProps.business.description,
-        image: nextProps.business.image,
-      });
+        name: business.name,
+        email: business.email,
+        address: business.address,
+        location: business.location,
+        category: business.category,
+        image: business.image,
+        description: business.description,
+        averageRating: business.averageRating,
+      })
     }
   }
 
@@ -96,13 +99,36 @@ class BusinessProfile extends Component {
   onBusinessDelete(event) {
     event.preventDefault();
 
-    this.props.deleteBusiness(this.props.match.params.id).then(() => {
-      if (this.props.user.username == 'admin') {
-        this.context.router.history.push('/adminpanel');
-      } else {
-        this.context.router.history.push('/dashboard');
-      }
+    this.props.deleteBusiness(this.props.match.params.id).then(
+      () => {
+        this.props.addFlashMessage({
+          type: 'success',
+          text: 'Business deleted successfully'
+        });
+        if (this.props.user.username == 'admin') {
+          this.context.router.history.push('/adminpanel');
+        } else {
+          this.context.router.history.push('/dashboard');
+        }
     });
+  }
+  /**
+   * @description Deletes business from the database
+   * 
+   * @param {any} event
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof BusinessProfile
+   */
+  imageGenerator() {
+    if(!this.props.business && this.state.image) {
+      return this.state.image;
+    }
+    if(this.state.image) {
+      return this.state.image;
+    }
+    return green;
   }
 
   /**
@@ -114,10 +140,18 @@ class BusinessProfile extends Component {
    */
   render() {
     const {
-      reviews, business, params, user 
+      reviews, business, params, user, paginate
     } = this.props;
 
-    const { name, address, location, email, description, category, image } = this.state;
+    const { 
+      name, 
+      address, 
+      location, 
+      email, 
+      description, 
+      category, 
+      averageRating,  } = this.state;
+      
 
     const noReviews = (
       <h3>No reviews yet</h3>
@@ -131,13 +165,18 @@ class BusinessProfile extends Component {
     
     return (
       <div>
-        <div className="container">
-
+        <div className="business-profile container">
           <div className="row">
             <div className="col-sm-12 col-lg-10 offset-lg-1 profile-icon-style">
-              {/* <img className="business-profile-image" src={green} alt="" /> */}
               <div className="image-button-holder">
-                <img className="business-profile-image" id="business-image" src={!image ? green : image} alt="" />
+                <div className="zoom">
+                  <img 
+                    className="business-profile-image" 
+                    id="business-image" 
+                    src={this.imageGenerator()}
+                    alt="Business" 
+                  />
+                </div>                
                 <button 
                   className="btn image-edit-button hide" 
                   id="owner" 
@@ -146,14 +185,18 @@ class BusinessProfile extends Component {
                 >
                   <i className="fa fa-edit fa-lg" />
                 </button>
-                <BusinessImageUpload params={params} />
+                <BusinessImageUpload 
+                  params={params}
+                  businessImageUploader={this.props.businessImageUploader}
+                  addFlashMessage={this.props.addFlashMessage}
+                />
               </div>
               <h4 className="text-center business-name text-capitalize">{ !business ? name : business.name}</h4>
               <div className="row">
                 <div className="col-sm-12 col-lg-10 offset-lg-1 text-center">
                   <ul className="list-unstyled list-inline hide" id="owner">
                     <li className="list-inline-item">
-                      <Link className="btn" id="permission-button" to={`/registerbusiness/${params.id}`}>
+                      <Link className="btn" id="permission-button" to={`/updatebusiness/${params.id}`}>
                         <i className="fa fa-edit fa-lg" /> edit
                       </Link>
                     </li>
@@ -168,26 +211,31 @@ class BusinessProfile extends Component {
                     </li>
                   </ul>
                 </div>
-              </div>         
-              <p className="mb-0 small font-weight-medium business-category
-                text-uppercase mb-1 text-muted lts-2px"
-              >
-                { !business ? category : business.category }
-              </p>
+              </div>  
               <h4>Description:</h4>
               <p>{ !business ? description : business.description }</p>       
               <p><i className="fa fa-envelope" /><span>{ !business ? email : business.email }</span></p>          
               <p><i className="fa fa-map-marker" /><span>{ !business ? `${address} ${location}` : `${business.address} ${business.location}` }</span></p>          
+              <p><i className="fa fa-map-marker" /><span>{ !business ? location : business.location }</span></p>          
+              <p><i className="fa fa-tags" /><span>{ !business ? category : business.category }</span></p>          
+              <StarRatingComponent
+                name="rate2"             
+                editing={false}
+                starCount={5}
+                value={!business ? averageRating : business.averageRating}
+                starColor="#ffd700"
+              />
             </div>
 
-          </div>
+          </div>  
 
           <div className="col-sm-12 col-lg-10 offset-lg-1">
-            <FlashMessagesList />
             <ReviewModal 
               reviewRequest={this.props.reviewRequest} 
               addFlashMessage={this.props.addFlashMessage} 
               params={this.props.params} 
+              fetchReviews={this.props.fetchReviews}
+              fetchBusinessById={this.props.fetchBusinessById}
             />
           </div>
 
@@ -196,12 +244,14 @@ class BusinessProfile extends Component {
               <ReviewList 
                 reviews={reviews} 
                 deleteReview={this.props.deleteReview} 
+                fetchBusinessById={this.props.fetchBusinessById}
+                fetchReviews={this.props.fetchReviews}
+                paginate={paginate}
                 params={params} 
                 user={user}
               />
                 )}
           </div>
-
         </div>
 
         <div className="modal fade" id="confirmModal" tabIndex="-1" role="dialog" aria-labelledby="confirmModalTitle" aria-hidden="true">
@@ -229,6 +279,7 @@ BusinessProfile.propTypes = {
   deleteReview: PropTypes.func.isRequired,
   deleteBusiness: PropTypes.func.isRequired,
   fetchReviews: PropTypes.func.isRequired,
+  businessImageUploader: PropTypes.func.isRequired,
 };
 
 BusinessProfile.contextTypes = {
@@ -241,7 +292,10 @@ const mapStateToProps = (state, props) => {
     reviews: state.reviews,
     user: state.auth.user,
     business: state.businesses[0],
-    params
+    params,
+    paginate: state.paginationResult,
+    image: state.image,
+    isLoading: state.loaderToggler.isLoading
   };
 };
 
@@ -252,6 +306,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchReviews,
   deleteReview,
   addFlashMessage,
+  businessImageUploader
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BusinessProfile);

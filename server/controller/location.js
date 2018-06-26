@@ -30,7 +30,7 @@ class locationOptions {
             id: location.id,
             location: location.location
           });
-        })
+        });
 
         return res.status(200).json({
           locations: locationArray

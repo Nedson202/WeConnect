@@ -1,15 +1,18 @@
 import React from 'react';
 import moment from 'moment';
+import StarRatingComponent from 'react-star-rating-component';
 import avatar from '../../images/user-avatar.png';
 import '../../index.scss';
 
 /**
  * @class ReviewList
- * 
+ *
  * @extends {Component}
  */
 
-const ReviewList = ({ reviews, deleteReview, params, user }) => {
+const ReviewList = ({
+ reviews, deleteReview, params, user 
+}) => {
   const { username } = user;
 
   return (
@@ -27,6 +30,13 @@ const ReviewList = ({ reviews, deleteReview, params, user }) => {
                 <button onClick={() => deleteReview(params.id, review.id)} className="close"><span>&times;</span></button> : null
             }
             <p>{review.message}</p>
+            <StarRatingComponent
+              name="rate2"
+              editing={false}
+              starCount={5}
+              value={review.rating}
+              starColor="#ffd700"
+            />
             <p
               className="mb-0 small font-weight-medium
               mb-1 text-muted lts-2px"
@@ -37,6 +47,7 @@ const ReviewList = ({ reviews, deleteReview, params, user }) => {
         </div>))}
     </div>
   );
-}
+};
+
 
 export default ReviewList;

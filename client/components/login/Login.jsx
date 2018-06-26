@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import LoginForm from './LoginForm';
 import { userLoginRequest } from '../../actions/loginActions';
-import { addFlashMessage } from '../../actions/flashMessages';
+import addFlashMessage from '../../actions/flashMessages';
 
 /**
  * @class Login
@@ -33,6 +33,7 @@ class Login extends Component {
   render() {
     return (
       <div>
+        <div id="background-image" />
         <LoginForm 
           userLoginRequest={this.props.userLoginRequest}
           addFlashMessage={this.props.addFlashMessage}   

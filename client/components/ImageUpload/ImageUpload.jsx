@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import firebaseApp from '../utils/firebaseConfig';
-import '../index.scss';
+import firebaseApp from '../../utils/firebaseConfig';
+import '../../index.scss';
 
 /**
  * @class ImageUpload
@@ -111,7 +111,7 @@ class ImageUploader extends Component {
       <div>
         <div className="row col-lg-12">   
           <div className="form-group col-lg-8">
-            <label className="btn btn-default">
+            <label className="btn btn-default" id="upload-form-label">
               <div 
                 className="progress form-progress-bar" 
                 id="progress" 
@@ -125,7 +125,7 @@ class ImageUploader extends Component {
                   style={{ width: progress }}
                 />
               </div>
-              <div className="circle"><img
+              <div><img
                 src=""
                 className="hide"
                 id="show-image"
@@ -134,7 +134,7 @@ class ImageUploader extends Component {
                 alt="Avatar"
               />
                 <div id="dropzone">
-                  <i className="fa fa-picture-o fa-3x text-center" aria-hidden="true" />
+                  <i className="fa fa-picture-o fa-3x" aria-hidden="true" />
                   <p>choose image</p>
                 </div>
 

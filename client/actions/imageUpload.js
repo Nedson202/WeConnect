@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ADD_IMAGE } from './types.js';
+import { ADD_IMAGE } from './types';
 
 const setImage = (image) => {
     return {

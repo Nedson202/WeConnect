@@ -13,6 +13,7 @@ export default (route) => {
   route.get('/api/v1/locations', Locations.getLocations);
   route.get('/api/v1/businesses/:businessId', Businesses.getOneBusiness);
   route.get('/api/v1/businesses/user/:userId', Businesses.getBusinessByUserId);
-  route.put('/api/v1/businesses/:businessId', checkAuth, sorter.checkBusiness, validator.registerBusiness, Businesses.updateBusiness);
+  route.put('/api/v1/businesses/:businessId', checkAuth, sorter.checkBusiness, validator.registerBusiness, errorHandler, Businesses.updateBusiness);
+  route.put('/api/v1/business/:businessId/image', checkAuth, sorter.checkBusiness, Businesses.updateBusinessImage);
   route.delete('/api/v1/businesses/:businessId', checkAuth, sorter.checkBusiness, Businesses.deleteBusiness);
 };

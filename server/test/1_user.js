@@ -7,6 +7,7 @@ require("dotenv").config;
 
 const { NOREADACCESS } = process.env;
 const { ADMINTOKEN } = process.env;
+const { TOKEN } = process.env;
 
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
@@ -40,6 +41,21 @@ describe('User signup authenticator', () => {
       .send({
         username: 'alan',
         email: 'alan@width.com',
+        password: 'israel'
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        res.body.message.should.eql('Signup successful');
+        done();
+      });
+  });
+
+  it('should return status 201 on successful signup', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        username: 'alanco',
+        email: 'israel@all.net',
         password: 'israel'
       })
       .end((err, res) => {
@@ -126,7 +142,9 @@ describe('User Login authenticator', () => {
         username: 'moses',
         password: 'horusss'
       })
-      .end((res) => {
+      .end((err, res) => {
+        // if(err) done(err);
+        // expect(res).to.have.status(401);
         expect(res.status).to.equal(401);
         done();
       });
@@ -173,6 +191,96 @@ describe('User Login authenticator', () => {
   });
 });
 
+describe('User updater', () => {
+  it('should return status 403 if token is absent', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/1')
+      .end((res) => {
+        expect(res.status).to.equal(403);
+        done();
+      });
+  });
+
+  it('should return 403 if not user', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/2')
+      .set('Authorization', NOREADACCESS)
+      .end((res) => {
+        expect(res.status).to.equal(403);
+        done();
+      });
+  });
+
+  it('should return if user is not found', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/20')
+      .set('Authorization', NOREADACCESS)
+      .end((res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+
+  it('should return object if successful', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/1')
+      .set('Authorization', TOKEN)
+      .send({
+        username: 'alansm',
+        email: 'israejl@all.net'
+      }).end((err, res) => {
+        expect(res.status).to.equal(200);
+        res.body.token.should.be.a('string');
+        done();
+      });
+  });
+
+  it('should return conflict if username exists', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/1')
+      .set('Authorization', TOKEN)
+      .send({
+        username: 'alanco',
+        email: 'israejl@all.net'
+      }).end((err, res) => {
+        expect(res.status).to.equal(409);
+        res.body.should.be.a('array');
+        res.body[0].should.eql('user with name is already registered');
+        done();
+      });
+  });
+
+  it('should return conflict if email exists', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/1')
+      .set('Authorization', TOKEN)
+      .send({
+        username: 'alansmith co',
+        email: 'israel@all.net'
+      }).end((err, res) => {
+        expect(res.status).to.equal(409);
+        res.body.should.be.a('array');
+        res.body[0].should.eql('user with email is already registered');
+        done();
+      });
+  });
+
+  it('should return internal server error if userid is invalid', (done) => {
+    chai.request(app)
+      .put('/api/v1/user/-------------------')
+      .set('Authorization', TOKEN)
+      .send({
+        username: 
+        `alansm1`,
+        email: 'israejl@all.net',
+      }).end((err, res) => {
+        expect(res).to.have.status(500);
+        res.body.error.should.eql(true)
+        done();
+      });
+  });
+});
+
 describe('User administrator test', () => {
   it('should return status 403 if token is absent', (done) => {
     chai.request(app)
@@ -188,7 +296,7 @@ describe('User administrator test', () => {
       .get('/api/v1/admin/users')
       .set('Authorization', NOREADACCESS)
       .end((res) => {
-        expect(res.status).to.equal(403);
+        expect(res).to.have.status(403);
         done();
       });
   });
@@ -199,6 +307,17 @@ describe('User administrator test', () => {
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         res.body.should.be.a('object');
+        done();
+      });
+  });
+
+  it('should return 403 and message if not an admin', (done) => {
+    chai.request(app)
+      .delete('/api/v1/admin/users/2')
+      .set('Authorization', NOREADACCESS)
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
+        res.body.message.should.eql('Forbidden, you do not have access to view all users');
         done();
       });
   });
@@ -231,12 +350,19 @@ describe('User administrator test', () => {
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(404);
-        res.body.message.should.eql('User not found');
+        res.body.message.should.eql('user not found');
+        done();
+      });
+  });
+
+  it('should return internal server error if userid is invalid', (done) => {
+    chai.request(app)
+      .delete('/api/v1/admin/users/_____________________-------------------')
+      .set('Authorization', ADMINTOKEN)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        res.body.error.should.eql(true)
         done();
       });
   });
 });
-
-    // "test": "cross-env NODE_ENV=test nyc --require babel-register --require babel-polyfill mocha  server/test --exit",
-    // "coveralls": "nyc report --reporter=text-lcov | coveralls",
-  

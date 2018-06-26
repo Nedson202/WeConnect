@@ -1,21 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import businessImageUploader from '../actions/businessImageUpload';
-import firebaseApp from '../utils/firebaseConfig';
-import '../index.scss';
-
-// const config = {
-//   apiKey: "AIzaSyBnRKH-tpjGoHJfGtuXxR7qk6e3gZbQNvc",
-//   authDomain: "weconnect-image.firebaseapp.com",
-//   databaseURL: "https://weconnect-image.firebaseio.com",
-//   projectId: "weconnect-image",
-//   storageBucket: "weconnect-image.appspot.com",
-//   messagingSenderId: "465125394331"
-// };
-  // firebase.initializeApp(firebaseConfig());
-
+import firebaseApp from '../../utils/firebaseConfig';
+import '../../index.scss';
 /**
  * @class BusinessImageUpload
  * 
@@ -80,7 +65,7 @@ class BusinessImageUpload extends Component {
       document.getElementById('show-image').src = url;
       document.querySelector('img').src = url;
 
-      localStorage.setItem('image', url);
+      localStorage.setItem('businessImage', url);
 
       const hideIclass = document.getElementById('dropzone');
       hideIclass.classList.add('hide');
@@ -105,7 +90,11 @@ class BusinessImageUpload extends Component {
     this.props.businessImageUploader(this.props.params.id, this.state)
     .then(
       () => {
-        document.getElementById('close').click();
+        this.props.addFlashMessage({
+          type: 'success',
+          text: 'Image uploaded successfully'
+        })
+        document.getElementById('close-btn').click();
       }
     );
   }
@@ -127,7 +116,7 @@ class BusinessImageUpload extends Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h4>Edit Image</h4>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close" id="close">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close" id="close-btn">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -137,7 +126,7 @@ class BusinessImageUpload extends Component {
                     <label className="btn btn-default">
                       <div className="progress form-progress-bar" id="progress">
                         <div
-                          className="progress" 
+                          className="progress-bar" 
                           role="progressbar"
                           aria-valuenow={progress}
                           aria-valuemin="0"
@@ -185,12 +174,4 @@ class BusinessImageUpload extends Component {
   }
 }
 
-BusinessImageUpload.propTypes = {
-  businessImageUploader: PropTypes.func.isRequired
-}
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-  businessImageUploader
-}, dispatch)
-
-export default connect(null, mapDispatchToProps)(BusinessImageUpload);
+export default BusinessImageUpload;

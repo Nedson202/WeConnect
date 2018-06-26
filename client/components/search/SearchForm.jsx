@@ -50,12 +50,28 @@ class SearchForm extends Component {
    * @memberof SearchForm
    */
   onSubmit(event) {
-    const { query, option } = this.state;
     event.preventDefault();
-    this.props.filterBusiness(option, query).then(() => {
-      sessionStorage.setItem('query', JSON.stringify(this.state));
-      this.context.router.history.push('/searchresult');
-    });
+    const { query, option } = this.state;
+
+    if(query.length === 0 || option.length === 0) {
+      return this.props.addFlashMessage({
+        type: 'error',
+        text: 'Search query and option cannot be empty'
+      })
+    }
+
+    this.props.filterBusiness(option, query).then(
+      () => {
+        sessionStorage.setItem('query', JSON.stringify(this.state));
+        this.context.router.history.push('/searchresult');
+      },
+      (err) => {
+        this.props.addFlashMessage({
+          type: 'error',
+          text: err.response.data.message
+        })
+      }
+    );
   }
 
   /**
@@ -76,14 +92,12 @@ class SearchForm extends Component {
             name="query"
             onChange={this.onChange}
             value={this.state.query}
-            required 
           />
           <select
             className="custom-select"
             name="option"
             onChange={this.onChange}
             value={this.state.option}
-            required
           >
             <option value="">choose</option>
             <option value="name">Name</option>

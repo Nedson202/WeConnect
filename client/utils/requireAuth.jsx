@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import tokenVerifier from './tokenVerifier';
 import { logout } from '../actions/loginActions';
-import { addFlashMessage } from '../actions/flashMessages';
+import addFlashMessage from '../actions/flashMessages';
 
 /**
  * @description Deletes business from the database
@@ -36,7 +36,7 @@ export default function(ComposedComponent) {
       if(tokenVerifier(localStorage.getItem('accessToken'))) {
         this.props.addFlashMessage({
           type: 'error',
-          message: 'Access denied, you need to login'
+          text: 'Access denied, you need to login'
         });
         this.props.logout();
         this.context.router.history.push('/login');
@@ -45,7 +45,7 @@ export default function(ComposedComponent) {
       if(!this.props.isAuthenticated) {
         this.props.addFlashMessage({
           type: 'error',
-          message: 'Access denied, you need to login'
+          text: 'Access denied, you need to login'
         });
         this.props.logout();
         this.context.router.history.push('/login');

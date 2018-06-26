@@ -14,6 +14,6 @@ const setUsers = users => ({
 const fetchUsers = () => dispatch => axios.get('/api/v1/admin/users').then((res) => {
   const { userArray } = res.data;
   dispatch(setUsers(userArray));
-});
+});  
 
 export default fetchUsers;

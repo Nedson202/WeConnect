@@ -1,29 +1,29 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Navbar from './Navbar.jsx';
-import FlashMessagesList from './flash/FlashMessagesList';
-import BusinessRegistration from './business-registration/BusinessRegistration.jsx';
-import UserList from './user/UserList.jsx';
-import BusinessList from './BusinessList.jsx';
-import { getName } from '../utils/getUsername';
-import Footer from './Footer.jsx';
-import '../index.css';
+// import FlashMessagesList from './flash/FlashMessagesList';
+import UserList from './user/UserList';
+import BusinessList from './BusinessList';
+import '../index.scss';
 import { fetchBusinesses } from '../actions/fetchBusinessAction';
-import { deleteBusiness } from '../actions/deleteBusinessAction';
-import { deleteUser } from '../actions/deleteUserAction';
-import { fetchUsers } from '../actions/fetchUserAction';
+import deleteBusiness from '../actions/deleteBusinessAction';
+import deleteUser from '../actions/deleteUserAction';
+import fetchUsers from '../actions/fetchUserAction';
 
+/**
+ * @class AdminPanel
+ * 
+ * @extends {Component}
+ */
 class AdminPanel extends Component {
-  componentWillMount() {
-    // const hideAdmin = document.getElementById('admin');
-    // hideAdmin.classList.add('hide')
-    document.title = 'Admin panel'
-    this.props.fetchBusinesses();
-    this.props.fetchUsers();
-  }
-
+  /**
+   * @description Creates an instance of AdminPanel.
+   * 
+   * @param {object} props 
+   * 
+   * @memberof AdminPanel
+   */
   constructor(props){
     super(props);
 
@@ -38,6 +38,26 @@ class AdminPanel extends Component {
     this.businessVisibility = this.businessVisibility.bind(this);
   }
 
+  /**
+   * @description Fetch users and business
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof AdminPanel
+   */
+  componentWillMount() {
+    document.title = 'Admin panel'
+    this.props.fetchBusinesses();
+    this.props.fetchUsers();
+  }
+
+  /**
+   * @description handle toggler for permission
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof AdminPanel
+   */
   handleVisibility() {
     this.setState((prevState) => {
       return {
@@ -46,6 +66,13 @@ class AdminPanel extends Component {
     })
   }
 
+  /**
+   * @description handle user list toggling
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof AdminPanel
+   */
   userVisibility() {
     this.setState((prevState) => {
       return {
@@ -54,6 +81,13 @@ class AdminPanel extends Component {
     })
   }
 
+  /**
+   * @description handle business list toggling
+   * 
+   * @returns {undefined}
+   * 
+   * @memberof AdminPanel
+   */
   businessVisibility() {
     this.setState((prevState) => {
       return {
@@ -62,14 +96,20 @@ class AdminPanel extends Component {
     })
   }
 
+  /**
+   * @description Renders the component to the dom
+   * 
+   * @returns {object} JSX object
+   * 
+   * @memberof AdminPanel
+   */
   render() {
-    const { businesses, deleteBusiness, deleteUser } = this.props;
+    const { businesses } = this.props;
     return (
       <div>
-        <Navbar />
-        <FlashMessagesList />
+        {/* <FlashMessagesList /> */}
         <div className="dashboard-heading">
-          <h4>Welcome {getName()}!</h4>
+          <h4>Welcome {this.props.user.username}!</h4>
 
         </div>
 
@@ -86,7 +126,7 @@ class AdminPanel extends Component {
         {this.state.isHidden && (
           <div className="card dashboard-card ">
             <div className="card-body">
-              <h5 className="card-title textcase">Hi {getName()}!</h5>
+              <h5 className="card-title textcase">Hi {this.props.user.username}!</h5>
               <p className="card-text">You have the permission to perform the following.</p>
               <ul>
                 <li>Delete a business</li>
@@ -98,33 +138,36 @@ class AdminPanel extends Component {
         )}
 
         {this.state.isBusinessesHidden &&
-          (<BusinessList businesses={businesses} deleteBusiness={deleteBusiness}/>)
+          (<BusinessList businesses={businesses} deleteBusiness={this.props.deleteBusiness} />)
         }
 
         {this.state.isUsersHidden &&
-          (<UserList users={this.props.users}  deleteUser={deleteUser}/>)
+          (<UserList users={this.props.users}  deleteUser={this.props.deleteUser} />)
         }
-
-        <Footer />
       </div>
     );
   }
 }
 
 AdminPanel.propTypes = {
-  businesses: PropTypes.array.isRequired,
   fetchBusinesses: PropTypes.func.isRequired,
   deleteBusiness: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
   fetchUsers: PropTypes.func.isRequired,
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
   return {
     businesses: state.businesses,
     users: state.users,
   }
 }
 
-export default connect(mapStateToProps, { fetchBusinesses, fetchUsers, deleteBusiness, deleteUser })(AdminPanel);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchBusinesses,
+  fetchUsers,
+  deleteBusiness,
+  deleteUser
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPanel);

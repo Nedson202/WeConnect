@@ -10,9 +10,9 @@ class validator {
   */
   static userSignup(req, res, next) {
     req.check('username', 'Username is required').notEmpty();
-    req.check('email', 'Email is not valid').isEmail().trim();
+    req.check('email', 'Email cannot be empty or invalid').isEmail().trim();
     req
-      .check('password', 'Minimun password length is 5 chars')
+      .check('password', 'Minimun password length is 6 chars')
       .isLength({ min: 6 }).trim();
     req.sanitizeBody('username').trim();
     req.sanitizeBody('email').trim();
@@ -39,18 +39,33 @@ class validator {
     *
     *@param {any} req - request value
     *@param {any} res - response value
+    *@param {any} next
+    *@return {status} validator
+  */
+  static userUpdate(req, res, next) {
+    req.check('username', 'Username is required').notEmpty();
+    req.check('email', 'Email cannot be empty or invalid').notEmpty();
+    req.sanitizeBody('username').trim();
+    req.sanitizeBody('email').trim();
+
+    next();
+  }
+  /**
+    *
+    *@param {any} req - request value
+    *@param {any} res - response value
     *@param {any} next - next value
     *@return {status} validator
   */
   static registerBusiness(req, res, next) {
-    req.check('name', 'This is required').notEmpty();
-    req.check('email', 'Email is not valid').isEmail().trim();
-    req.check('address', 'This field is required').notEmpty().trim();
-    req.check('location', 'This field is required').notEmpty().trim();
-    req.check('category', 'This field is required').notEmpty().trim();
+    req.check('name', 'Name is required').notEmpty();
+    req.check('email', 'Email cannot be empty or invalid').isEmail().trim();
+    req.check('address', 'Address is required').notEmpty().trim();
+    req.check('location', 'Location is required').notEmpty().trim();
+    req.check('category', 'Category is required').notEmpty().trim();
     req
-      .check('description', 'Minimum character length is 30')
-      .isLength({ min: 30 }).trim();
+      .check('description', 'Length of description must be bewtween 30-250 characters')
+      .isLength({ min: 30, max: 250 }).trim();
 
     req.sanitizeBody('name').trim();
     req.sanitizeBody('email').trim();
@@ -70,7 +85,8 @@ class validator {
   */
   static reviews(req, res, next) {
     req.checkParams('businessId', 'Id in params can only be an integer').isInt().trim();
-    req.check('message', 'This field is required').notEmpty();
+    req.check('message', 'Review content is required').notEmpty();
+    req.check('rating', 'Please rate this business').isInt({min: 1});
     req.sanitizeBody('message').trim();
 
     next();
@@ -95,6 +111,8 @@ class validator {
     *@return {status} validator
   */
   static checkQuery(req, res, next) {
+    // req.checkQuery('location', 'Review content is required').notEmpty();
+    // req.checkQuery('category', 'Review content is required').notEmpty();
     req.sanitizeQuery('location').trim();
     req.sanitizeQuery('category').trim();
 

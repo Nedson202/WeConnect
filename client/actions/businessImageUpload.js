@@ -13,7 +13,7 @@ const setBusinessById = business => ({
     business
   });
 
-const businessImageUploader = (businessId, image) => dispatch => axios.put(`/api/v1/businesses/${businessId}`, image)
+const businessImageUploader = (businessId, image) => dispatch => axios.put(`/api/v1/business/${businessId}/image`, image)
 .then((res) => {
     dispatch(setBusinessById(res.data.business));
 }); //eslint-disable-line no-unused-vars

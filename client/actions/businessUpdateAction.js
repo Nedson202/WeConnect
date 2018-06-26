@@ -9,5 +9,5 @@ import axios from 'axios';
  * 
  * @return {Object} action dispatched by the action creator
  */
-const businessUpdateRequest = (id, businessData) => dispatch => axios.put(`/api/v1/businesses/${id}`, businessData);
+const businessUpdateRequest = (id, businessData) => dispatch => axios.put(`/api/v1/businesses/${id}`, businessData);//eslint-disable-line no-unused-vars
 export default businessUpdateRequest;

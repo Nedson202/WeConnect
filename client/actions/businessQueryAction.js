@@ -1,5 +1,12 @@
 import axios from 'axios';
+import { FILTERED_BUSINESSES } from './types';
 
+const setFilteredBusinesses = searchResult => {
+  return {
+    type: FILTERED_BUSINESSES,
+    searchResult
+  }
+}
 /**
  * @description function to dispatch an action to filter businesses
  * 
@@ -11,11 +18,7 @@ import axios from 'axios';
  */
 const filterBusiness = (option, query) => (dispatch) => 
   axios.get(`/api/v1/businesses?${option}=${query}`).then((res) => {
-    const businessList = JSON.stringify(res.data.businesses);
-    sessionStorage.setItem('businessList', businessList);
-  }).catch(() => {
-    sessionStorage.setItem('businessList', null);
-    return 'Business not found';
+    dispatch(setFilteredBusinesses(res.data.businesses));
   });
 
 

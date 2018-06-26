@@ -1,11 +1,12 @@
 import React from 'react';
+import notFoundImage from '../images/error.jpg';
 
 const NotFound = () => {
   return (
     <div>
-      <div className="text-center" id="no-business-found">
-        <h1>404!</h1>
-        <h1>Sorry page not found</h1>
+      <div className="text-center no-page-found">
+        <img src={notFoundImage} alt="error" height="200px" width="200px" />
+        <h1>The page you requested for was not found</h1>
       </div>
     </div>
   );

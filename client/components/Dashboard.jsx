@@ -7,11 +7,12 @@ import BusinessList from './BusinessList';
 import '../index.scss';
 import green from '../images/default.jpeg';
 import avatar from '../images/user-avatar.png';
-import UserProfileUpdate from './UserProfileUpdate';
+import UserProfileUpdate from './user/UserProfileUpdate';
 import userProfileUpdateRequest from '../actions/userProfileUpdateAction';
 import {fetchBusinesses, fetchBusinessesByUserId } from '../actions/fetchBusinessAction';
 import addFlashMessages from '../actions/flashMessages';
 import imageUploader from '../actions/imageUpload';
+import Spinner from './Spinner';
 
 /**
  * @class Dashboard
@@ -46,13 +47,6 @@ class Dashboard extends Component {
   componentWillMount() {
     document.title = 'My dashboard'
 
-    // this.props.fetchBusinesses().then(
-    //   () => {
-    //     const businesses = this.props.businesses.filter(business => business.userId === this.props.user.userId);
-    //     this.setState({ businesses })
-    //     console.log(this.state.businesses);
-    //   }
-    // );
     this.props.fetchBusinessesByUserId('page=1');
   }
 
@@ -79,8 +73,12 @@ class Dashboard extends Component {
    * @memberof Dashboard
    */
   render() {
-    const { user, paginate, businesses, image } = this.props;
+    const { user, paginate, businesses, image, isLoading } = this.props;
     const imageUrl = localStorage.getItem('image');
+
+    // if(isLoading) {
+    //   return <Spinner />
+    // }
 
     return (
       <div>
@@ -88,7 +86,7 @@ class Dashboard extends Component {
           <h3>Welcome { !user ? null : user.username}!</h3>
 
           <button className="btn btn-outline-success permission-button" id="permission-button">
-            <Link to="/registerbusiness" className="link">
+            <Link to="/registerbusiness" className="link" data-intro="Hey">
               Register a business
             </Link>
           </button>
@@ -121,13 +119,13 @@ class Dashboard extends Component {
           imageUploader={this.props.imageUploader}
         />
 
-        <BusinessList
+        { isLoading ? <Spinner /> : <BusinessList
           businesses={businesses}
           paginate={paginate}
           fetchBusinesses={this.props.fetchBusinesses}
           user={user}
           fetchBusinessesByUserId={this.props.fetchBusinessesByUserId}
-        />
+        /> }
 
       </div>
     );
@@ -147,7 +145,8 @@ const mapStateToProps =(state) => {
     businesses: state.businesses,
     user: state.auth.user,
     paginate: state.paginationResult,
-    image: state.image
+    image: state.image,
+    isLoading: state.loaderToggler.isLoading
   }
 }
 

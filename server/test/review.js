@@ -13,6 +13,7 @@ const { REVIEWER_TOKEN } = process.env;
 const { TOKEN } = process.env;
 const { ADMINTOKEN } = process.env;
 const { NOWRITEACCESS } = process.env;
+const { ANOTHERREVIEWERTOKEN } = process.env;
 
 const invalidToken = `${REVIEWER_TOKEN}l`;
 
@@ -24,7 +25,8 @@ describe('Review posting', () => {
       .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
       .set('Authorization', invalidToken)
       .send({
-        message: 'Business is great'
+        message: 'Business is great',
+        rating: 2
       })
       .end((res) => {
         expect(res.status).to.equal(403);
@@ -37,7 +39,8 @@ describe('Review posting', () => {
       .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
       .set('Authorization', NOREADACCESS)
       .send({
-        message: 'Business is great'
+        message: 'Business is great',
+        rating: 2
       })
       .end((err, res) => {
         expect(res.status).to.equal(201);
@@ -50,7 +53,8 @@ describe('Review posting', () => {
       .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
       .set('Authorization', NOREADACCESS)
       .send({
-        message: 'Really cool'
+        message: 'Really cool',
+        rating: 3
       })
       .end((err, res) => {
         expect(res.status).to.equal(201);
@@ -63,7 +67,8 @@ describe('Review posting', () => {
       .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
       .set('Authorization', NOREADACCESS)
       .send({
-        message: 'Unbelievable'
+        message: 'Unbelievable',
+        rating: 3
       })
       .end((err, res) => {
         expect(res.status).to.equal(201);
@@ -71,15 +76,32 @@ describe('Review posting', () => {
       });
   });
 
-  it('should return status of 403 if posts a review', (done) => {
+  it('should return status of 201 if review is posted successfully', (done) => {
+    chai.request(app)
+      .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
+      .set('Authorization', ANOTHERREVIEWERTOKEN)
+      .send({
+        message: 'Unbelievable',
+        rating: 3
+      })
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        done();
+      });
+  });
+
+  it('should return status of 403 if admin posts a review', (done) => {
     chai.request(app)
       .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
       .set('Authorization', ADMINTOKEN)
       .send({
-        message: 'Unbelievable'
+        message: 'Unbelievable',
+        rating: 3
       })
       .end((err, res) => {
-        expect(res.status).to.equal(403);
+        expect(res).to.have.status(403);
+        // res.body.should.eql('object');
+        expect(res.body[0]).to.equal('Owner of a business can not post a review');
         done();
       });
   });
@@ -89,21 +111,23 @@ describe('Review posting', () => {
       .post(`/api/v1/businesses/${availableBusinessId}/reviews`)
       .set('Authorization', TOKEN)
       .send({
-        message: 'Business is great'
+        message: 'Business is great',
+        rating: 3
       })
       .end((err, res) => {
-        expect(res.status).to.equal(403);
-        res.body.message.should.eql('Owner of a business can not post a review');
+        expect(res).to.have.status(403);
+        res.body[0].should.eql('Owner of a business can not post a review');
         done();
       });
   });
 
   it('should return status 400 if message is empty', (done) => {
     chai.request(app)
-      .post('/api/v1/businesses/3/reviews')
+      .post('/api/v1/businesses/2/reviews')
       .set('Authorization', NOREADACCESS)
       .send({
-        message: null
+        message: null,
+        rating: 3
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -115,7 +139,8 @@ describe('Review posting', () => {
     chai.request(app)
       .post('/api/v1/businesses/2/reviews')
       .send({
-        message: 'Too bad'
+        message: 'Too bad',
+        rating: 3
       })
       .end((res) => {
         expect(res.status).to.equal(403);
@@ -129,7 +154,8 @@ describe('Review posting', () => {
       .post(`/api/v1/businesses/${businessId}/reviews`)
       .set('Authorization', NOREADACCESS)
       .send({
-        message: 'Business is great'
+        message: 'Business is great',
+        rating: 2
       })
       .end((res) => {
         expect(res.status).to.equal(404);
@@ -163,7 +189,7 @@ describe('Get all reviews', () => {
     chai.request(app)
       .get('/api/v1/businesses/3/reviews/')
       .end((res) => {
-        expect(res.status).to.equal(404);
+        expect(res).to.have.status(404);
         done();
       });
   });
@@ -189,13 +215,14 @@ describe('Get all reviews', () => {
 
   it('should return status of 500 for invalid businessId', (done) => {
     chai.request(app)
-      .get('/api/v1/businesses/11111111132222222222222224333333')
+      .get('/api/v1/businesses/__________----------______----/reviews')
       .end((err, res) => {
-        expect(res.status).to.equal(500);
-        expect(res.body.error).to.equal(true);
+        expect(res).to.have.status(500);
+        res.body.error.should.eql(true);
         done();
       });
   });
+
   it('should return status of 500 if id is invalid', (done) => {
     chai.request(app)
       .get('/api/v1/businesses/shduss')
@@ -220,8 +247,8 @@ describe('Delete review by id', () => {
 
   it('should return status of 200 if successful', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/3/reviews/1`)
-      .set('Authorization', NOREADACCESS)
+      .delete(`/api/v1/businesses/2/reviews/1`)
+      .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         done();
@@ -230,7 +257,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 200 if deleted by admin', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/3/reviews/2`)
+      .delete(`/api/v1/businesses/2/reviews/2`)
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -240,7 +267,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 403 if not owner or admin', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/3/reviews/2`)
+      .delete(`/api/v1/businesses/1/reviews/2`)
       .set('Authorization', REVIEWER_TOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(403);
@@ -248,19 +275,31 @@ describe('Delete review by id', () => {
       });
   });
 
-  it('should return status of 404 if business does note exist', (done) => {
+  it('should return status of 404 if business does not exist', (done) => {
     chai.request(app)
       .delete(`/api/v1/businesses/300/reviews/2`)
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(404);
+        res.body.message.should.eql('Business not found')
         done();
       });
   });
 
-  it('should return status of 500 if id is invalid', (done) => {
+  it('should return status of 404 if review does not exist', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/3/reviews/thsh`)
+      .delete(`/api/v1/businesses/2/reviews/200`)
+      .set('Authorization', ADMINTOKEN)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        res.body.message.should.eql('Review not found')
+        done();
+      });
+  });
+
+  it('should return status of 500 if there is uncaught error', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/businesses/2/reviews/4`)
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(500);
@@ -268,9 +307,19 @@ describe('Delete review by id', () => {
       });
   });
 
-  it('should return status of 403 if token is valid but not admin or owner', (done) => {
+  it('should return status of 404 if id is invalid', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/3/reviews/3`)
+      .delete(`/api/v1/businesses/3/reviews/thsh`)
+      .set('Authorization', ADMINTOKEN)
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+
+  it('should return status of 403 if token is valid but not admin or reviewer', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/businesses/2/reviews/3`)
       .set('Authorization', NOWRITEACCESS)
       .end((err, res) => {
         expect(res.status).to.equal(403);

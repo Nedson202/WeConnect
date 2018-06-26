@@ -43,6 +43,7 @@ class BusinessRegistration extends Component {
 
     return (
       <div>
+        <div id="background-image" />        
         <RegistrationForm
           businessRegistrationRequest={this.props.businessRegistrationRequest}
           businessUpdateRequest={this.props.businessUpdateRequest}

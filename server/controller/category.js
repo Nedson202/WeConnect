@@ -30,7 +30,7 @@ class BusinessCategories {
             id: category.id,
             category: category.category
           });
-        })
+        });
 
         return res.status(200).json({
           categories: categoryArray

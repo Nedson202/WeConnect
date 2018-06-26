@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import BusinessList from '../BusinessList';
 import '../../index.scss';
 
@@ -27,26 +28,28 @@ class SearchResultPage extends Component {
    * @memberof SearchResultPage
    */
   render() {
-    const businessList = JSON.parse(sessionStorage.getItem('businessList'));
+    const { businesses } = this.props;
     const queryData = JSON.parse(sessionStorage.getItem('query'));
-
-    const noBusiness = (
-      <h1 className="text-center textcase" id="no-business-found">No business found with {queryData.option}: {queryData.query}</h1>
-    )
 
     const foundBusiness = (
       <h1 className="text-center textcase" id="business-found">Displaying business with {queryData.option}: {queryData.query}</h1>
     )
+
     return (
       <div>
-        <div className="text-center" />
-        { !businessList ? null : foundBusiness}
-        { !businessList ? noBusiness : (
-          <BusinessList businesses={businessList} />
-        )}
+        <div className="text-center business-profile" />
+        {businesses.length !== 0 ? foundBusiness : null}
+        <BusinessList businesses={businesses} />
       </div>
     );
   }
 }
 
-export default SearchResultPage;
+const mapStateToProps = state => {
+  return {
+    businesses: state.businesses       
+    // businesses: state.searchResult       
+  }
+}
+
+export default connect(mapStateToProps)(SearchResultPage);
