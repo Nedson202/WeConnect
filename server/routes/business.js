@@ -5,7 +5,7 @@ import validator from '../middlewares/validator';
 import errorHandler from '../middlewares/error-handler';
 import sorter from '../middlewares/business-filterer';
 import checkAuth from '../middlewares/check-auth';
-
+// all endpoints related to businesses
 export default (route) => {
   route.post('/api/v1/businesses', checkAuth, validator.registerBusiness, errorHandler, Businesses.createBusiness);
   route.get('/api/v1/businesses', validator.checkQuery, sorter.sortQuery, Businesses.getBusiness);
