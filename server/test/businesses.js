@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 
 const { TOKEN } = process.env;
 
-const businesses = models.Business
+const businesses = models.Business;
 
 const invalidTOKEN = `${TOKEN}l`;
 const { NOWRITEACCESS } = process.env;
@@ -80,7 +80,7 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'finance',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((err, res) => {
         if (err) return done(err);
@@ -99,9 +99,9 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
-      .end((res) => {        
+      .end((res) => {
         expect(res).to.have.status(409);
         done();
       });
@@ -117,9 +117,9 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
-      .end((res) => {        
+      .end((res) => {
         expect(res).to.have.status(403);
         done();
       });
@@ -135,7 +135,7 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'others',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((err, res) => {
         if (err) done(err);
@@ -153,7 +153,7 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -170,7 +170,7 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -187,7 +187,7 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: 'lagos',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -203,7 +203,7 @@ describe('Register business', () => {
         email: 'crack@fine.net',
         location: 'lagos',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -220,7 +220,7 @@ describe('Register business', () => {
         address: '12 payne avenue',
         location: null,
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -236,7 +236,7 @@ describe('Register business', () => {
         email: 'crack@fine.net',
         address: '12 payne avenue',
         location: 'lagos',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res.status).to.equal(400);
@@ -314,16 +314,17 @@ describe('Filter business by location', () => {
       .query({ location: 'lagos' })
       .end((err, res) => {
         expect(res.status).to.equal(200);
+        expect(res.body.allData.businesses.length).to.be.greaterThan(0);
         done();
       });
   });
 
-  it('should return a 404 if no business with provided location is found', (done) => {
+  it('should return an empty array if no business with provided location is found', (done) => {
     chai.request(app)
       .get('/api/v1/businesses')
-      .query({ location: 'ajah' })
+      .query({ location: 'ajasoah' })
       .end((res) => {
-        expect(res.status).to.equal(404);
+        expect(res).to.have.status(200);
         done();
       });
   });
@@ -346,7 +347,7 @@ describe('Filter/get business by id', () => {
       .get(`/api/v1/businesses/${businessId}`)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        res.body.business.should.be.a('array');
+        res.body.business.should.be.a('object');
         done();
       });
   });
@@ -367,7 +368,7 @@ describe('Filter/get business by owner id', () => {
     chai.request(app)
       .get(`/api/v1/businesses/user/${userId}`)
       .end((err, res) => {
-        if(err) return done(err);
+        if (err) return done(err);
         expect(res).to.have.status(200);
         done();
       });
@@ -378,7 +379,7 @@ describe('Filter/get business by owner id', () => {
     chai.request(app)
       .get(`/api/v1/businesses/user/${userId}`)
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        expect(res).to.have.status(200);
         res.body.allData.should.be.a('object');
         done();
       });
@@ -395,12 +396,13 @@ describe('Filter/get business by owner id', () => {
 });
 
 describe('Filter business by category', () => {
-  it('should return a 404 if no business with provided category is found', (done) => {
+  it('should return an empty array if no business with provided category is found', (done) => {
     chai.request(app)
       .get('/api/v1/businesses')
       .query({ category: 'religion' })
       .end((res) => {
-        expect(res).to.have.status(404);
+        expect(res).to.have.status(200);
+        expect(res.businesses.length).to.equal(0);
         done();
       });
   });
@@ -411,6 +413,7 @@ describe('Filter business by category', () => {
       .query({ category: 'finance' })
       .end((err, res) => {
         expect(res.status).to.equal(200);
+        expect(res.body.allData.businesses.length).to.be.greaterThan(0);
         done();
       });
   });
@@ -439,7 +442,7 @@ describe('Update business by id', () => {
         address: '12 payne avenue',
         location: 'lao',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -459,7 +462,7 @@ describe('Update business by id', () => {
         address: '12 payne avenue',
         location: 'lao',
         category: 'health',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -480,7 +483,7 @@ describe('Update business by id', () => {
         location: 'lagos',
         category: 'health',
         address: '12 jsd',
-        description: 'hey there description has to be 30 characters long for business to be successfully registered'          
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((err, res) => {
         expect(res).to.have.status(409);
@@ -535,7 +538,7 @@ describe('Update business by id', () => {
 
   it('should return error if businessId is not valid', (done) => {
     chai.request(app)
-      .put(`/api/v1/businesses/________----------------`)
+      .put('/api/v1/businesses/________----------------')
       .set('Authorization', TOKEN)
       .send({
         name: 'Hi tech',
@@ -551,7 +554,7 @@ describe('Update business by id', () => {
 describe('Business image upload', () => {
   it('should return a 500 if business id is invalid', (done) => {
     chai.request(app)
-      .put(`/api/v1/business/________--------_________/image`)
+      .put('/api/v1/business/________--------_________/image')
       .set('Authorization', TOKEN)
       .end((res) => {
         expect(res).to.have.status(500);

@@ -2,7 +2,7 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../index';
 
-require("dotenv").config();
+require('dotenv').config(); // eslint-disable-line
 
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
@@ -247,7 +247,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 200 if successful', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/2/reviews/1`)
+      .delete('/api/v1/businesses/2/reviews/1')
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -257,7 +257,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 200 if deleted by admin', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/2/reviews/2`)
+      .delete('/api/v1/businesses/2/reviews/2')
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -267,7 +267,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 403 if not owner or admin', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/1/reviews/2`)
+      .delete('/api/v1/businesses/1/reviews/2')
       .set('Authorization', REVIEWER_TOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(403);
@@ -277,29 +277,29 @@ describe('Delete review by id', () => {
 
   it('should return status of 404 if business does not exist', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/300/reviews/2`)
+      .delete('/api/v1/businesses/300/reviews/2')
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(404);
-        res.body.message.should.eql('Business not found')
+        res.body.message.should.eql('Business not found');
         done();
       });
   });
 
   it('should return status of 404 if review does not exist', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/2/reviews/200`)
+      .delete('/api/v1/businesses/2/reviews/200')
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(404);
-        res.body.message.should.eql('Review not found')
+        res.body.message.should.eql('Review not found');
         done();
       });
   });
 
   it('should return status of 500 if there is uncaught error', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/2/reviews/4`)
+      .delete('/api/v1/businesses/2/reviews/4')
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(500);
@@ -309,7 +309,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 404 if id is invalid', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/3/reviews/thsh`)
+      .delete('/api/v1/businesses/3/reviews/thsh')
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(404);
@@ -319,7 +319,7 @@ describe('Delete review by id', () => {
 
   it('should return status of 403 if token is valid but not admin or reviewer', (done) => {
     chai.request(app)
-      .delete(`/api/v1/businesses/2/reviews/3`)
+      .delete('/api/v1/businesses/2/reviews/3')
       .set('Authorization', NOWRITEACCESS)
       .end((err, res) => {
         expect(res.status).to.equal(403);
