@@ -1,8 +1,10 @@
-import {
-  ADD_IMAGE
- } from '../actions/types';
+import { ADD_IMAGE } from '../actions/types';
 
-export default (state = [], action = {}) => {
+const inItialState = {
+  image: ''
+};
+
+export default (state = inItialState, action) => {
   switch (action.type) {
     case ADD_IMAGE:
       return action.image;

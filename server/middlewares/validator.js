@@ -10,17 +10,16 @@ class validator {
   */
   static userSignup(req, res, next) {
     req.check('username', 'Username is required').notEmpty();
-    req.check('email', 'Email cannot be empty or invalid').isEmail().trim();
+    req.checkBody('email', 'Email cannot be empty or invalid').isEmail().trim();
     req
-      .check('password', 'Minimun password length is 6 chars')
+      .check('password', 'Minimun password length is 6 characters')
       .isLength({ min: 6 }).trim();
     req.sanitizeBody('username').trim();
-    req.sanitizeBody('email').trim();
+    // req.sanitizeBody('email').normalizeEmail();
 
     next();
   }
   /**
-    *
     *@param {any} req - request value
     *@param {any} res - response value
     *@param {any} next
@@ -36,7 +35,6 @@ class validator {
     next();
   }
   /**
-    *
     *@param {any} req - request value
     *@param {any} res - response value
     *@param {any} next
@@ -44,14 +42,13 @@ class validator {
   */
   static userUpdate(req, res, next) {
     req.check('username', 'Username is required').notEmpty();
-    req.check('email', 'Email cannot be empty or invalid').notEmpty();
+    req.check('email', 'Email cannot be empty or invalid').isEmail();
     req.sanitizeBody('username').trim();
     req.sanitizeBody('email').trim();
 
     next();
   }
   /**
-    *
     *@param {any} req - request value
     *@param {any} res - response value
     *@param {any} next - next value
@@ -85,14 +82,13 @@ class validator {
   */
   static reviews(req, res, next) {
     req.checkParams('businessId', 'Id in params can only be an integer').isInt().trim();
-    req.check('message', 'Review content is required').notEmpty();
-    req.check('rating', 'Please rate this business').isInt({min: 1});
+    req.check('message', 'Review cannot be more than 250 characters').isLength({ min: 1, max: 250 }).trim();
+    req.check('rating', 'Please rate this business').isFloat({ min: 1 });
     req.sanitizeBody('message').trim();
 
     next();
   }
   /**
-    *
     *@param {any} req - request value
     *@param {any} res - response value
     *@param {any} next - next value
@@ -104,15 +100,12 @@ class validator {
     next();
   }
   /**
-    *
     *@param {any} req - request value
     *@param {any} res - response value
     *@param {any} next - next value
     *@return {status} validator
   */
   static checkQuery(req, res, next) {
-    // req.checkQuery('location', 'Review content is required').notEmpty();
-    // req.checkQuery('category', 'Review content is required').notEmpty();
     req.sanitizeQuery('location').trim();
     req.sanitizeQuery('category').trim();
 

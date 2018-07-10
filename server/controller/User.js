@@ -10,31 +10,31 @@ const Users = models.User;
  */
 class Auth {
   /**
-      *
-      *@param {any} req - request value
-      *@param {any} res - response value
-      *@return {json} response object gotten
-      *@memberof Auth
-    */
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@return {json} response object gotten
+    *@memberof Auth
+  */
   static createUser(req, res) {
     const { username, email } = req.body;
     let { password } = req.body;
-
+    // parse password to string if it is an integer
     if (typeof (password) === 'number') {
       password = password.toString();
     }
-
+    // create user account
     Users.create({
       username: username.toLowerCase(),
       email: email.toLowerCase(),
       password: password.toLowerCase()
     })
       .then((user) => {
+        // hash user password using bcrypt
         const passwordHash = bcrypt.hashSync(user.password, 10);
         user.update({
           password: passwordHash
         });
-
+        // sign user data to generate a token
         const token = jwt.sign(
           {
             userId: user.id,
@@ -43,7 +43,7 @@ class Auth {
           },
           config.secretkey
         );
-
+        // return success message, user data, and token
         return res.status(201).json({
           message: 'Signup successful',
           error: false,
@@ -53,50 +53,54 @@ class Auth {
           },
           token
         });
-      }).catch(error => res.status(409).json([error.errors[0].message]));
+      })
+      // return error occured as a result of conflict
+      .catch(error => res.status(409).json([error.errors[0].message]));
   }
 
   /**
-      *
-      *@param {any} req - request value
-      *@param {any} res - response value
-      *@return {json} response object goten
-      *@memberof Auth
-    */
-  static logUser(req, res) {
+    *@param {any} req - request value
+    *@param {any} res - response value
+    *@return {json} response object goten
+    *@memberof Auth
+  */
+  static loginUser(req, res) {
     const { username } = req.body;
     let { password } = req.body;
-
+    // parse password to string if it is an integer
     if (typeof (password) === 'number') {
       password = password.toString();
     }
-
+    // find a user by username provided
     Users.findOne({
       where: {
         username: username.toLowerCase()
       }
     })
       .then((user) => {
+        // check if password provided matches that in the database
         if (!(user && bcrypt.compareSync((password).toLowerCase(), user.password))) {
           return res.status(401).json([
             'Unauthorised, check your username or password'
           ]);
         }
-
+        // sign user data to generate a token
         const token = jwt.sign(
           {
             userId: user.id,
             username,
-            email: user.email
+            email: user.email,
+            image: user.image
           },
           config.secretkey
         );
-
+        // return success message and generated token
         return res.status(200).json({
           message: 'login successful',
           tokenMessage: 'Generated token expires in 10 hours time',
           error: false,
-          token
+          token,
+          image: user.image
         });
       });
   }
@@ -109,6 +113,7 @@ class Auth {
     */
   static getAllUser(req, res) {
     const userArray = [];
+    const { username, email } = req.decoded;
 
     return Users
       .findAll()
@@ -119,7 +124,7 @@ class Auth {
           });
         }
 
-        if (req.decoded.username !== 'admin' && req.decoded.email !== 'admin@aladmin.com') {
+        if (username !== config.admin && email !== config.adminEmail) {
           return res.status(403).json({
             message: 'Forbidden, you do not have access to view all users',
             error: true
@@ -144,14 +149,14 @@ class Auth {
       *@memberof Auth
     */
   static updateUser(req, res) {
-    const user = req.user;
-    // const userId = parseInt(req.params.userId, 10);
+    const { user } = req;
+    const { username, email, image } = req.body;
     const conflict = [];
 
     user.update({
-      username: req.body.username || user.username,
-      email: req.body.email || user.email,
-      image: req.body.image || user.image
+      username: username || user.username,
+      email: email || user.email,
+      image: image || user.image
     })
       .then(() => {
         const token = jwt.sign(

@@ -2,114 +2,115 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import tokenVerifier from './tokenVerifier';
-import { logout } from '../actions/loginActions';
-import addFlashMessage from '../actions/flashMessages';
+import tokenVerifier from '../tokenVerifier';
+import { logout } from '../../actions/userActions';
+import addFlashMessage from '../../actions/flashMessages';
 
 /**
  * @description Deletes business from the database
- * 
+ *
  * @param {any} ComposedComponent
- * 
+ *
  * @returns {undefined}
- * 
+ *
  * @memberof Authenticate
  */
-export default function(ComposedComponent) {
+export default function (ComposedComponent) {
   /**
    * @class Authenticate
-   * 
+   *
    * @extends {Component}
    */
   class Authenticate extends Component {
     /**
        * @description Retrieve business fetched
-       * 
+       *
        * @param {any} nextProps
-       * 
+       *
        * @returns {undefined}
-       * 
+       *
        * @memberof Authenticate
        */
     componentWillMount() {
-
-      if(tokenVerifier(localStorage.getItem('accessToken'))) {
+      const { history } = this.context.router;
+      if (tokenVerifier(localStorage.getItem('accessToken'))) {
         this.props.addFlashMessage({
           type: 'error',
           text: 'Access denied, you need to login'
         });
         this.props.logout();
-        this.context.router.history.push('/login');
+        history.push('/login');
       }
 
-      if(!this.props.isAuthenticated) {
+      if (!this.props.isAuthenticated) {
         this.props.addFlashMessage({
           type: 'error',
           text: 'Access denied, you need to login'
         });
         this.props.logout();
-        this.context.router.history.push('/login');
+        history.push('/login');
       }
 
-      if(this.props.isAuthenticated && this.props.user.username === 'admin') {
+      if (this.props.isAuthenticated && this.props.user.username === process.env.ADMIN) {
         this.props.addFlashMessage({
           type: 'error',
-          message: 'Access denied, operation is unathorised for an admin'
+          text: 'Access denied, operation is unathorised for an admin'
         });
-        this.context.router.history.push('/adminpanel');
+        history.push('/adminpanel');
       }
     }
 
     /**
    * @description Retrieve business fetched
-   * 
+   *
    * @param {any} nextProps
-   * 
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof Authenticate
    */
     componentWillUpdate(nextProps) {
+      const { history } = this.context.router;
       if (!nextProps.isAuthenticated) {
-        this.context.router.history.push('/');
+        history.push('/');
       }
     }
 
     /**
    * @description Renders the component to the dom
-   * 
+   *
    * @returns {object} JSX object
-   * 
+   *
    * @memberof Authenticate
    */
-    render(){
-      return(
+    render() {
+      return (
         <ComposedComponent {...this.props} />
       );
     }
   }
 
-Authenticate.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  logout: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired
-}
+  Authenticate.propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired,
+    addFlashMessage: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  };
 
-Authenticate.contextTypes = {
-  router: PropTypes.object.isRequired
-}
+  Authenticate.contextTypes = {
+    router: PropTypes.object.isRequired
+  };
 
-const mapStateToProps = (state) => {
-  return {
+  const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-  }
-}
+  });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  logout,
-  addFlashMessage
-}, dispatch);
+  const mapDispatchToProps = dispatch => bindActionCreators({
+    logout,
+    addFlashMessage
+  }, dispatch);
 
-return connect(mapStateToProps, mapDispatchToProps)(Authenticate);
+  return connect(mapStateToProps, mapDispatchToProps)(Authenticate);
 }

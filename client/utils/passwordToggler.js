@@ -1,20 +1,18 @@
-const passwordToggler = () => {
-  return () => {
-    const toggleType = document.getElementById('password');
+const passwordToggler = () => () => {
+  const toggleType = document.getElementById('password');
 
-    const showEyeSlashIcon = document.getElementById('remove-hide');
-    const hideEyeIcon = document.getElementById('add-hide');
+  const showEyeSlashIcon = document.getElementById('remove-hide');
+  const hideEyeIcon = document.getElementById('add-hide');
 
-    if(toggleType.type === 'password') {
-      toggleType.type = 'text';
-      showEyeSlashIcon.classList.remove('hide')
-      hideEyeIcon.classList.add('hide')
-    } else {
-      toggleType.type = 'password';
-      showEyeSlashIcon.classList.add('hide')
-      hideEyeIcon.classList.remove('hide')
-    }
+  if (toggleType.type === 'password') {
+    toggleType.type = 'text';
+    showEyeSlashIcon.classList.remove('hide');
+    hideEyeIcon.classList.add('hide');
+  } else {
+    toggleType.type = 'password';
+    showEyeSlashIcon.classList.add('hide');
+    hideEyeIcon.classList.remove('hide');
   }
-}
+};
 
 export default passwordToggler;

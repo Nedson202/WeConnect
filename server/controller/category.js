@@ -1,14 +1,11 @@
-import models from '../models/index';
+import models from '../models';
 
 const Categories = models.Category;
 /**
-
  *@class
- *
  */
 class BusinessCategories {
   /**
-    *
     *@param {any} req - request value
     *@param {any} res - response value
     *@return {json} response object gotten
@@ -16,6 +13,7 @@ class BusinessCategories {
   */
   static getCategories(req, res) {
     const categoryArray = [];
+    // find and return all categories
     return Categories
       .findAll()
       .then((categories) => {
@@ -24,14 +22,14 @@ class BusinessCategories {
             message: 'No business category available'
           });
         }
-
-        categories.forEach((category) => {
+        // loop through the categories returned and collect only the category and id
+        categories.forEach((businessCategory) => {
           categoryArray.push({
-            id: category.id,
-            category: category.category
+            id: businessCategory.id,
+            category: businessCategory.category
           });
         });
-
+        // return the new array of categories
         return res.status(200).json({
           categories: categoryArray
         });

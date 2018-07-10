@@ -1,8 +1,23 @@
 import { TOGGLELOADER } from './types';
-
-const loader = () => ({
+/**
+ * @description function to dispatch an action to filter recipes
+ *
+ * @param {Boolean} loadingStatus
+ *
+ * @return {Object} action dispatched by the action creator
+ */
+const loadingState = loadingStatus => ({
   type: TOGGLELOADER,
-  loader: { isLoading: false }
+  loadingStatus
 });
-
-export default loader;
+// /**
+//  * @description function to dispatch an action to filter recipes
+//  *
+//  * @param {Boolean} loadingStatus
+//  *
+//  * @return {Object} action dispatched by the action creator
+//  */
+// const loader = loadingStatus => (dispatch) => {
+//   dispatch(loadingState(loadingStatus));
+// };
+export default loadingState;

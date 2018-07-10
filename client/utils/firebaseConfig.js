@@ -1,13 +1,13 @@
 import * as firebase from 'firebase';
 
 const config = {
-    apiKey: "AIzaSyBnRKH-tpjGoHJfGtuXxR7qk6e3gZbQNvc",
-    authDomain: "weconnect-image.firebaseapp.com",
-    databaseURL: "https://weconnect-image.firebaseio.com",
-    projectId: "weconnect-image",
-    storageBucket: "weconnect-image.appspot.com",
-    messagingSenderId: "465125394331"
-  };
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.DATABASE_URL,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID
+};
 
 firebase.initializeApp(config);
 

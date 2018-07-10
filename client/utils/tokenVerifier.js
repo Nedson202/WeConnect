@@ -1,13 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-const decodeToken = (token) => {
-  return jwt.verify(token, 'aledna', (err) => {
-    if (err) {
-      return err
-    }
+const decodeToken = token => jwt.verify(token, process.env.JWT_SECRET, (err) => {
+  if (err) return err;
 
-    return false
-  });
-}
+  return false;
+});
 
 export default decodeToken;
