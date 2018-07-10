@@ -52,7 +52,7 @@ module.exports = {
     },
   ], {}),
 
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Categories', [
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Categories', [ // eslint-disable-line
 
-    ], {}) // eslint-disable-line no-unused-vars
+  ], {}) // eslint-disable-line no-unused-vars
 };

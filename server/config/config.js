@@ -7,7 +7,11 @@ module.exports = {
     database: 'weconnect-api',
     host: '127.0.0.1',
     port: '5432',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    dialectOptions: {
+      useUTC: false
+    },
+    timezone: '11:00'
   },
   test: {
     username: process.env.DB_USERNAME,
@@ -21,4 +25,6 @@ module.exports = {
     use_env_variable: 'DATABASE_URL'
   },
   secretkey: process.env.JWT_SECRET,
+  admin: process.env.ADMIN,
+  adminEmail: process.env.ADMIN_EMAIL,
 };
