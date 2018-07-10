@@ -5,9 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from './rootReducer'
+import rootReducer from './rootReducer';
 import setAuthToken from './utils/setAuthToken';
-import { setCurrentUser } from './actions/loginActions';
+import { setCurrentUser } from './actions/userActions';
 import Routes from './Routes';
 
 const composeEnhancers =
@@ -16,9 +16,7 @@ const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     }) : compose;
 
-const enhancer = composeEnhancers(
-  applyMiddleware(thunk)
-);
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const store = createStore(
   rootReducer,
@@ -30,12 +28,14 @@ if (localStorage.accessToken) {
   store.dispatch(setCurrentUser(jwt.decode(localStorage.accessToken)));
 }
 
-ReactDOM.render((
-  <Provider store={store}>
-    <BrowserRouter>
-      <Routes />
-    </BrowserRouter>
-  </Provider>
-), document.getElementById('app'));
+ReactDOM.render(
+  (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
+    </Provider>
+  ), document.getElementById('app')
+);
 
 module.hot.accept();
