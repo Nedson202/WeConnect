@@ -11,7 +11,7 @@
     "test:nyc": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 15000 --compilers js:babel-core/register server/test/* --exit",
     "test-client": "jest --config=./client/__test__/jest.config.js",
     "migrate": "./node_modules/.bin/sequelize db:migrate:undo:all && sequelize db:migrate",
-    "migration:test": "NODE_ENV=test sequelize db:migrate",
+    "migration:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:migrate",
     "migration": "NODE_ENV=production sequelize db:migrate",
     "migration:dev": "sequelize db:migrate",
     "migrate:test": "NODE_ENV=test npm run migration:undo:test && npm run migration:test && npm run seed:undo && npm run migration:test && npm run seed && npm run test:nyc",
