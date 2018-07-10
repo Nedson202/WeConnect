@@ -177,7 +177,7 @@ module.exports = {
     },
   ], {}),
 
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Locations', [
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Locations', [// eslint-disable-line no-unused-vars
 
-    ], {}) // eslint-disable-line no-unused-vars
+  ], {})
 };

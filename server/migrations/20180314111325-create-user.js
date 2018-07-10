@@ -19,7 +19,7 @@ module.exports = {
     password: {
       type: Sequelize.STRING
     },
-    image: { 
+    image: {
       type: Sequelize.STRING
     },
     createdAt: {

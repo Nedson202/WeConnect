@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Review = sequelize.define('Review', {
     message: DataTypes.STRING,
-    rating: DataTypes.INTEGER
+    rating: DataTypes.FLOAT
   });
 
   Review.associate = (models) => {
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     Review.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
-      as: 'reviewer'      
+      as: 'reviewer'
     });
   };
 
