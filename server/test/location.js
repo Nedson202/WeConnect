@@ -14,7 +14,6 @@ describe('Get all location', () => {
         if (err) done(err);
         expect(res).to.have.status(200);
         res.body.should.be.a('object');
-        res.body.locations.should.be.a('array');
         done();
       });
   });

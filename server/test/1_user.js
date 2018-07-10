@@ -3,7 +3,7 @@ import chai from 'chai';
 import app from '../../index';
 import models from '../models/index';
 
-require("dotenv").config;
+require("dotenv").config; // eslint-disable-line 
 
 const { NOREADACCESS } = process.env;
 const { ADMINTOKEN } = process.env;
@@ -24,8 +24,8 @@ describe('User signup authenticator', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
-        username: 'admin',
-        email: 'admin@aladmin.com',
+        username: process.env.ADMIN,
+        email: process.env.ADMIN_EMAIL,
         password: 'israel'
       })
       .end((err, res) => {
@@ -228,7 +228,8 @@ describe('User updater', () => {
       .send({
         username: 'alansm',
         email: 'israejl@all.net'
-      }).end((err, res) => {
+      })
+      .end((err, res) => {
         expect(res.status).to.equal(200);
         res.body.token.should.be.a('string');
         done();
@@ -242,7 +243,8 @@ describe('User updater', () => {
       .send({
         username: 'alanco',
         email: 'israejl@all.net'
-      }).end((err, res) => {
+      })
+      .end((err, res) => {
         expect(res.status).to.equal(409);
         res.body.should.be.a('array');
         res.body[0].should.eql('user with name is already registered');
@@ -257,7 +259,8 @@ describe('User updater', () => {
       .send({
         username: 'alansmith co',
         email: 'israel@all.net'
-      }).end((err, res) => {
+      })
+      .end((err, res) => {
         expect(res.status).to.equal(409);
         res.body.should.be.a('array');
         res.body[0].should.eql('user with email is already registered');
@@ -270,12 +273,13 @@ describe('User updater', () => {
       .put('/api/v1/user/-------------------')
       .set('Authorization', TOKEN)
       .send({
-        username: 
-        `alansm1`,
+        username:
+        'alansm1',
         email: 'israejl@all.net',
-      }).end((err, res) => {
+      })
+      .end((err, res) => {
         expect(res).to.have.status(500);
-        res.body.error.should.eql(true)
+        res.body.error.should.eql(true);
         done();
       });
   });
@@ -361,7 +365,7 @@ describe('User administrator test', () => {
       .set('Authorization', ADMINTOKEN)
       .end((err, res) => {
         expect(res).to.have.status(500);
-        res.body.error.should.eql(true)
+        res.body.error.should.eql(true);
         done();
       });
   });
