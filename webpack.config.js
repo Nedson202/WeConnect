@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
@@ -20,19 +20,11 @@ module.exports = {
     new UglifyJsPlugin({
       test: /\.js($|\?)/i
     }),
-    // new HtmlWebpackPlugin({
-    //   title: 'HtmlWebpackPlugin example',
-    //   favicon: 'client/images/favicon.ico',
-    //   filename: 'index.html'
-    // }),
+    new Dotenv({
+      path: './.env',
+      systemvars: true
+    })
   ],
-  // optimization: {
-  //   splitChunks: {
-  //     cacheGroups: {
-  //       commons: { test: /[\\/]node_modules[\\/]/, name: "vendors", chunks: "all" }
-  //     }
-  //   }
-  // },
   module: {
     rules: [
       {
@@ -52,7 +44,7 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.bundle\.js$/,
@@ -63,4 +55,4 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx']
   }
-}
+};
