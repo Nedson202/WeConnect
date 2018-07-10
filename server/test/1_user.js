@@ -3,8 +3,7 @@ import chai from 'chai';
 import app from '../../index';
 import models from '../models/index';
 
-require("dotenv").config; // eslint-disable-line 
-
+require('dotenv').config(); // eslint-disable-line
 const { NOREADACCESS } = process.env;
 const { ADMINTOKEN } = process.env;
 const { TOKEN } = process.env;

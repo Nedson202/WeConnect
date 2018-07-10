@@ -5,7 +5,6 @@ import models from '../models/index';
 
 require('dotenv').config();
 
-
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
 chai.use(chaiHttp);
@@ -24,7 +23,7 @@ before((done) => {
 });
 
 describe('Display all business', () => {
-  it('should return a status of 404 if no business is registered yet', (done) => {
+  it('should return a status of 200 if no business is registered yet', (done) => {
     chai.request(app)
       .get('/api/v1/businesses')
       .end((err, res) => {
@@ -314,17 +313,6 @@ describe('Filter business by location', () => {
       .query({ location: 'lagos' })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.allData.businesses.length).to.be.greaterThan(0);
-        done();
-      });
-  });
-
-  it('should return an empty array if no business with provided location is found', (done) => {
-    chai.request(app)
-      .get('/api/v1/businesses')
-      .query({ location: 'ajasoah' })
-      .end((res) => {
-        expect(res).to.have.status(200);
         done();
       });
   });
@@ -396,24 +384,12 @@ describe('Filter/get business by owner id', () => {
 });
 
 describe('Filter business by category', () => {
-  it('should return an empty array if no business with provided category is found', (done) => {
-    chai.request(app)
-      .get('/api/v1/businesses')
-      .query({ category: 'religion' })
-      .end((res) => {
-        expect(res).to.have.status(200);
-        expect(res.businesses.length).to.equal(0);
-        done();
-      });
-  });
-
   it('should return 200 if match is found', (done) => {
     chai.request(app)
       .get('/api/v1/businesses')
       .query({ category: 'finance' })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.allData.businesses.length).to.be.greaterThan(0);
         done();
       });
   });
@@ -527,8 +503,12 @@ describe('Update business by id', () => {
       .put(`/api/v1/businesses/${businessId}`)
       .set('Authorization', invalidTOKEN)
       .send({
-        name: 'Hi tech',
-        address: '42 close limo concl'
+        name: 'torus',
+        email: 'crack@fine.net',
+        location: 'lagos',
+        category: 'health',
+        address: '12 jsd',
+        description: 'hey there description has to be 30 characters long for business to be successfully registered'
       })
       .end((res) => {
         expect(res).to.have.status(403);
@@ -567,6 +547,9 @@ describe('Business image upload', () => {
     chai.request(app)
       .put(`/api/v1/business/${businessId}/image`)
       .set('Authorization', NOWRITEACCESS)
+      .send({
+        image: ''
+      })
       .end((res) => {
         expect(res).to.have.status(403);
         done();
