@@ -1,27 +1,132 @@
 import {
+  ADD_BUSINESS,
   SET_BUSINESSES,
   SET_BUSINESSES_BY_ID,
   SET_BUSINESS_BY_ID,
   BUSINESS_DELETED,
-  FILTERED_BUSINESSES
- } from '../actions/types';
+  FILTERED_BUSINESSES,
+  SET_LOCATIONS,
+  SET_CATEGORIES,
+  PAGINATION_RESULT,
+  SET_REVIEWS,
+  ADD_REVIEW,
+  REVIEW_DELETED,
+  EDIT_REVIEW,
+  BUSINESS_REQUEST_ERROR,
+  BUSINESS_REQUEST_SUCCESS
+} from '../actions/types';
 
-export default (state = [], action = {}) => {
+const initialState = {
+  businesses: [],
+  businessOwnedByUser: [],
+  business: {},
+  searchResult: [],
+  locations: [],
+  categories: [],
+  paginationResult: {},
+  reviews: [],
+};
+
+export default (state = initialState, action) => {
   switch (action.type) {
+    case ADD_BUSINESS:
+      return [
+        ...state,
+        action.business
+      ];
+
     case SET_BUSINESSES:
-      return action.businesses;
+      return {
+        ...state,
+        businesses: action.businesses
+      };
 
     case SET_BUSINESSES_BY_ID:
-      return action.businesses;
+      return {
+        ...state,
+        businessOwnedByUser: action.businesses
+      };
 
     case SET_BUSINESS_BY_ID:
-      return action.business;
+      return {
+        ...state,
+        business: action.business
+      };
 
     case FILTERED_BUSINESSES:
-      return action.searchResult;
+      return {
+        ...state,
+        searchResult: action.searchResult
+      };
 
     case BUSINESS_DELETED:
-      return state.filter(business => business.id !== action.businessId);
+      return {
+        ...state,
+        businessOwnedByUser:
+        state.businessOwnedByUser.filter(business => business.id !== action.businessId)
+      };
+
+    case SET_LOCATIONS:
+      return {
+        ...state,
+        locations: action.locations
+      };
+
+    case SET_CATEGORIES:
+      return {
+        ...state,
+        categories: action.categories
+      };
+
+    case PAGINATION_RESULT:
+      return {
+        ...state,
+        paginationResult: action.result
+      };
+
+    case ADD_REVIEW:
+      return {
+        ...state,
+        reviews: [action.review, ...state.reviews]
+      };
+
+    case SET_REVIEWS:
+      return {
+        ...state,
+        reviews: action.reviews
+      };
+
+    case REVIEW_DELETED:
+      return {
+        ...state,
+        reviews: state.reviews.filter(review => review.id !== action.reviewId)
+      };
+
+    case EDIT_REVIEW:
+      return {
+        ...state,
+        reviews: state.reviews.map((review) => {
+          if (review.id === action.review.id) {
+            review.message = action.review.message;
+            review.rating = action.review.rating;
+          }
+
+          return review;
+        })
+      };
+
+    case BUSINESS_REQUEST_ERROR:
+      return {
+        ...state,
+        businessRequestError: action.error
+      };
+
+    case BUSINESS_REQUEST_SUCCESS:
+      return {
+        ...state,
+        businessRequestSuccess: action.success
+      };
+
     default: return state;
   }
 };
