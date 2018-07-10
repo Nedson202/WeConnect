@@ -2,263 +2,507 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import 'rc-pagination/assets/index.css';
+import ImageZoom from 'react-medium-image-zoom';
 import { Link } from 'react-router-dom';
-import StarRatingComponent from 'react-star-rating-component';
+import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
 import ReviewModal from './ReviewModal';
-import ReviewList from '../ReviewList';
-import fetchBusinessById from '../../actions/fetchBusinessByIdAction';
-import reviewRequest from '../../actions/postReviewAction';
+import ReviewList from './ReviewList';
+import { reviewRequest, reviewUpdateRequest } from '../../actions/postReviewAction';
 import addFlashMessage from '../../actions/flashMessages';
-import deleteBusiness from '../../actions/deleteBusinessAction';
-import fetchReviews from '../../actions/fetchReviewAction';
-import deleteReview from '../../actions/deleteReviewAction';
+import { deleteBusiness, deleteReview } from '../../actions/deleteAction';
+import { fetchReviews, fetchBusinessById } from '../../actions/fetchActions';
 import BusinessImageUpload from '../ImageUpload/BusinessImageUpload';
-import '../../index.scss';
 import green from '../../images/default.jpeg';
-import businessImageUploader from '../../actions/businessImageUpload';
+import { businessImageUploader, uploadToCloudinary } from '../../actions/imageUpload';
+import Spinner from '../common/Spinner';
+import loader from '../../actions/loader';
+
+let reviewToDelete;
 /**
  * @class BusinessProfile
- * 
+ *
  * @extends {Component}
  */
 class BusinessProfile extends Component {
   /**
    * @description Creates an instance of BusinessProfile.
-   * 
-   * @param {object} props 
-   * 
+   * @param {object} props
    * @memberof Profile
    */
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      message: '',
+      editMessage: '',
+      image: '',
+      rating: 0,
+      editRating: 0,
+      errors: {},
+      current: 1,
+      editStatus: null
+    };
+
     this.onBusinessDelete = this.onBusinessDelete.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onImageChange = this.onImageChange.bind(this);
+    this.onReviewPageChange = this.onReviewPageChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onImageSubmit = this.onImageSubmit.bind(this);
+    this.onStarClick = this.onStarClick.bind(this);
+    this.edit = this.edit.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.onReviewDelete = this.onReviewDelete.bind(this);
+    this.deleteStatus = this.deleteStatus.bind(this);
+    this.onReviewUpdate = this.onReviewUpdate.bind(this);
   }
 
   /**
    * @description Fetch reviews and business
-   * 
    * @returns {undefined}
-   * 
    * @memberof BusinessProfile
    */
   componentDidMount() {
-    const showButtonToOwner = document.querySelectorAll('#owner');
-    const showButtonToAdmin = document.getElementById('showButtonToAdmin');
     document.title = 'Business profile';
-    this.props.fetchBusinessById(this.props.match.params.id).then(() => {
-      if (this.props.user.userId === this.props.business.userId) {
-        showButtonToOwner.forEach((button) => {
-          button.classList.remove('hide');
-        })
-      }
-
-      if (this.props.user.username == 'admin') {
-        showButtonToAdmin.classList.remove('hide');
-      }
-    });
-    this.props.fetchReviews(this.props.match.params.id, 'page=1');
+    const { id } = this.props.match.params;
+    this.props.loader(true);
+    this.props.fetchBusinessById(id);
+    this.props.fetchReviews(id, 'page=1');
   }
 
   /**
    * @description Fetch reviews and business
-   * 
    * @param{any} nextProps
-   * 
    * @returns {undefined}
-   * 
    * @memberof BusinessProfile
    */
   componentWillReceiveProps(nextProps) {
-    if(nextProps.business) {
-      const { business } = nextProps;
+    if (nextProps.business) {
+      const {
+        name,
+        email,
+        address,
+        location,
+        category,
+        description,
+        image,
+        averageRating
+      } = nextProps.business;
       this.setState({
-        name: business.name,
-        email: business.email,
-        address: business.address,
-        location: business.location,
-        category: business.category,
-        image: business.image,
-        description: business.description,
-        averageRating: business.averageRating,
-      })
+        name,
+        email,
+        address,
+        location,
+        category,
+        image,
+        description,
+        averageRating,
+      });
     }
+  }
+  /**
+   * @description Handles image upload to firebase
+   *
+   * @param {any} event
+   *
+   * @returns {undefined}
+   *
+   * @memberof ImageUpload
+   */
+  onImageChange(event) {
+    const image = event.target.files[0];
+    const uploadPreset = process.env.UPLOAD_PRESET;
+    const cloudinaryApi = process.env.CLOUDINARY_API;
+    this.props.uploadToCloudinary(
+      image,
+      uploadPreset,
+      cloudinaryApi,
+    )
+      .then(() => {
+        this.setState({ image: this.props.image });
+      });
+  }
+
+  /**
+   * @description Fetch reviews and business
+   *
+   * @param {any} event
+   *
+   * @param {any} rating
+   *
+   * @returns {undefined}
+   *
+   * @memberof BusinessProfile
+   */
+  onChange(event) {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  }
+
+  /**
+   * @description Fetch reviews and business
+   *
+   * @param {any} newRating
+   *
+   * @returns {undefined}
+   *
+   * @memberof BusinessProfile
+   */
+  onStarClick(newRating) {
+    if (!this.state.editStatus) {
+      this.setState({ rating: newRating });
+    }
+    this.setState({ editRating: newRating });
+  }
+
+  /**
+   * @description Fetch reviews and business
+   *
+   * @param {any} event
+   *
+   * @returns {undefined}
+   *
+   * @memberof BusinessProfile
+   */
+  onSubmit(event) {
+    event.preventDefault();
+    const { params } = this.props;
+    const { message, rating } = this.state;
+    if (!message || rating === 0) {
+      return toastr.error('Please leave a review and rating');
+    }
+
+    this.props.reviewRequest(params.id, this.state, this.props.fetchBusinessById).then(() => {
+      this.setState({ message: '', rating: 0 });
+    });
   }
 
   /**
    * @description Deletes business from the database
-   * 
+   *
    * @param {any} event
-   * 
+   * @param {any} username
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof BusinessProfile
    */
   onBusinessDelete(event) {
     event.preventDefault();
+    const { history, params } = this.props;
+    const { username } = this.props.user;
+    this.props.deleteBusiness(params.id, username, history);
+  }
+  /**
+   * @description Delete business
+   *
+   * @param {any} businessId
+   *
+   * @param {any} reviewToDelete
+   *
+   * @returns {undefined}
+   *
+   * @memberof ReviewList
+   */
+  onReviewDelete(businessId) {
+    return () => {
+      this.props.deleteReview(businessId, reviewToDelete, this.props.fetchBusinessById);
+    };
+  }
+  /**
+   * @description Handles image url submission to database
+   *
+   * @param {any} event
+   *
+   * @returns {undefined}
+   *
+   * @memberof ImageUpload
+   */
+  onImageSubmit(event) {
+    event.preventDefault();
+    this.props.businessImageUploader(this.props.params.id, this.state);
+  }
+  /**
+   * @description Toggler for pagination
+   *
+   * @param {any} page
+   *
+   * @returns {undefined}
+   *
+   * @memberof BusinessList
+   */
+  onReviewPageChange(page) {
+    const genPage = `page=${page}`;
+    const { params } = this.props;
 
-    this.props.deleteBusiness(this.props.match.params.id).then(
-      () => {
-        this.props.addFlashMessage({
-          type: 'success',
-          text: 'Business deleted successfully'
-        });
-        if (this.props.user.username == 'admin') {
-          this.context.router.history.push('/adminpanel');
-        } else {
-          this.context.router.history.push('/dashboard');
-        }
+    this.setState({
+      current: page,
     });
+
+    this.props.fetchReviews(params.id, genPage);
+  }
+  /**
+   * @description Fetch reviews and business
+   * @param {any} reviewId
+   * @returns {undefined}
+   * @memberof EditReview
+   */
+  onReviewUpdate(reviewId) {
+    const {
+      params
+    } = this.props;
+    const { state, cancelEdit } = this;
+    const { editMessage, editRating } = this.state;
+    if (!editMessage || editRating === 0) {
+      return toastr.error('Please leave a review and rating');
+    }
+    this.props.reviewUpdateRequest(
+      params.id,
+      reviewId,
+      state,
+      this.props.fetchBusinessById
+    )
+      .then(() => cancelEdit());
+  }
+  /**
+   * @description Edit business
+   * @returns {undefined}
+   * @param {any} reviewId
+   * @memberof ReviewList
+   */
+  cancelEdit() {
+    this.setState({ editStatus: null });
+  }
+  /**
+   * @description Edit business
+   * @returns {undefined}
+   * @param {any} id
+   * @memberof ReviewList
+   */
+  deleteStatus(id) {
+    reviewToDelete = id;
+  }
+  /**
+   * @description Edit business
+   * @returns {undefined}
+   * @param {any} review
+   * @memberof ReviewList
+   */
+  edit(review) {
+    const { id, message, rating } = review;
+    return () => {
+      this.setState({
+        editStatus: id,
+        editMessage: message,
+        editRating: rating
+      });
+    };
   }
   /**
    * @description Deletes business from the database
-   * 
+   *
    * @param {any} event
-   * 
+   *
    * @returns {undefined}
-   * 
+   *
    * @memberof BusinessProfile
    */
   imageGenerator() {
-    if(!this.props.business && this.state.image) {
-      return this.state.image;
+    const { image } = this.state;
+    if (!this.props.business && image) {
+      return image;
     }
-    if(this.state.image) {
-      return this.state.image;
+    if (image) {
+      return image;
     }
     return green;
   }
 
   /**
    * @description Renders the component to the dom
-   * 
+   *
    * @returns {object} JSX object
-   * 
+   *
    * @memberof BusinessProfile
    */
   render() {
     const {
-      reviews, business, params, user, paginate
+      reviews, business, params, user, paginate, isLoading
     } = this.props;
 
-    const { 
-      name, 
-      address, 
-      location, 
-      email, 
-      description, 
-      category, 
-      averageRating,  } = this.state;
-      
+    const {
+      name,
+      address,
+      location,
+      email,
+      description,
+      category,
+      averageRating,
+    } = this.state;
+
+    const {
+      state,
+      onStarClick,
+      onChange,
+      onSubmit,
+      edit,
+      cancelEdit,
+      deleteStatus,
+      onReviewDelete,
+      onReviewPageChange,
+      onReviewUpdate,
+      onImageChange,
+      onImageSubmit
+    } = this;
+
+    if (isLoading) {
+      return <Spinner isLoading={isLoading} />;
+    }
 
     const noReviews = (
       <h3>No reviews yet</h3>
     );
 
+    const noBusiness = (
+      <h3 className="text-center" id="no-business-found">No business match found</h3>
+    );
+
     const deleteButton = (
-      <button className="btn btn-danger" data-toggle="modal" data-target="#confirmModal">
+      <button className="btn btn-danger" data-toggle="modal" data-target="#businessDeleteModal">
         <i className="fa fa-trash fa-lg" /> delete
       </button>
     );
-    
+
+    const businessReviews = reviews || [];
+
+    if (business.name === undefined) {
+      return noBusiness;
+    }
+
     return (
       <div>
         <div className="business-profile container">
           <div className="row">
-            <div className="col-sm-12 col-lg-10 offset-lg-1 profile-icon-style">
-              <div className="image-button-holder">
-                <div className="zoom">
-                  <img 
-                    className="business-profile-image" 
-                    id="business-image" 
-                    src={this.imageGenerator()}
-                    alt="Business" 
-                  />
-                </div>                
-                <button 
-                  className="btn image-edit-button hide" 
-                  id="owner" 
-                  data-toggle="modal" 
-                  data-target="#businessImageModal"
-                >
-                  <i className="fa fa-edit fa-lg" />
-                </button>
-                <BusinessImageUpload 
+            <div className="row col-sm-12 col-lg-10 offset-lg-1 profile-icon-style">
+              <div className="image-button-holder col-lg-4">
+                <ImageZoom
+                  image={{
+                      src: `${this.imageGenerator()}`,
+                      alt: 'business image',
+                      className: 'img',
+                      style: { width: '320px', height: '300px' }
+                    }}
+                  zoomImage={{
+                      src: `${this.imageGenerator()}`,
+                      alt: 'business image',
+                    }}
+                />
+
+                { !user ? null :
+                <span>
+                  { user.userId === (business && business.userId) ?
+                    <button
+                      className="btn image-edit-button"
+                      data-toggle="modal"
+                      data-target="#businessImageModal"
+                    >
+                      <i className="fa fa-edit fa-lg" />
+                    </button> : null }
+                </span> }
+                <BusinessImageUpload
                   params={params}
-                  businessImageUploader={this.props.businessImageUploader}
+                  onImageSubmit={onImageSubmit}
+                  onImageChange={onImageChange}
+                  uploadToCloudinary={this.props.uploadToCloudinary}
+                  state={state}
                   addFlashMessage={this.props.addFlashMessage}
                 />
               </div>
-              <h4 className="text-center business-name text-capitalize">{ !business ? name : business.name}</h4>
-              <div className="row">
-                <div className="col-sm-12 col-lg-10 offset-lg-1 text-center">
-                  <ul className="list-unstyled list-inline hide" id="owner">
+              <div className="col-lg-6 business-details">
+                <h4 className="business-name text-capitalize">{ !business ? name : business.name}</h4>
+                <h4>Description:</h4>
+                <p>{ !business ? description : business.description }</p>
+                <p><i className="fa fa-envelope" /><span>{ !business ? email : business.email }</span></p>
+                <p><i className="fa fa-map-marker" /><span>{ !business ? `${address} ${location}` : `${business.address} ${business.location}` }</span></p>
+                <p><i className="fa fa-tags" /><span>{ !business ? category : business.category }</span></p>
+                <ReactStars
+                  count={5}
+                  size={17}
+                  edit={false}
+                  color1="#333333"
+                  color2="#ffaf00"
+                  value={!business ? averageRating : business.averageRating}
+                />
+                { user.userId === (business && business.userId) ?
+                  <ul className="list-unstyled list-inline pull-right" style={{ paddingTop: '30px' }}>
                     <li className="list-inline-item">
-                      <Link className="btn" id="permission-button" to={`/updatebusiness/${params.id}`}>
+                      <Link className="btn edit-button" id="permission-button" to={`/updatebusiness/${params.id}`}>
                         <i className="fa fa-edit fa-lg" /> edit
                       </Link>
                     </li>
                     <li className="list-inline-item">
                       {deleteButton}
                     </li>
-                  </ul>
-
-                  <ul className="list-unstyled list-inline hide" id="showButtonToAdmin">
+                  </ul> : null }
+                { user.username === process.env.ADMIN ?
+                  <ul
+                    className="list-unstyled list-inline pull-right"
+                    style={{ paddingTop: '30px', paddingBottom: '20px' }}
+                  >
                     <li className="list-inline-item">
                       {deleteButton}
                     </li>
-                  </ul>
-                </div>
-              </div>  
-              <h4>Description:</h4>
-              <p>{ !business ? description : business.description }</p>       
-              <p><i className="fa fa-envelope" /><span>{ !business ? email : business.email }</span></p>          
-              <p><i className="fa fa-map-marker" /><span>{ !business ? `${address} ${location}` : `${business.address} ${business.location}` }</span></p>          
-              <p><i className="fa fa-map-marker" /><span>{ !business ? location : business.location }</span></p>          
-              <p><i className="fa fa-tags" /><span>{ !business ? category : business.category }</span></p>          
-              <StarRatingComponent
-                name="rate2"             
-                editing={false}
-                starCount={5}
-                value={!business ? averageRating : business.averageRating}
-                starColor="#ffd700"
-              />
+                  </ul> : null
+                }
+              </div>
             </div>
-
-          </div>  
+          </div>
 
           <div className="col-sm-12 col-lg-10 offset-lg-1">
-            <ReviewModal 
-              reviewRequest={this.props.reviewRequest} 
-              addFlashMessage={this.props.addFlashMessage} 
-              params={this.props.params} 
-              fetchReviews={this.props.fetchReviews}
-              fetchBusinessById={this.props.fetchBusinessById}
+            <ReviewModal
+              onStarClick={onStarClick}
+              onChange={onChange}
+              onSubmit={onSubmit}
+              state={state}
+              user={user}
+              business={business}
+              isPosting={isLoading}
             />
           </div>
 
           <div className="col-sm-12 col-lg-10 offset-lg-1">
-            { reviews.length === 0 ? noReviews : (
-              <ReviewList 
-                reviews={reviews} 
-                deleteReview={this.props.deleteReview} 
+            { businessReviews.length === 0 ? noReviews : (
+              <ReviewList
+                reviews={reviews}
+                deleteReview={this.props.deleteReview}
                 fetchBusinessById={this.props.fetchBusinessById}
                 fetchReviews={this.props.fetchReviews}
+                reviewUpdateRequest={this.props.reviewUpdateRequest}
                 paginate={paginate}
-                params={params} 
+                params={params}
                 user={user}
+                isLoading={isLoading}
+                onStarClick={onStarClick}
+                onChange={onChange}
+                onSubmit={onSubmit}
+                state={state}
+                edit={edit}
+                cancelEdit={cancelEdit}
+                deleteStatus={deleteStatus}
+                onReviewDelete={onReviewDelete}
+                onReviewPageChange={onReviewPageChange}
+                onReviewUpdate={onReviewUpdate}
               />
                 )}
           </div>
         </div>
 
-        <div className="modal fade" id="confirmModal" tabIndex="-1" role="dialog" aria-labelledby="confirmModalTitle" aria-hidden="true">
+        <div className="modal fade" id="businessDeleteModal" tabIndex="-1" role="dialog" aria-labelledby="confirmModalTitle" aria-hidden="true">
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-body">
-                <h4>Delete business profile?</h4>
+                <h4>Are you sure?</h4>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-outline-success" data-dismiss="modal">No</button>
@@ -275,38 +519,63 @@ class BusinessProfile extends Component {
 BusinessProfile.propTypes = {
   fetchBusinessById: PropTypes.func.isRequired,
   reviewRequest: PropTypes.func.isRequired,
+  reviewUpdateRequest: PropTypes.func.isRequired,
   addFlashMessage: PropTypes.func.isRequired,
   deleteReview: PropTypes.func.isRequired,
   deleteBusiness: PropTypes.func.isRequired,
   fetchReviews: PropTypes.func.isRequired,
   businessImageUploader: PropTypes.func.isRequired,
+  uploadToCloudinary: PropTypes.func.isRequired,
+  loader: PropTypes.func.isRequired,
+  paginate: PropTypes.object,
+  isLoading: PropTypes.bool.isRequired,
+  reviews: PropTypes.array,
+  params: PropTypes.object.isRequired,
+  business: PropTypes.object,
+  user: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  image: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 BusinessProfile.contextTypes = {
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
+};
+
+BusinessProfile.defaultProps = {
+  reviews: [],
+  business: {},
+  paginate: {}
 };
 
 const mapStateToProps = (state, props) => {
   const { params } = props.match;
+  const {
+    businesses, isLoading, auth, image
+  } = state;
   return {
-    reviews: state.reviews,
-    user: state.auth.user,
-    business: state.businesses[0],
+    reviews: businesses.reviews,
+    user: auth.user,
+    business: businesses.business,
     params,
-    paginate: state.paginationResult,
-    image: state.image,
-    isLoading: state.loaderToggler.isLoading
+    paginate: businesses.paginationResult,
+    image,
+    isLoading,
+    error: businesses.businessRequestError
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchBusinessById,
   reviewRequest,
+  reviewUpdateRequest,
   deleteBusiness,
   fetchReviews,
   deleteReview,
   addFlashMessage,
-  businessImageUploader
+  businessImageUploader,
+  loader,
+  uploadToCloudinary,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BusinessProfile);
