@@ -10,7 +10,7 @@
     "test-dev": "cross-env NODE_ENV=test mocha ./server/test/* js:babel-register --exit",
     "test:nyc": "NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 15000 --compilers js:babel-core/register server/test/* --exit",
     "test-client": "jest --config=./client/__test__/jest.config.js",
-    "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "migrate": "./node_modules/.bin/sequelize db:migrate:undo:all && sequelize db:migrate",
     "migration:test": "NODE_ENV=test sequelize db:migrate",
     "migration": "NODE_ENV=production sequelize db:migrate",
     "migration:dev": "sequelize db:migrate",
@@ -21,7 +21,7 @@
     "build": "webpack",
     "seed:undo": "NODE_ENV=test sequelize db:seed:undo:all",
     "seed": "NODE_ENV=test sequelize db:seed:all",
-    "seeders": "sequelize db:seed:undo:all && sequelize db:seed:all",
+    "seeders": "./node_modules/.bin/sequelize db:seed:undo:all && sequelize db:seed:all",
     "heroku-prebuild": "npm run webpack && npm run seeders"
   },
   "keywords": [],
