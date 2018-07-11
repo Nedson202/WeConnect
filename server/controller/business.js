@@ -209,7 +209,7 @@ class BusinessMethods {
     } = req.body;
     // upddate business information
     business.update({
-      name: name || business.name,
+      name: name.toLowerCase() || business.name,
       email: email || business.email,
       address: address || business.address,
       location: location || business.location,
