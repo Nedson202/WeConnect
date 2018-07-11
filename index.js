@@ -29,13 +29,15 @@ app.use(expressValidator());
 
 const compiler = webpack(webpackConfig);
 
-app.use(webpackMiddleware(compiler, {
-  noInfo: true,
-  publicPath: webpackConfig.output.publicPath,
-  hot: true
-}));
-
-app.use(webpackHotMiddleware(compiler));
+if (process.env.NODE_ENV === 'development') {
+  app.use(webpackMiddleware(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath,
+    hot: true
+  }));
+  
+  app.use(webpackHotMiddleware(compiler));
+}
 
 app.use(logger('dev'));
 
