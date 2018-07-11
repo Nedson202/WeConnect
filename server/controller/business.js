@@ -218,11 +218,13 @@ class BusinessMethods {
       image: image || business.image,
     })
       // return success message and updated business information
-      .then(() => res.status(200).json({
-        message: 'Business updated successfully',
-        error: false,
-        business
-      }))
+      .then(() => { // eslint-disable-line arrow-body-style
+        return res.status(200).json({
+          message: 'Business updated successfully',
+          error: false,
+          business
+        });
+      })
       // catch error which occurs on the server
       .catch(error => res.status(409).json([error.errors[0].message]));
   }
@@ -240,11 +242,13 @@ class BusinessMethods {
       image: req.body.image || business.image,
     })
     // return success message and updated business information
-      .then(() => res.status(200).json({
-        message: 'Image uploaded successfully',
-        error: false,
-        business
-      }));
+      .then(() => { // eslint-disable-line arrow-body-style
+        return res.status(200).json({
+          message: 'Image uploaded successfully',
+          error: false,
+          business
+        });
+      });
   }
   /**
     *@param {any} req - request value
@@ -274,6 +278,10 @@ class BusinessMethods {
             error: false
           }));
       }
+
+      // return res.status(403).json({
+      //   message: 'Forbidden, you do not have access to modify this business'
+      // });
     });
   }
 }
