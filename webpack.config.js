@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -23,7 +24,8 @@ module.exports = {
     new Dotenv({
       path: './.env',
       systemvars: true
-    })
+    }),
+    new HtmlWebpackPlugin()
   ],
   module: {
     rules: [
