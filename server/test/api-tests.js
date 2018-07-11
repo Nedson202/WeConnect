@@ -7,15 +7,6 @@ const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no
 chai.use(chaiHttp);
 
 describe('Api test', () => {
-  it('should return welcome message', (done) => {
-    chai.request(app)
-      .get('/api/v1')
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        done();
-      });
-  });
-
   it('should return status 404 when a post request is sent to an unavailable route', (done) => {
     chai.request(app)
       .post('/here')
