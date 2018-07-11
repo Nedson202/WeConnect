@@ -8,14 +8,16 @@ const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no
 
 chai.use(chaiHttp);
 
-const { NOREADACCESS } = process.env;
-const { REVIEWER_TOKEN } = process.env;
-const { TOKEN } = process.env;
-const { ADMINTOKEN } = process.env;
-const { NOWRITEACCESS } = process.env;
-const { ANOTHERREVIEWERTOKEN } = process.env;
+const {
+  NOREADACCESS,
+  REVIEWERTOKEN,
+  ADMINTOKEN,
+  NOWRITEACCESS,
+  ANOTHERREVIEWERTOKEN,
+  TOKEN
+} = process.env;
 
-const invalidToken = `${REVIEWER_TOKEN}l`;
+const invalidToken = `${REVIEWERTOKEN}l`;
 
 const availableBusinessId = 2;
 
@@ -166,7 +168,7 @@ describe('Review posting', () => {
   it('should return status of 500 for invalid businessId', (done) => {
     chai.request(app)
       .get('/api/v1/businesses/11111111132222222222222224333333')
-      .set('Authorization', REVIEWER_TOKEN)
+      .set('Authorization', REVIEWERTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(500);
         done();
@@ -176,7 +178,7 @@ describe('Review posting', () => {
   it('should return status of 500 if id is invalid', (done) => {
     chai.request(app)
       .get('/api/v1/businesses/11tts3')
-      .set('Authorization', REVIEWER_TOKEN)
+      .set('Authorization', REVIEWERTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(500);
         done();
@@ -268,7 +270,7 @@ describe('Delete review by id', () => {
   it('should return status of 403 if not owner or admin', (done) => {
     chai.request(app)
       .delete('/api/v1/businesses/1/reviews/2')
-      .set('Authorization', REVIEWER_TOKEN)
+      .set('Authorization', REVIEWERTOKEN)
       .end((err, res) => {
         expect(res.status).to.equal(403);
         done();

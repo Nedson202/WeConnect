@@ -102,6 +102,7 @@ class sorter {
   static checkBusiness(req, res, next) {
     const { businessId } = req.params;
     const { id } = req.body;
+    const { username, userId } = req.decoded;
     // const { userId, username } = req.decoded;
     // middleware that searches for a business by its id
     return Businesses.findById(parseInt(businessId, 10))
@@ -109,6 +110,14 @@ class sorter {
         // return error message if no match is found
         if (!business) {
           return errorMessage(res);
+        }
+
+        if (username !== config.admin) {
+          if (business.userId !== userId) {
+            return res.status(403).json({
+              message: 'Forbidden, you do not have access to modify this business'
+            });
+          }
         }
         // return error message if user tries to update business id or owner id
         if (id) {

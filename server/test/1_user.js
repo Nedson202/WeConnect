@@ -3,11 +3,14 @@ import chai from 'chai';
 import app from '../../index';
 import models from '../models/index';
 
-require("dotenv").config; // eslint-disable-line 
-
-const { NOREADACCESS } = process.env;
-const { ADMINTOKEN } = process.env;
-const { TOKEN } = process.env;
+require('dotenv').config(); // eslint-disable-line
+const {
+  NOREADACCESS,
+  ADMINTOKEN,
+  TOKEN,
+  ADMIN,
+  ADMINEMAIL
+} = process.env;
 
 const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no-unused-vars
 
@@ -24,8 +27,8 @@ describe('User signup authenticator', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
-        username: process.env.ADMIN,
-        email: process.env.ADMIN_EMAIL,
+        username: ADMIN,
+        email: ADMINEMAIL,
         password: 'israel'
       })
       .end((err, res) => {
