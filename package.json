@@ -22,7 +22,7 @@
     "seed:undo": "NODE_ENV=test sequelize db:seed:undo:all",
     "seed": "NODE_ENV=test sequelize db:seed:all",
     "seeders": "./node_modules/.bin/sequelize db:seed:undo:all && sequelize db:seed:all",
-    "heroku-postbuild": "npm run webpack && npm run seeders"
+    "postinstall": "npm run build && npm run seeders"
   },
   "keywords": [],
   "author": "",
