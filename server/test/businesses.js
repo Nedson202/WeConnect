@@ -9,13 +9,15 @@ const [should, expect] = [chai.should(), chai.expect]; // eslint-disable-line no
 
 chai.use(chaiHttp);
 
-const { TOKEN } = process.env;
+const {
+  TOKEN,
+  NOWRITEACCESS,
+  ADMINTOKEN
+} = process.env;
 
 const businesses = models.Business;
 
 const invalidTOKEN = `${TOKEN}l`;
-const { NOWRITEACCESS } = process.env;
-const { ADMINTOKEN } = process.env;
 
 before((done) => {
   businesses.sync({ force: true })
