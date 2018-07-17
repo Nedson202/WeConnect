@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: UserProfileUpdate should render 1`] = `
+<div>
+  <div
+    aria-hidden="true"
+    aria-labelledby="confirmModalTitle"
+    className="modal fade"
+    id="updateModal"
+    role="dialog"
+    tabIndex="-1"
+  >
+    <div
+      className="modal-dialog modal-dialog-centered"
+      role="document"
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <h4>
+            Edit profile
+          </h4>
+          <button
+            aria-label="Close"
+            className="close"
+            data-dismiss="modal"
+            id="closeProfileModal"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+        </div>
+        <div
+          className="modal-body"
+        >
+          <form>
+            <div
+              className="row"
+            >
+              <div
+                className="form-group col-lg-12"
+              >
+                <label
+                  id="upload-form-label"
+                >
+                  Username
+                </label>
+                <input
+                  className="form-control"
+                  id="control-label"
+                  name="username"
+                  onChange={[MockFunction]}
+                  placeholder="username"
+                  type="text"
+                  value="mike"
+                />
+              </div>
+              <div
+                className="form-group col-lg-12"
+              >
+                <label
+                  id="upload-form-label"
+                >
+                  Email
+                </label>
+                <input
+                  className="form-control"
+                  id="control-label"
+                  name="email"
+                  onChange={[MockFunction]}
+                  placeholder="email"
+                  type="text"
+                  value="alen@stuart.mill"
+                />
+              </div>
+              <ImageUploader
+                onImageChange={[MockFunction]}
+                state={
+                  Object {
+                    "email": "alen@stuart.mill",
+                    "username": "mike",
+                  }
+                }
+                uploadToCloudinary={[MockFunction]}
+                user={
+                  Object {
+                    "id": 1,
+                    "username": "astro",
+                  }
+                }
+              />
+            </div>
+          </form>
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-outline-success"
+            data-dismiss="modal"
+            type="button"
+          >
+            No
+          </button>
+          <button
+            className="btn btn-outline-success"
+            id="profile-update-button"
+            onClick={[MockFunction]}
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

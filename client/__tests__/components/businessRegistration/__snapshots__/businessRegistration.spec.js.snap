@@ -1,0 +1,263 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Business registration component should render registration form 1`] = `
+<div
+  className="container"
+>
+  <form
+    onSubmit={[MockFunction]}
+  >
+    <div
+      className="business-form-style"
+    >
+      <h3
+        className="text-center form-header"
+      >
+        Update business
+      </h3>
+      <div
+        className="row"
+      >
+        <div
+          className="form-group col-lg-6"
+        >
+          <label
+            id="control-label"
+          >
+            Business Name
+          </label>
+          <input
+            className="form-control"
+            id="control-label"
+            name="name"
+            onChange={[MockFunction]}
+            placeholder="Business name"
+            type="text"
+            value="alpha tech"
+          />
+        </div>
+        <div
+          className="form-group col-lg-6"
+        >
+          <label
+            id="control-label"
+          >
+            Email address
+          </label>
+          <input
+            aria-describedby="emailHelp"
+            className="form-control"
+            id="icon-prefix email"
+            name="email"
+            onChange={[MockFunction]}
+            placeholder="Enter email"
+            type="email"
+            value="altech@caria.net"
+          />
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="form-group col-lg-6"
+        >
+          <label
+            id="control-label"
+          >
+            Address
+          </label>
+          <input
+            className="form-control"
+            id="control-label"
+            name="address"
+            onChange={[MockFunction]}
+            placeholder="Address"
+            type="text"
+            value="2r close sau paulo"
+          />
+        </div>
+        <div
+          className="form-group col-lg-6"
+        >
+          <label
+            id="control-label"
+          >
+            Location
+          </label>
+          <select
+            className="form-control custom-select"
+            name="location"
+            onChange={[MockFunction]}
+            type="select"
+            value="sau paulo"
+          >
+            <option
+              disabled={true}
+              value=""
+            >
+              choose location
+            </option>
+            <option
+              key="1"
+              value="lao"
+            >
+              lao
+            </option>
+            <option
+              key="2"
+              value="hawaii"
+            >
+              hawaii
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="form-group col-lg-6"
+        >
+          <label
+            id="control-label"
+          >
+            Category
+          </label>
+          <select
+            className="form-control custom-select"
+            name="category"
+            onChange={[MockFunction]}
+            type="select"
+          >
+            <option
+              disabled={true}
+              value=""
+            >
+              choose category
+            </option>
+            <option
+              key="1"
+              value="finance"
+            >
+              finance
+            </option>
+            <option
+              key="2"
+              value="tech"
+            >
+              tech
+            </option>
+          </select>
+        </div>
+        <div
+          className="form-group col-lg-6"
+        >
+          <label
+            id="control-label"
+          >
+            Description
+          </label>
+          <textarea
+            className="form-control"
+            id="control-label"
+            name="description"
+            onChange={[MockFunction]}
+            placeholder="Description"
+            rows="3"
+            type="text"
+            value="this is a simple meal made with rice and yam"
+          />
+          <p>
+            <span
+              style={
+                Object {
+                  "color": "red",
+                }
+              }
+            >
+              11
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "white",
+                }
+              }
+            >
+              /
+              250
+            </span>
+          </p>
+        </div>
+      </div>
+      <button
+        className="btn btn-outline-success"
+        id="submit-button"
+        type="submit"
+      >
+        <span
+          className="processing-info"
+        >
+          processing 
+          <i
+            className="fa fa-spinner fa-spin"
+          />
+        </span>
+      </button>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`Business registration component should render registration page 1`] = `
+<div>
+  <div
+    id="background-image"
+  />
+  <RegistrationForm
+    categories={
+      Array [
+        Object {
+          "category": "finance",
+          "id": 1,
+        },
+        Object {
+          "category": "tech",
+          "id": 2,
+        },
+      ]
+    }
+    isLoading={false}
+    locations={
+      Array [
+        Object {
+          "id": 1,
+          "location": "lao",
+        },
+        Object {
+          "id": 2,
+          "location": "hawaii",
+        },
+      ]
+    }
+    onChange={[Function]}
+    onSubmit={[Function]}
+    params={Object {}}
+    state={
+      Object {
+        "address": undefined,
+        "category": undefined,
+        "changeValue": 0,
+        "color": "red",
+        "defaultTotal": 250,
+        "description": undefined,
+        "email": undefined,
+        "errors": Object {},
+        "location": undefined,
+        "name": undefined,
+      }
+    }
+  />
+</div>
+`;

@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: AllBusiness should render 1`] = `
+<Spinner
+  isLoading={true}
+/>
+`;

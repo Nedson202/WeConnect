@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: ReviewList should render 1`] = `
+<div>
+  <div>
+    <span>
+      <div />
+    </span>
+  </div>
+</div>
+`;

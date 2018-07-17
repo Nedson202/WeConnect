@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: App should render 1`] = `
+<div>
+  <div
+    className="text-center"
+    id="main-content"
+  >
+    <h1>
+      Welcome to WeConnect
+    </h1>
+    <h3>
+      Here, we make it easier for you to reach businesses faster
+    </h3>
+    <Link
+      replace={false}
+      to="/businesses"
+    >
+      <button
+        className="btn"
+        id="explore-button"
+      >
+        Explore
+      </button>
+    </Link>
+  </div>
+</div>
+`;

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: Footer should successfully render 1`] = `
+<div>
+  <footer>
+    <div
+      className="container"
+    >
+      © 2018
+      <a
+        className="float-right"
+        href="https://weconnect-api-service.herokuapp.com/api-docs"
+      >
+        Api docs
+      </a>
+    </div>
+  </footer>
+</div>
+`;

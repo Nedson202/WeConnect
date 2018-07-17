@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: UserCard should render 1`] = `
+<div
+  className="col-sm-12 col-md-4 col-lg-4"
+>
+  <div
+    className="card business-card"
+    style={
+      Object {
+        "height": "130px",
+      }
+    }
+  >
+    <div
+      className="card-header text-center textcase"
+    >
+      <h5 />
+    </div>
+    <div
+      className="card-body text-center bg-transparent"
+    >
+      <button
+        className="btn btn-outline-success text-danger delete-button"
+        data-target="#confirmDeleteModal"
+        data-toggle="modal"
+        onClick={[Function]}
+      >
+        <i
+          className="fa fa-trash fa-lg"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    aria-hidden="true"
+    aria-labelledby="confirmModalTitle"
+    className="modal fade"
+    id="confirmDeleteModal"
+    role="dialog"
+    tabIndex="-1"
+  >
+    <div
+      className="modal-dialog modal-dialog-centered"
+      role="document"
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-body"
+        >
+          <h4>
+            Are you sure?
+          </h4>
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-outline-success dismiss-button"
+            data-dismiss="modal"
+            type="button"
+          >
+            No
+          </button>
+          <button
+            className="btn btn-outline-success remove-user"
+            data-dismiss="modal"
+            onClick={[Function]}
+            type="button"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

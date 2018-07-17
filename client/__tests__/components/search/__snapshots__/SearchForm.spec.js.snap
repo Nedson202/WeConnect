@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: SearchForm should render 1`] = `
+<div>
+  <form
+    className="form-inline my-2 my-lg-2"
+    onSubmit={[MockFunction]}
+  >
+    <input
+      className="form-control mr-sm-2"
+      name="query"
+      onChange={[MockFunction]}
+      placeholder="Filter businesses by"
+      type="search"
+      value="query"
+    />
+    <select
+      className="custom-select"
+      name="option"
+      onChange={[MockFunction]}
+      value="option"
+    >
+      <option
+        value=""
+      >
+        choose
+      </option>
+      <option
+        value="name"
+      >
+        Name
+      </option>
+      <option
+        value="location"
+      >
+        Location
+      </option>
+      <option
+        value="category"
+      >
+        Category
+      </option>
+    </select>
+    <button
+      className="btn btn-outline-success my-2 my-sm-0 search-button"
+      id="search-button"
+      type="submit"
+    >
+      <span>
+         searching 
+        <i
+          className="fa fa-spinner fa-spin"
+        />
+         
+      </span>
+    </button>
+  </form>
+</div>
+`;
