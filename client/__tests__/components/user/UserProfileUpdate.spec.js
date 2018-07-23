@@ -11,11 +11,11 @@ let props;
 const setup = () => {
   props = {
     state,
-    onChange: jest.fn(),
-    onSubmit: jest.fn(),
+    onChange: jest.fn(() => Promise.resolve()),
+    onSubmit: jest.fn(() => Promise.resolve()),
     user: userData,
-    uploadToCloudinary: jest.fn(),
-    onImageChange: jest.fn()
+    uploadToCloudinary: jest.fn(() => Promise.resolve()),
+    onImageChange: jest.fn(() => Promise.resolve())
   };
 
   return shallow(<UserProfileUpdate {...props} />);

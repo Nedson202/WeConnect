@@ -20,8 +20,8 @@ const props = {
   userLoginRequest: jest.fn(() => Promise.resolve()),
   history: {},
   isLoading: false,
-  onChange: jest.fn(),
-  onSubmit: jest.fn(),
+  onChange: jest.fn(() => Promise.resolve()),
+  onSubmit: jest.fn(() => Promise.resolve()),
   state: loginState
 };
 
@@ -30,7 +30,7 @@ const setup = () => {
 };
 
 const event = (name, value) => ({
-  preventDefault: jest.fn(),
+  preventDefault: jest.fn(() => Promise.resolve()),
   target: {
     name,
     value

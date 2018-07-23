@@ -13,9 +13,9 @@ configure({ adapter: new Adapter() });
 let props;
 const setup = () => {
   props = {
-    onChange: jest.fn(),
-    onStarClick: jest.fn(),
-    onSubmit: jest.fn(),
+    onChange: jest.fn(() => Promise.resolve()),
+    onStarClick: jest.fn(() => Promise.resolve()),
+    onSubmit: jest.fn(() => Promise.resolve()),
     state: review,
     user: userUpdateData,
     business

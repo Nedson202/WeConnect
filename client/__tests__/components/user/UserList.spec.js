@@ -11,8 +11,8 @@ let props;
 const setup = () => {
   props = {
     users,
-    removeUser: jest.fn(),
-    markUserToRemove: jest.fn()
+    removeUser: jest.fn(() => Promise.resolve()),
+    markUserToRemove: jest.fn(() => Promise.resolve())
   };
 
   return shallow(<UserList {...props} />);

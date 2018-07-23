@@ -1,0 +1,387 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: BusinessProfile should render 1`] = `
+<div>
+  <div
+    className="business-profile container"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="row col-sm-12 col-lg-10 offset-lg-1 profile-icon-style"
+      >
+        <div
+          className="image-button-holder col-lg-4"
+        >
+          <ImageZoom
+            defaultStyles={
+              Object {
+                "image": Object {},
+                "overlay": Object {},
+                "zoomContainer": Object {},
+                "zoomImage": Object {},
+              }
+            }
+            image={
+              Object {
+                "alt": "business image",
+                "className": "img",
+                "src": "image/connect.jpg",
+                "style": Object {
+                  "height": "300px",
+                  "width": "320px",
+                },
+              }
+            }
+            onUnzoom={[Function]}
+            onZoom={[Function]}
+            shouldHandleZoom={[Function]}
+            shouldReplaceImage={true}
+            shouldRespectMaxDimension={false}
+            zoomImage={
+              Object {
+                "alt": "business image",
+                "src": "image/connect.jpg",
+              }
+            }
+            zoomMargin={40}
+          />
+          <span>
+            <button
+              className="btn image-edit-button"
+              data-target="#businessImageModal"
+              data-toggle="modal"
+            >
+              <i
+                className="fa fa-edit fa-lg"
+              />
+            </button>
+          </span>
+          <BusinessImageUpload
+            onImageChange={[Function]}
+            onImageSubmit={[Function]}
+            params={
+              Object {
+                "id": 1,
+              }
+            }
+            state={
+              Object {
+                "address": "2r close sau paulo",
+                "averageRating": undefined,
+                "category": undefined,
+                "current": 1,
+                "description": "this is a simple meal made with rice and yam",
+                "editMessage": "",
+                "editRating": 0,
+                "editStatus": null,
+                "email": "altech@caria.net",
+                "errors": Object {},
+                "image": "image/connect.jpg",
+                "isLoading": false,
+                "location": "sau paulo",
+                "message": "",
+                "name": "alpha tech",
+                "rating": 0,
+              }
+            }
+            uploadToCloudinary={[MockFunction]}
+          />
+        </div>
+        <div
+          className="col-lg-6 business-details"
+        >
+          <h4
+            className="business-name text-capitalize"
+          >
+            alpha tech
+          </h4>
+          <h4>
+            Description:
+          </h4>
+          <p>
+            this is a simple meal made with rice and yam
+          </p>
+          <p>
+            <i
+              className="fa fa-envelope"
+            />
+            <span>
+              altech@caria.net
+            </span>
+          </p>
+          <p>
+            <i
+              className="fa fa-map-marker"
+            />
+            <span>
+              2r close sau paulo sau paulo
+            </span>
+          </p>
+          <p>
+            <i
+              className="fa fa-tags"
+            />
+            <span />
+          </p>
+          <ReactStars
+            char="★"
+            color1="#333333"
+            color2="#ffaf00"
+            count={5}
+            edit={false}
+            half={true}
+            onChange={[Function]}
+            size={17}
+            value={0}
+          />
+          <ul
+            className="list-unstyled list-inline pull-right"
+            style={
+              Object {
+                "paddingTop": "30px",
+              }
+            }
+          >
+            <li
+              className="list-inline-item"
+            >
+              <Link
+                className="btn edit-button"
+                id="permission-button"
+                replace={false}
+                to="/updatebusiness/1"
+              >
+                <i
+                  className="fa fa-edit fa-lg"
+                />
+                 edit
+              </Link>
+            </li>
+            <li
+              className="list-inline-item"
+            >
+              <button
+                className="btn btn-danger"
+                data-target="#businessDeleteModal"
+                data-toggle="modal"
+              >
+                <i
+                  className="fa fa-trash fa-lg"
+                />
+                 delete
+              </button>
+            </li>
+          </ul>
+          <ul
+            className="list-unstyled list-inline pull-right"
+            style={
+              Object {
+                "paddingBottom": "20px",
+                "paddingTop": "30px",
+              }
+            }
+          >
+            <li
+              className="list-inline-item"
+            >
+              <button
+                className="btn btn-danger"
+                data-target="#businessDeleteModal"
+                data-toggle="modal"
+              >
+                <i
+                  className="fa fa-trash fa-lg"
+                />
+                 delete
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-sm-12 col-lg-10 offset-lg-1"
+    >
+      <ReviewModal
+        business={
+          Object {
+            "address": "2r close sau paulo",
+            "categories": "tech",
+            "changeValue": 11,
+            "color": "red",
+            "defaultTotal": 250,
+            "description": "this is a simple meal made with rice and yam",
+            "email": "altech@caria.net",
+            "id": 1,
+            "image": "image/connect.jpg",
+            "location": "sau paulo",
+            "name": "alpha tech",
+          }
+        }
+        isPosting={false}
+        onChange={[Function]}
+        onStarClick={[Function]}
+        onSubmit={[Function]}
+        state={
+          Object {
+            "address": "2r close sau paulo",
+            "averageRating": undefined,
+            "category": undefined,
+            "current": 1,
+            "description": "this is a simple meal made with rice and yam",
+            "editMessage": "",
+            "editRating": 0,
+            "editStatus": null,
+            "email": "altech@caria.net",
+            "errors": Object {},
+            "image": "image/connect.jpg",
+            "isLoading": false,
+            "location": "sau paulo",
+            "message": "",
+            "name": "alpha tech",
+            "rating": 0,
+          }
+        }
+        user={Object {}}
+      />
+    </div>
+    <div
+      className="col-sm-12 col-lg-10 offset-lg-1"
+    >
+      <ReviewsList
+        cancelEdit={[Function]}
+        deleteReview={[MockFunction]}
+        deleteStatus={[Function]}
+        edit={[Function]}
+        fetchBusinessById={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                1,
+              ],
+            ],
+            "results": Array [
+              Object {
+                "isThrow": false,
+                "value": Promise {},
+              },
+            ],
+          }
+        }
+        fetchReviews={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                1,
+                "page=1",
+              ],
+            ],
+            "results": Array [
+              Object {
+                "isThrow": false,
+                "value": Promise {},
+              },
+            ],
+          }
+        }
+        isLoading={false}
+        onChange={[Function]}
+        onReviewDelete={[Function]}
+        onReviewPageChange={[Function]}
+        onReviewUpdate={[Function]}
+        onStarClick={[Function]}
+        onSubmit={[Function]}
+        paginate={
+          Object {
+            "limit": 6,
+            "page": 1,
+            "queryData": Object {
+              "option": "option",
+            },
+            "totalBusiness": 10,
+            "totalReviews": 10,
+          }
+        }
+        params={
+          Object {
+            "id": 1,
+          }
+        }
+        reviewUpdateRequest={[MockFunction]}
+        reviews={
+          Array [
+            "good",
+          ]
+        }
+        state={
+          Object {
+            "address": "2r close sau paulo",
+            "averageRating": undefined,
+            "category": undefined,
+            "current": 1,
+            "description": "this is a simple meal made with rice and yam",
+            "editMessage": "",
+            "editRating": 0,
+            "editStatus": null,
+            "email": "altech@caria.net",
+            "errors": Object {},
+            "image": "image/connect.jpg",
+            "isLoading": false,
+            "location": "sau paulo",
+            "message": "",
+            "name": "alpha tech",
+            "rating": 0,
+          }
+        }
+        user={Object {}}
+      />
+    </div>
+  </div>
+  <div
+    aria-hidden="true"
+    aria-labelledby="confirmModalTitle"
+    className="modal fade"
+    id="businessDeleteModal"
+    role="dialog"
+    tabIndex="-1"
+  >
+    <div
+      className="modal-dialog modal-dialog-centered"
+      role="document"
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-body"
+        >
+          <h4>
+            Are you sure?
+          </h4>
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-outline-success"
+            data-dismiss="modal"
+            type="button"
+          >
+            No
+          </button>
+          <button
+            className="btn btn-outline-success"
+            data-dismiss="modal"
+            onClick={[Function]}
+            type="button"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -16,7 +16,7 @@
 
 // configure({ adapter: new Adapter() });
 // let props;
-// // const newProps = {
+// // const props = {
 // //   businessRegistrationRequest: jest.fn(() => Promise.resolve()),
 // //   businessUpdateRequest: jest.fn(() => Promise.resolve()),
 // //   fetchBusinessById: jest.fn(() => Promise.resolve()),
@@ -27,8 +27,8 @@
 // //   history,
 // //   categories,
 // //   locations,
-// //   onChange: jest.fn(),
-// //   onSubmit: jest.fn(),
+// //   onChange: jest.fn(() => Promise.resolve()),
+// //   onSubmit: jest.fn(() => Promise.resolve()),
 // //   state: business
 // // };
 
@@ -49,15 +49,15 @@
 //     history,
 //     categories,
 //     locations,
-//     onChange: jest.fn(),
-//     onSubmit: jest.fn(),
+//     onChange: jest.fn(() => Promise.resolve()),
+//     onSubmit: jest.fn(() => Promise.resolve()),
 //     state: business
 //   }
 //   return shallow(<BusinessRegistration {...props} match={props.match} />);
 // };
 
 // const event = (name, value) => ({
-//   preventDefault: jest.fn(),
+//   preventDefault: jest.fn(() => Promise.resolve()),
 //   target: {
 //     name,
 //     value
@@ -83,8 +83,8 @@
 //       history,
 //       categories,
 //       locations,
-//       onChange: jest.fn(),
-//       onSubmit: jest.fn(),
+//       onChange: jest.fn(() => Promise.resolve()),
+//       onSubmit: jest.fn(() => Promise.resolve()),
 //       state: business
 //     }
 //     const wrapper = shallow(<BusinessRegistration {...props} />)
@@ -236,36 +236,42 @@ const mockStore = configureMockStore(middlewares);
 const { business, categories, locations } = state;
 
 configure({ adapter: new Adapter() });
-let match, id, props;
-const newProps = {
+let props;
+props = {
   businessRegistrationRequest: jest.fn(() => Promise.resolve()),
   businessUpdateRequest: jest.fn(() => Promise.resolve()),
   fetchBusinessById: jest.fn(() => Promise.resolve()),
   fetchCategories: jest.fn(() => Promise.resolve()),
+  categories: jest.fn(() => Promise.resolve()),
   fetchLocations: jest.fn(() => Promise.resolve()),
+  locations: jest.fn(() => Promise.resolve()),
   isLoading: false,
-  params: {},
-  history,
-  categories,
-  locations,
-  onChange: jest.fn(),
-  onSubmit: jest.fn(),
-  state: business
-};
-
-const setup = () => {
-  props = {
-    match: {
-      params: {
-        id: 1
-      }
+  match: {
+    params: {
+      id: 1
     }
+  },
+  params: {
+    id: 1
+  },
+  history,
+  // categories,
+  // locations,
+  onChange: jest.fn(() => Promise.resolve()),
+  onSubmit: jest.fn(() => Promise.resolve()),
+  state: {
+    // business,
+    changeValue: 11, 
+    defaultTotal: 250,
+    color: 'red'
   }
-  return shallow(<BusinessRegistration {...newProps} />);
+};
+const setup = () => {
+  return shallow(<BusinessRegistration {...props} />);
 };
 
 const event = (name, value) => ({
-  preventDefault: jest.fn(),
+  preventDefault: jest.fn(() => Promise.resolve()),
   target: {
     name,
     value
@@ -276,12 +282,9 @@ describe('Business registration component', () => {
   beforeEach(() => {
     global.props = {
       match: {
-        params: {
-          id: 1
-        }
+        params: () => {}
       }
     }
-    global.business = business;
   })
 
   it('should render registration page', () => {
@@ -292,7 +295,31 @@ describe('Business registration component', () => {
   }) 
 
   it('should render registration form', () => {
-    const wrapper = shallow(<RegistrationForm {...newProps} />);
+    props = {
+      state: {
+        name: () => {}
+      },
+      locations: jest.fn(() => Promise.resolve()),
+      categories: jest.fn(() => Promise.resolve()),
+      params: {
+        id: undefined
+      }
+    }
+
+    let state = {
+      business: null,
+      // businesses: {
+        params,
+        categories,
+        locations,
+      // },
+      isLoading: false,
+      changeValue: 11, 
+      defaultTotal: 250,
+      color: 'red'
+    };
+
+    const wrapper = shallow(<RegistrationForm {...props} />);
     wrapper.setProps({ params: {} });
     expect(wrapper.find('.form-header').text()).toBe('Update business');
     expect(wrapper.find('div').length).toBe(11);
@@ -307,15 +334,7 @@ describe('Business registration component', () => {
     expect(wrapper.find('span').length).toBe(3);
     expect(toJSON(wrapper)).toMatchSnapshot();
 
-    let state = {
-      business: null,
-      // businesses: {
-        params,
-        categories,
-        locations,
-      // },
-      isLoading: false
-    };
+    
 
     let props = {
       match: {
@@ -346,8 +365,15 @@ describe('Business registration component', () => {
   }) 
 
   it('should render connected registration page', () => {
-    const store = mockStore({});
-    const wrapper = shallow(<ConnectedBusinessRegistration store={store} />);
+    const businesses = {
+        business,
+        params,
+        categories,
+        locations,
+      }
+
+    const store = mockStore({businesses});
+    const wrapper = shallow(<ConnectedBusinessRegistration store={store} {...props}  />);
     expect(wrapper.length).toBe(1);
   }) 
 });

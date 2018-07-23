@@ -11,8 +11,8 @@ let props;
 const setup = () => {
   props = {
     state: searchState,
-    onChange: jest.fn(),
-    onSubmit: jest.fn()
+    onChange: jest.fn(() => Promise.resolve()),
+    onSubmit: jest.fn(() => Promise.resolve())
   };
 
   return shallow(<SearchForm {...props} />);

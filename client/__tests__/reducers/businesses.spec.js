@@ -6,23 +6,15 @@ import {
   SET_BUSINESSES_BY_ID,
   SET_BUSINESS_BY_ID,
   FILTERED_BUSINESSES,
-  // BUSINESS_DELETED,
+  BUSINESS_DELETED,
   SET_LOCATIONS,
   SET_CATEGORIES,
   PAGINATION_RESULT,
-  ADD_REVIEW
+  ADD_REVIEW,
+  EDIT_REVIEW,
+  REVIEW_DELETED,
+  SET_REVIEWS
 } from '../../actions/types';
-
-const initialState = {
-  businesses: [],
-  businessOwnedByUser: [],
-  business: {},
-  searchResult: [],
-  locations: [],
-  categories: [],
-  paginationResult: {},
-  reviews: [],
-};
 
 const {
   business,
@@ -31,8 +23,20 @@ const {
   locations,
   categories,
   paginationResult,
-  review
+  review,
+  reviews
 } = businessMock;
+
+const initialState = {
+  businesses: [],
+  businessOwnedByUser: allBusiness,
+  business: {},
+  searchResult: [],
+  locations: [],
+  categories: [],
+  paginationResult: {},
+  reviews,
+};
 
 const addBusiness = {
   type: ADD_BUSINESS,
@@ -59,10 +63,10 @@ const filterBusinesses = {
   searchResult: allBusiness
 };
 
-// const deleteBusiness = {
-//   type: BUSINESS_DELETED,
-//   businessId: 1
-// };
+const deleteBusiness = {
+  type: BUSINESS_DELETED,
+  businessId: 2
+};
 
 const fetchLocations = {
   type: SET_LOCATIONS,
@@ -84,9 +88,24 @@ const addReview = {
   review
 };
 
+const editReview = {
+  type: EDIT_REVIEW,
+  review
+};
+
+const deleteReview = {
+  type: REVIEW_DELETED,
+  reviewId: 2
+};
+
+const getReviews = {
+  type: SET_REVIEWS,
+  reviews
+};
+
 describe('Business reducer test', () => {
   it('should have a default state', () => {
-    const newState = businessReducer(undefined, {});
+    const newState = businessReducer(initialState, {});
     expect(newState).toEqual(initialState);
   });
 
@@ -121,13 +140,10 @@ describe('Business reducer test', () => {
     });
   });
 
-  // it('should successfully delete a business', () => {
-  //   const state = businessReducer(initialState.businessOwnedByUser, deleteBusiness);
-  //   expect(state.)
-  // expect(businessReducer(initialState.businessOwnedByUser, deleteBusiness)).toEqual({
-  //   ...initialState, businessId: deleteBusiness.id
-  // });
-  // });
+  it('should successfully delete a business', () => {
+    const state = businessReducer(initialState, deleteBusiness);
+    expect(state.businessOwnedByUser.length).toEqual(2);
+  });
 
   it('should return all business locations', () => {
     expect(businessReducer(initialState, fetchLocations)).toEqual({
@@ -147,16 +163,28 @@ describe('Business reducer test', () => {
     });
   });
 
+  it('should successfully delete a review', () => {
+    const state = businessReducer(initialState, deleteReview);
+    expect(state.reviews.length).toEqual(4);
+  });
+
   it('should add review successfully', () => {
     const newState = businessReducer(initialState, addReview);
     expect(newState).toEqual({
-      ...initialState, reviews: [addReview.review]
+      ...initialState, reviews: [...reviews, addReview.review]
     });
   });
 
   it('should successfully display all reviews', () => {
-    expect(businessReducer(initialState, getBusinesses)).toEqual({
-      ...initialState, businesses: getBusinesses.businesses
+    expect(businessReducer(initialState, getReviews)).toEqual({
+      ...initialState, reviews: getReviews.reviews
     });
   });
+
+  it('should successfully edit a review', () => {
+    expect(businessReducer(initialState, editReview)).toEqual({
+      ...initialState, reviews: [...reviews]
+    });
+  });
+
 });

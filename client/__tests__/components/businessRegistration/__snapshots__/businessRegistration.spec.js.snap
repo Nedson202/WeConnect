@@ -4,9 +4,7 @@ exports[`Business registration component should render registration form 1`] = `
 <div
   className="container"
 >
-  <form
-    onSubmit={[MockFunction]}
-  >
+  <form>
     <div
       className="business-form-style"
     >
@@ -30,10 +28,8 @@ exports[`Business registration component should render registration form 1`] = `
             className="form-control"
             id="control-label"
             name="name"
-            onChange={[MockFunction]}
             placeholder="Business name"
             type="text"
-            value="alpha tech"
           />
         </div>
         <div
@@ -49,10 +45,8 @@ exports[`Business registration component should render registration form 1`] = `
             className="form-control"
             id="icon-prefix email"
             name="email"
-            onChange={[MockFunction]}
             placeholder="Enter email"
             type="email"
-            value="altech@caria.net"
           />
         </div>
       </div>
@@ -71,10 +65,8 @@ exports[`Business registration component should render registration form 1`] = `
             className="form-control"
             id="control-label"
             name="address"
-            onChange={[MockFunction]}
             placeholder="Address"
             type="text"
-            value="2r close sau paulo"
           />
         </div>
         <div
@@ -88,27 +80,13 @@ exports[`Business registration component should render registration form 1`] = `
           <select
             className="form-control custom-select"
             name="location"
-            onChange={[MockFunction]}
             type="select"
-            value="sau paulo"
           >
             <option
               disabled={true}
               value=""
             >
               choose location
-            </option>
-            <option
-              key="1"
-              value="lao"
-            >
-              lao
-            </option>
-            <option
-              key="2"
-              value="hawaii"
-            >
-              hawaii
             </option>
           </select>
         </div>
@@ -127,7 +105,6 @@ exports[`Business registration component should render registration form 1`] = `
           <select
             className="form-control custom-select"
             name="category"
-            onChange={[MockFunction]}
             type="select"
           >
             <option
@@ -135,18 +112,6 @@ exports[`Business registration component should render registration form 1`] = `
               value=""
             >
               choose category
-            </option>
-            <option
-              key="1"
-              value="finance"
-            >
-              finance
-            </option>
-            <option
-              key="2"
-              value="tech"
-            >
-              tech
             </option>
           </select>
         </div>
@@ -162,22 +127,18 @@ exports[`Business registration component should render registration form 1`] = `
             className="form-control"
             id="control-label"
             name="description"
-            onChange={[MockFunction]}
             placeholder="Description"
             rows="3"
             type="text"
-            value="this is a simple meal made with rice and yam"
           />
           <p>
             <span
               style={
                 Object {
-                  "color": "red",
+                  "color": undefined,
                 }
               }
-            >
-              11
-            </span>
+            />
             <span
               style={
                 Object {
@@ -186,7 +147,6 @@ exports[`Business registration component should render registration form 1`] = `
               }
             >
               /
-              250
             </span>
           </p>
         </div>
@@ -216,34 +176,19 @@ exports[`Business registration component should render registration page 1`] = `
     id="background-image"
   />
   <RegistrationForm
-    categories={
-      Array [
-        Object {
-          "category": "finance",
-          "id": 1,
-        },
-        Object {
-          "category": "tech",
-          "id": 2,
-        },
-      ]
-    }
+    categories={[Function]}
+    changeValue={0}
+    color="red"
+    defaultTotal={250}
     isLoading={false}
-    locations={
-      Array [
-        Object {
-          "id": 1,
-          "location": "lao",
-        },
-        Object {
-          "id": 2,
-          "location": "hawaii",
-        },
-      ]
-    }
+    locations={[Function]}
     onChange={[Function]}
     onSubmit={[Function]}
-    params={Object {}}
+    params={
+      Object {
+        "id": 1,
+      }
+    }
     state={
       Object {
         "address": undefined,

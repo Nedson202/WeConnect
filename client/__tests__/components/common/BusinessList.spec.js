@@ -16,9 +16,9 @@ const setup = () => {
     }
   }
   props = {
-    filterBusiness: jest.fn(),
-    fetchBusinesses: jest.fn(),
-    fetchBusinessesByUserId: jest.fn(),
+    filterBusiness: jest.fn(() => Promise.resolve()),
+    fetchBusinesses: jest.fn(() => Promise.resolve()),
+    fetchBusinessesByUserId: jest.fn(() => Promise.resolve()),
     businesses: allBusiness,
     business: business,
     paginate: paginationResult,

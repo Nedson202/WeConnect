@@ -16,11 +16,11 @@ configure({ adapter: new Adapter() });
 let props, businesses;
 const setup = () => {
   props = {
-    fetchBusinesses: jest.fn(),
+    fetchBusinesses: jest.fn(() => Promise.resolve()),
     businesses: allBusiness,
     paginate: paginationResult,
     isLoading: false,
-    loader: jest.fn()
+    loader: jest.fn(() => Promise.resolve())
   };
 
   return shallow(<AllBusiness {...props} />);

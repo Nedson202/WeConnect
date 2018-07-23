@@ -20,8 +20,8 @@ const setup = () => {
   props = {
     businesses: allBusiness,
     paginate: paginationResult,
-    filterBusiness: jest.fn(),
-    onSubmit: jest.fn()
+    filterBusiness: jest.fn(() => Promise.resolve()),
+    onSubmit: jest.fn(() => Promise.resolve())
   };
 
   return shallow(<SearchResultPage {...props} />);
