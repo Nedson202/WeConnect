@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: Spinner should render 1`] = `
+<div
+  className="spinner"
+>
+  <onlyUpdateForKeys(Loader)
+    color="#1a3c5d"
+    loading={false}
+    size={60}
+    sizeUnit="px"
+  />
+</div>
+`;

@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: Textfield should render 1`] = `
+<div>
+  <div
+    className="form-group col-md-6 offset-md-3 col-lg-8 offset-lg-2"
+  >
+    <label
+      className="control-label"
+      id="control-label"
+    >
+      Username
+    </label>
+    <input
+      className="form-control"
+      name="username"
+      onChange={[MockFunction]}
+      placeholder="Do this"
+      type="text"
+      value="username"
+    />
+  </div>
+</div>
+`;

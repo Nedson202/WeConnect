@@ -16,10 +16,14 @@
   "parserOptions": {
     "ecmaVersion": 6
   },
+  "plugins": [
+    "jest"
+  ],
   "globals": {
     "toastr": true,
     "expect": true,
-    "should": true
+    "should": true,
+    "jest": true
   },
   "rules": {
     "one-var": 0,

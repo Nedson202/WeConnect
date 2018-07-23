@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: UserList should render 1`] = `
+<div>
+  <div
+    className="text-center"
+  >
+    <h4>
+      Displaying user list
+    </h4>
+  </div>
+  <div
+    className="container card-container"
+  >
+    <div
+      className="row"
+    >
+      <UserCard
+        key="1"
+        markUserToRemove={[MockFunction]}
+        removeUser={[MockFunction]}
+        user={
+          Object {
+            "id": 1,
+            "username": "astro",
+          }
+        }
+      />
+      <UserCard
+        key="2"
+        markUserToRemove={[MockFunction]}
+        removeUser={[MockFunction]}
+        user={
+          Object {
+            "id": 2,
+            "username": "chemical",
+          }
+        }
+      />
+      <UserCard
+        key="3"
+        markUserToRemove={[MockFunction]}
+        removeUser={[MockFunction]}
+        user={
+          Object {
+            "id": 3,
+            "username": "physics",
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;

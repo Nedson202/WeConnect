@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User login component should render login component 1`] = `
+<div>
+  <div
+    id="background-image"
+  />
+  <LoginForm
+    isLoading={false}
+    onChange={[Function]}
+    onSubmit={[Function]}
+    state={
+      Object {
+        "errors": Object {},
+        "password": "",
+        "username": "",
+      }
+    }
+    userLoginRequest={[MockFunction]}
+  />
+</div>
+`;
+
+exports[`User login component should render login form 1`] = `
+<div>
+  <form
+    onSubmit={[MockFunction]}
+  >
+    <div
+      className="custom-form-style"
+    >
+      <h3
+        className="text-center form-header"
+      >
+        Login
+      </h3>
+      <TextField
+        field="username"
+        label="Username"
+        onChange={[MockFunction]}
+        placeholder="Username"
+        type="text"
+        value="mike"
+      />
+      <div
+        className="form-group col-md-6 offset-md-3 col-lg-8 offset-lg-2"
+      >
+        <label
+          id="control-label"
+        >
+          Password
+        </label>
+        <input
+          className="form-control"
+          id="password"
+          name="password"
+          onChange={[MockFunction]}
+          placeholder="password"
+          type="password"
+          value="alen@stuart.mill"
+        />
+        <div
+          className="input-group-btn"
+        >
+          <li
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <i
+              aria-hidden="true"
+              className="fa fa-eye"
+              id="add-hide"
+            />
+            <i
+              aria-hidden="true"
+              className="fa fa-eye-slash hide"
+              id="remove-hide"
+            />
+          </li>
+        </div>
+      </div>
+      <button
+        className="btn btn-outline-success"
+        disabled={true}
+        id="submit-button"
+        type="submit"
+      >
+        <span
+          className="processing-info"
+        >
+          processing 
+          <i
+            className="fa fa-spinner fa-spin"
+          />
+        </span>
+      </button>
+      <p
+        className="text-center account-block"
+      >
+        Don't have an account?  
+        <Link
+          className="link"
+          replace={false}
+          to="/signup"
+        >
+          signup
+        </Link>
+      </p>
+    </div>
+  </form>
+</div>
+`;

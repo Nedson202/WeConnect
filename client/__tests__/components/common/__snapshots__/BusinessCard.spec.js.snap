@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: BusinessCard should render 1`] = `
+<div
+  className="col-sm-12 col-md-6 col-lg-4 card-style"
+>
+  <div
+    className="card business-card"
+  >
+    <div
+      className="card-header text-center textcase"
+    >
+      <h5>
+        alpha tech
+      </h5>
+    </div>
+    <div
+      className="zoom"
+    >
+      <Link
+        replace={false}
+        to="profile/1"
+      >
+        <img
+          alt="business"
+          className="card-img-top image-fluid"
+          height="200px"
+          src="image/connect.jpg"
+        />
+      </Link>
+    </div>
+    <hr
+      style={
+        Object {
+          "marginBottom": 0,
+          "marginTop": 0,
+        }
+      }
+    />
+    <div
+      className="card-body"
+    >
+      <p
+        className="mb-0 small text-uppercase mb-1 lts-2px pull-left"
+      />
+      <p
+        className="mb-0 small text-uppercase mb-1 lts-2px pull-right"
+      >
+        sau paulo
+      </p>
+      <div
+        className="card-title text-center textcase"
+      >
+        <p />
+      </div>
+      <Truncate
+        ellipsis="…"
+        line={2}
+        lines={1}
+        trimWhitespace={false}
+      >
+        this is a simple meal made with rice and yam
+      </Truncate>
+      <div>
+        <Link
+          replace={false}
+          to="profile/1"
+        >
+          <button
+            className="btn btn-outline-success"
+            id="read-more"
+          >
+            Read more
+          </button>
+        </Link>
+      </div>
+    </div>
+  </div>
+</div>
+`;

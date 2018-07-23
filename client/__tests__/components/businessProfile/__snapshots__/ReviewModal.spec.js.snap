@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: ReviewModal should render 1`] = `
+<div>
+  <div />
+</div>
+`;
+
+exports[`Component: ReviewModal should render form if reviewer is not the business owner 1`] = `
+<div>
+  <div>
+    <div
+      className="review-section row"
+    >
+      <div
+        className="col-lg-9"
+      >
+        <div
+          className="form-group"
+        >
+          <label
+            id="control-label"
+          >
+            Add a review
+          </label>
+          <textarea
+            className="form-control"
+            id="control-label"
+            name="message"
+            onChange={[MockFunction]}
+            placeholder="Add review"
+            rows="3"
+            type="text"
+            value="Great business"
+          />
+        </div>
+        <ReactStars
+          char="★"
+          color1="#333333"
+          color2="#ffaf00"
+          count={5}
+          edit={true}
+          half={true}
+          onChange={[MockFunction]}
+          size={19}
+          value={3}
+        />
+      </div>
+      <div
+        className="col-lg-3 add-review"
+      >
+        <button
+          className="btn btn-outline-success add-review-button"
+          id="add-review"
+          onClick={[MockFunction]}
+        >
+          <span>
+            Post review
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
