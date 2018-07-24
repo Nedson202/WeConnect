@@ -4,101 +4,91 @@
 
 # WeConnect
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with. 
+It has the following features:
+
+#### Non registered users
+* User Signup
+* Filter businesses by location, category or name
+* View businesses
+* View reviews
+
+#### Registered users
+* User Signin
+* Add business
+* Update business
+* Delete business
+* Review and rate a business
+* Edit a review
+* Delete a review
+
 
 # Table of Contents
-1. [Tech stack used](https://github.com/Nedson202/WeConnect#tech-stack-used)
-2. [Getting started](https://github.com/Nedson202/WeConnect#getting-started)
-3. [API endpoints](https://github.com/Nedson202/WeConnect#api-endpoints)
-4. [JWT ](https://github.com/Nedson202/WeConnect#jwt)
-5. [License](https://github.com/Nedson202/WeConnect#license)
+1. [Technologies](https://github.com/Nedson202/WeConnect#technologies)
+2. [Installation Setup](https://github.com/Nedson202/WeConnect#installation-setup)
+3. [Api documentation](https://github.com/Nedson202/WeConnect#api-documentation)
+4. [Coding style](https://github.com/Nedson202/WeConnect#coding-style)
+5. [Dependencies](https://github.com/Nedson202/WeConnect#dependencies)
+6. [Language](https://github.com/Nedson202/WeConnect#language)
+7. [Author](https://github.com/Nedson202/WeConnect#author)
+8. [License](https://github.com/Nedson202/WeConnect#license)
 
-## Tech stack used
-Weconnect currently uses [MaterializeCss](https://materializecss.com) for its template coupled with NodeJs/ExpressJs, Postgresql and Sequelize on the back-end and JWT(jsonwebtoken) for route protection.
-The template is currently hosted on github using gh-pages and the API documentation on heroku. See links below
-* [View the template live](https://nedson202.github.io/WeConnect/template/index.html)
-* [Api documentation](https://weconnect-api-service.herokuapp.com/api-docs)
-* [project Tracker Board](https://www.pivotaltracker.com/n/projects/2153373)
 
-## Getting started
-To get this project up and running on your local machine is pretty easy. Follow the steps below to complete the setup
-* **Install postman:** Postman is an app used to test api endpoints. Get its chrome extension [here](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
+## Technologies
+* NodeJs
+* Express
+* Sequelize
+* Postgresql
+* React
+* Redux
+
+## Installation Setup
+Getting this project up and running on your local machine is pretty easy. Follow the steps below to complete the setup
+* **Install global packages:** Skip this step if you have **NodeJS and postgresql** installed. For those who don't, you can head to [Node.js](https://nodejs.org/en/download/) and [Postgresql](https://www.postgresql.org/download/) to download.
     
-* **Install NodeJs:** Skip this step if you already have **NodeJS and postgresql** installed. For those who don't, you can head to [Node.js](https://nodejs.org/en/download/) and [Postgresql](https://www.postgresql.org/download/) to download.
+* **Additional setup:** This app uses the dotenv npm package to load environment variables. For more info visit [dotenv](https://www.npmjs.com/package/dotenv). Rename **.env_example** file to **.env**, open the .env file and rename your username and password according to your postgresql setup, you can also rename your jwt secret. Run on your terminal/cmd
+
+      open pgAdmin and create two databases. 
+      weconnect-api(for app development) and weconnect_test(for running tests)
 
 * **Clone this repo:** Open **cmd(command prompt)** for windows users, **terminal** for linux and mac users. 
     
       git clone https://github.com/Nedson202/WeConnect.git
 
-* **Install global packages:** This package is responsible for watching file changes and restarting the app server. In the terminal/cmd run
-
-      npm install -g nodemon
-
 * **Install project dependencies:** Enter the following in your terminal/cmd to change into the directory of the cloned repo and install all app dependencies
 
-      cd WeConnect
-      npm install
-    
-* **Additional setup:** This app uses the dotenv npm package to load environment variables. For more info visit [dotenv](https://www.npmjs.com/package/dotenv). Rename **.env_example** file to **.env**, open the .env file and rename your username and password according to your postgresql setup, you can also rename your jwt secret. Run on your terminal/cmd
-
-      createdb weconnect_api
-
-* **Start the app:** Enter the following in your terminal/cmd to start the app server
-    
-      npm start
-    
-* **Run the tests**
-
-      npm test
+      change directory to cloned repo (WeConnect)
+      npm i
       
-* **Open postman**
-
-      GET http://localhost:4000
+* **Start the app:** Enter the following on your terminal/cmd to start the app
+    
+      npm run start-dev
       
-## JWT 
+* **Open browser**
 
-JWT is used to secure routes only authenticated should have access to. During login, some user data (payload) is signed which returns a generated token to the user.
-This token can then be provided as header during business registration, business update, business deletion and to post reviews. Below are the endpoints that require a token as header.
-
-      POST localhost:4000/api/v1/businesses                           [Register a business] 
-      PUT  localhost:4000/api/v1/businesses/:businessId               [Update a business by its id]        
-    DELETE localhost:4000/api/v1/businesses/:businessId               [Delete a business by its id]
-      POST localhost:4000/api/v1/businesses/:businessId/reviews       [Post a review for a business]
+      Run http://localhost:4000 on the address bar
       
-## API endpoints
-      POST localhost:4000/api/v1/auth/signup                          [User signup]
-      POST localhost:4000/api/v1/auth/login                           [User login
-      POST localhost:4000/api/v1/businesses                           [Register a business]
-      GET  localhost:4000/api/v1/businesses                           [Get all business]
-      GET  localhost:4000/api/v1/businesses/:businessId               [Get a business by its id]
-      PUT  localhost:4000/api/v1/businesses/:businessId               [Update a business by its id]        
-    DELETE localhost:4000/api/v1/businesses/:businessId               [Delete a business by its id]
-      GET  localhost:4000/api/v1/businesses?location=location         [Get a business by location]
-      GET  localhost:4000/api/v1/businesses?category=category         [Get a business by category]
-      POST localhost:4000/api/v1/businesses/:businessId/reviews       [Post a review for a business]
-      GET  localhost:4000/api/v1/businesses/:businessId/reviews       [Get all reviews under a business]
-   
-   * **Additional notes for api-endpoints:** **:businessId** should be replaced with the Id of the business **1** for instance. The endpoint for location and category, when passed into postman will look thus:
-          
-          GET  localhost:4000/api/v1/businesses?location=lagos         [Get a business by location]
-          GET  localhost:4000/api/v1/businesses?category=sports        [Get a business by category]  
+## Test
+ You can use the following to run tests:
+* Backend:      `npm run test`
+* Frontend:     `npm run test:client`
+
+
+## Api Documentation
+Click [here](https://weconnect-samson.herokuapp.com/api-docs/) to view the api documentation 
+
+## Coding Style
+* Airbnb style guide
+
+## Dependencies
+Click [here](https://github.com/Nedson202/WeConnect/blob/develop/package.json) to view dependencies
+
+## Language
+* Javascript
+      
+## Author
+
+    NEGEDU SAMSON
       
 ## License
-The MIT License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+MIT © Negedu Samson
