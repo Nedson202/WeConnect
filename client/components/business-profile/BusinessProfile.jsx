@@ -41,7 +41,9 @@ export class BusinessProfile extends Component {
       errors: {},
       current: 1,
       editStatus: null,
-      isLoading: false
+      isLoading: false,
+      isImageProcessing: true,
+      uploading: false
     };
 
     this.onBusinessDelete = this.onBusinessDelete.bind(this);
@@ -111,6 +113,7 @@ export class BusinessProfile extends Component {
    * @memberof ImageUpload
    */
   onImageChange(event) {
+    this.setState({ uploading: true })
     const image = event.target.files[0];
     const uploadPreset = process.env.UPLOAD_PRESET;
     const cloudinaryApi = process.env.CLOUDINARY_API;
@@ -120,7 +123,11 @@ export class BusinessProfile extends Component {
       cloudinaryApi,
     )
       .then(() => {
-        this.setState({ image: this.props.image });
+        this.setState({ 
+          isImageProcessing: false, 
+          image: this.props.image,
+          uploading: false
+        });
       });
   }
 
