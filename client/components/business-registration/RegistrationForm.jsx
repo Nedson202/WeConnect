@@ -37,7 +37,7 @@ const RegistrationForm = ({
       <form onSubmit={onSubmit}>
         <div className="business-form-style">
           <h3 className="text-center form-header">
-            { !params ? 'Register business' : 'Update business' }
+            { !params.id ? 'Register business' : 'Update business' }
           </h3>
           <div className="row">
             <div className="form-group col-lg-6">
