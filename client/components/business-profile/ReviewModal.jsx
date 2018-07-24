@@ -10,7 +10,7 @@ import ReactStars from 'react-stars';
 const ReviewModal = ({
   onChange, onStarClick, onSubmit, state, user, business
 }) => {
-  const { message, rating } = state;
+  const { message, rating, isLoading } = state;
   return (
     <div>
       { user.username === process.env.ADMIN ? null :
@@ -42,12 +42,12 @@ const ReviewModal = ({
           </div>
           <div className="col-lg-3 add-review">
             <button
-              // disabled={isPosting}
+              disabled={isLoading}
               className="btn btn-outline-success add-review-button"
               id="add-review"
               onClick={onSubmit}
             >
-              <span>Post review</span>
+              { isLoading ? <span>Posting <i className="fa fa-spinner fa-spin" /></span> : <span>Post review</span> }
             </button>
           </div>
         </div>

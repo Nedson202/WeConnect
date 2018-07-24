@@ -15,7 +15,7 @@ const EditReview = ({
   reviewId,
   cancelEdit
 }) => {
-  const { editMessage, editRating } = state;
+  const { editMessage, editRating, isLoading } = state;
   return (
     <div className="row">
       <div className="col-lg-9">
@@ -45,12 +45,12 @@ const EditReview = ({
       </div>
       <div className="col-lg-3">
         <button
-          // disabled={isLoading}
+          disabled={isLoading}
           className="btn btn-outline-success update-review-button"
           id="update-review"
           onClick={() => onReviewUpdate(reviewId)}
         >
-          update review
+          { !isLoading ? <span>Update review</span> : <span>Updating <i className="fa fa-spinner fa-spin" /></span>}
         </button>
       </div>
     </div>

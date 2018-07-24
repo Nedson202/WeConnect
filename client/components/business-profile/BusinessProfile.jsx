@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import ReviewModal from './ReviewModal';
 import ReviewList from './ReviewList';
 import { reviewRequest, reviewUpdateRequest } from '../../actions/postReviewAction';
-import addFlashMessage from '../../actions/flashMessages';
 import { deleteBusiness, deleteReview } from '../../actions/deleteAction';
 import { fetchReviews, fetchBusinessById } from '../../actions/fetchActions';
 import BusinessImageUpload from '../ImageUpload/BusinessImageUpload';
@@ -24,7 +23,7 @@ let reviewToDelete;
  *
  * @extends {Component}
  */
-class BusinessProfile extends Component {
+export class BusinessProfile extends Component {
   /**
    * @description Creates an instance of BusinessProfile.
    * @param {object} props
@@ -41,7 +40,8 @@ class BusinessProfile extends Component {
       editRating: 0,
       errors: {},
       current: 1,
-      editStatus: null
+      editStatus: null,
+      isLoading: false
     };
 
     this.onBusinessDelete = this.onBusinessDelete.bind(this);
@@ -167,14 +167,17 @@ class BusinessProfile extends Component {
    */
   onSubmit(event) {
     event.preventDefault();
+    this.setState({ isLoading: true });
     const { params } = this.props;
     const { message, rating } = this.state;
+
     if (!message || rating === 0) {
+      this.setState({ isLoading: false });
       return toastr.error('Please leave a review and rating');
     }
 
     this.props.reviewRequest(params.id, this.state, this.props.fetchBusinessById).then(() => {
-      this.setState({ message: '', rating: 0 });
+      this.setState({ message: '', rating: 0, isLoading: false });
     });
   }
 
@@ -249,13 +252,15 @@ class BusinessProfile extends Component {
    * @memberof EditReview
    */
   onReviewUpdate(reviewId) {
+    this.setState({ isLoading: true });
     const {
       params
     } = this.props;
     const { state, cancelEdit } = this;
     const { editMessage, editRating } = this.state;
     if (!editMessage || editRating === 0) {
-      return toastr.error('Please leave a review and rating');
+    this.setState({ isLoading: false });
+    return toastr.error('Please leave a review and rating');
     }
     this.props.reviewUpdateRequest(
       params.id,
@@ -263,7 +268,11 @@ class BusinessProfile extends Component {
       state,
       this.props.fetchBusinessById
     )
-      .then(() => cancelEdit());
+      .then(
+        () => {
+          cancelEdit()
+          this.setState({ isLoading: false });
+        });
   }
   /**
    * @description Edit business
@@ -374,8 +383,6 @@ class BusinessProfile extends Component {
       </button>
     );
 
-    const businessReviews = reviews || [];
-
     if (business.name === undefined) {
       return noBusiness;
     }
@@ -416,7 +423,6 @@ class BusinessProfile extends Component {
                   onImageChange={onImageChange}
                   uploadToCloudinary={this.props.uploadToCloudinary}
                   state={state}
-                  addFlashMessage={this.props.addFlashMessage}
                 />
               </div>
               <div className="col-lg-6 business-details">
@@ -472,7 +478,7 @@ class BusinessProfile extends Component {
           </div>
 
           <div className="col-sm-12 col-lg-10 offset-lg-1">
-            { businessReviews.length === 0 ? noReviews : (
+            { reviews.length === 0 ? noReviews : (
               <ReviewList
                 reviews={reviews}
                 deleteReview={this.props.deleteReview}
@@ -520,7 +526,7 @@ BusinessProfile.propTypes = {
   fetchBusinessById: PropTypes.func.isRequired,
   reviewRequest: PropTypes.func.isRequired,
   reviewUpdateRequest: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired,
+  // addFlashMessage: PropTypes.func.isRequired,
   deleteReview: PropTypes.func.isRequired,
   deleteBusiness: PropTypes.func.isRequired,
   fetchReviews: PropTypes.func.isRequired,
@@ -548,8 +554,7 @@ BusinessProfile.defaultProps = {
   paginate: {}
 };
 
-const mapStateToProps = (state, props) => {
-  const { params } = props.match;
+export const mapStateToProps = (state, props) => {
   const {
     businesses, isLoading, auth, image
   } = state;
@@ -557,11 +562,10 @@ const mapStateToProps = (state, props) => {
     reviews: businesses.reviews,
     user: auth.user,
     business: businesses.business,
-    params,
+    params: props.match.params,
     paginate: businesses.paginationResult,
     image,
     isLoading,
-    error: businesses.businessRequestError
   };
 };
 
@@ -572,7 +576,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   deleteBusiness,
   fetchReviews,
   deleteReview,
-  addFlashMessage,
   businessImageUploader,
   loader,
   uploadToCloudinary,

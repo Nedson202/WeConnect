@@ -9,7 +9,7 @@ import avatar from '../../images/user-avatar.png';
 import UserProfileUpdate from '../user/UserProfileUpdate';
 import { userProfileUpdateRequest } from '../../actions/userActions';
 import { fetchBusinesses, fetchBusinessesByUserId } from '../../actions/fetchActions';
-import addFlashMessages from '../../actions/flashMessages';
+// import addFlashMessages from '../../actions/flashMessages';
 import { uploadToCloudinary } from '../../actions/imageUpload';
 import Spinner from '../common/Spinner';
 import loader from '../../actions/loader';
@@ -231,7 +231,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchBusinesses,
   fetchBusinessesByUserId,
   userProfileUpdateRequest,
-  addFlashMessages,
+  // addFlashMessages,
   uploadToCloudinary,
   loader
 }, dispatch);

@@ -11,7 +11,7 @@ import '../../index.scss';
  *
  * @extends {Component}
  */
-class SearchResultPage extends Component {
+export class SearchResultPage extends Component {
   /**
    * @description set page title
    *
@@ -32,7 +32,6 @@ class SearchResultPage extends Component {
    */
   render() {
     const { businesses, paginate } = this.props;
-    const searchResult = businesses || [];
     const queryData = paginate ? paginate.queryData : {};
 
     const foundBusiness = (
@@ -44,9 +43,9 @@ class SearchResultPage extends Component {
     return (
       <div>
         <div className="text-center business-profile" />
-        {searchResult.length !== 0 ? foundBusiness : null}
+        {businesses.length !== 0 ? foundBusiness : null}
         <BusinessList
-          businesses={searchResult}
+          businesses={businesses}
           filterBusiness={this.props.filterBusiness}
           paginate={paginate}
           queryData={queryData !== undefined ? queryData : {}}
@@ -62,7 +61,7 @@ SearchResultPage.propTypes = {
   paginate: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
   const { searchResult, paginationResult } = state.businesses;
   return {
     businesses: searchResult,

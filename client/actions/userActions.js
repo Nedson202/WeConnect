@@ -23,10 +23,10 @@ const logout = () => (dispatch) => {
   setAuthToken(false);
   localStorage.removeItem('accessToken');
   localStorage.removeItem('image');
-  dispatch(setCurrentUser({}));
+  return dispatch(setCurrentUser({}));
 };
 /**
- * @description function to dispatch an action to filter recipes
+ * @description function to dispatch an action to login a user
  *
  * @param {Object} userData
  * @param {Object} history
@@ -51,13 +51,15 @@ const userLoginRequest = (userData, history) => (dispatch) => {
         history.push('/dashboard');
       }
     }).catch((error) => {
-      error.response.data.map(err => toastr.error(err));
-      dispatch(loadingState(false));
+      if(error.response) {
+        error.response.data.map(err => toastr.error(err));
+        dispatch(loadingState(false));
+      }
     });
 };
 
 /**
- * @description function to dispatch an action to filter recipes
+ * @description function to dispatch an action to register a user
  *
  * @param {Object} userData
  * @param {Object} history
@@ -76,14 +78,16 @@ const userSignupRequest = (userData, history) => (dispatch) => {
       toastr.success(message);
       history.push('/dashboard');
     }).catch((error) => {
-      const { data } = error.response;
-      data.map(err => toastr.error(err));
-      dispatch(loadingState(false));
+      if(error.response) {
+        const { data } = error.response;
+        data.map(err => toastr.error(err));
+        dispatch(loadingState(false));
+      }
     });
 };
 
 /**
- * @description function to dispatch an action to filter recipes
+ * @description function to dispatch an action to update user details
  *
  * @param {Number} userId
  * @param {Object} data
@@ -100,7 +104,7 @@ const userProfileUpdateRequest = (userId, data) => dispatch => axios.put(`/api/v
     toastr.success('Profile update successful');
     document.getElementById('closeProfileModal').click();
   }).catch((error) => {
-    if (error) {
+    if (error.response) {
       error.response.data.map(err => toastr.error(err));
     }
   }); // eslint-disable-line no-unused-vars

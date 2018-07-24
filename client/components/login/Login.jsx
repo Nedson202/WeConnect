@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import LoginForm from './LoginForm';
 import { userLoginRequest } from '../../actions/userActions';
-import addFlashMessage from '../../actions/flashMessages';
 import loader from '../../actions/loader';
 
 /**
@@ -12,7 +11,7 @@ import loader from '../../actions/loader';
  *
  * @extends {Component}
  */
-class Login extends Component {
+export class Login extends Component {
   /**
    * @description Creates an instance of LoginForm.
    *
@@ -91,7 +90,6 @@ class Login extends Component {
         <div id="background-image" />
         <LoginForm
           userLoginRequest={this.props.userLoginRequest}
-          addFlashMessage={this.props.addFlashMessage}
           onChange={onChange}
           onSubmit={onSubmit}
           state={state}
@@ -104,26 +102,16 @@ class Login extends Component {
 
 Login.propTypes = {
   userLoginRequest: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 
-Login.contextTypes = {
-  router: PropTypes.object.isRequired
-};
-
-const mapStateToProps = (state) => {
-  const { isLoading, authError } = state;
-  return {
-    isLoading,
-    error: authError
-  };
-};
+const mapStateToProps = (state) => ({
+  isLoading: state.isLoading
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   userLoginRequest,
-  addFlashMessage,
   loader
 }, dispatch);
 

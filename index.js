@@ -13,6 +13,7 @@ import businessRoute from './server/routes/business';
 import reviewRoute from './server/routes/reviews';
 import models from './server/models/index';
 import webpackConfig from './webpack.config';
+import webpackProdConfig from './webpack.prod';
 
 const swaggerDocument = yaml.load(`${process.cwd()}/swagger.yaml`);
 
@@ -37,9 +38,12 @@ if (process.env.NODE_ENV === 'development') {
   }));
   
   app.use(webpackHotMiddleware(compiler));
+} else {
+  app.use(webpackMiddleware(webpack(webpackProdConfig)));
 }
 
 app.use(logger('dev'));
+app.use(express.static('./dist'));
 
 userRoute(app);
 businessRoute(app);
@@ -51,7 +55,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // app.use(express.static(path.resolve(__dirname, './dist')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './dist', 'index.html'));
+  res.sendFile(path.join(__dirname, './client/index.html'));
 });
 
 app.listen(port, () => {

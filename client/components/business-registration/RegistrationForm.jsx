@@ -12,15 +12,18 @@ const RegistrationForm = ({
   state,
   onChange,
   onSubmit,
-  isLoading
+  isLoading,
+  changeValue, 
+  defaultTotal, 
+  color
 }) => {
-  const { changeValue, defaultTotal, color } = state;
+  // const { changeValue, defaultTotal, color } = state;
 
-  const categoryOption = categories.map(({ id, category }) =>
-    <option key={id} value={category}>{category}</option>);
+  // const categoryOption = categories.map(({ id, category }) =>
+  //   <option key={id} value={category}>{category}</option>);
 
-  const locationOption = locations.map(({ id, location }) =>
-    <option key={id} value={location}>{location}</option>);
+  // const locationOption = locations.map(({ id, location }) =>
+  //   <option key={id} value={location}>{location}</option>);
 
   /**
    * @description Renders the component to the dom
@@ -86,7 +89,7 @@ const RegistrationForm = ({
                 value={state.location}
               >
                 <option value="" disabled>choose location</option>
-                {locationOption}
+                {locations()}
               </select>
             </div>
           </div>
@@ -101,7 +104,7 @@ const RegistrationForm = ({
                 value={state.category}
               >
                 <option value="" disabled>choose category</option>
-                {categoryOption}
+                {categories ()}
               </select>
             </div>
             <div className="form-group col-lg-6">
@@ -122,7 +125,7 @@ const RegistrationForm = ({
           <button type="submit" className="btn btn-outline-success" id="submit-button">
             {isLoading ? <span className="processing-info">processing <i className="fa fa-spinner fa-spin" /></span> :
             <span><i className="fa fa-paper-plane" />&nbsp;
-              { !params ? 'Submit' : 'Update' }
+              { !params.id ? 'Submit' : 'Update' }
             </span>}
           </button>
         </div>
@@ -136,9 +139,12 @@ RegistrationForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
-  categories: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired
+  categories: PropTypes.func.isRequired,
+  locations: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  changeValue: PropTypes.number.isRequired,
+  defaultTotal: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
 };
 
 export default RegistrationForm;

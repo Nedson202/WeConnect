@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TextField from '../common/TextField';
 import passwordToggler from '../../utils/passwordToggler';
-import '../../index.scss';
 
 /**
  * @class LoginForm

@@ -14,7 +14,7 @@ export default function UserCard({ user, removeUser, markUserToRemove }) {
         </div>
         <div className="card-body text-center bg-transparent">
           <button
-            className="btn btn-outline-success text-danger"
+            className="btn btn-outline-success text-danger delete-button"
             data-toggle="modal"
             data-target="#confirmDeleteModal"
             onClick={() => markUserToRemove(id)}
@@ -30,8 +30,8 @@ export default function UserCard({ user, removeUser, markUserToRemove }) {
               <h4>Are you sure?</h4>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-outline-success" data-dismiss="modal">No</button>
-              <button type="button" className="btn btn-outline-success" onClick={() => removeUser()} data-dismiss="modal">Yes</button>
+              <button type="button" className="btn btn-outline-success dismiss-button" data-dismiss="modal">No</button>
+              <button type="button" className="btn btn-outline-success remove-user" onClick={() => removeUser()} data-dismiss="modal">Yes</button>
             </div>
           </div>
         </div>

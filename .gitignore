@@ -3,5 +3,7 @@ node_modules
 coverage
 .env
 dist
+.dist
 .DS_STORE
 .VSCODE
+.vscode

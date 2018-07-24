@@ -120,9 +120,9 @@ class BusinessList extends Component {
           <Pagination
             onChange={onChange}
             current={state.current}
-            total={!paginate ? null : totalBusinesses}
+            total={totalBusinesses}
             defaultCurrent={state.current}
-            defaultPageSize={!paginate ? null : limit}
+            defaultPageSize={limit}
           />
           }
         </div> : null}
