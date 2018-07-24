@@ -11,7 +11,7 @@ import loader from '../../actions/loader';
  *
  * @extends {Component}
  */
-class AllBusiness extends Component {
+export class AllBusiness extends Component {
   /**
    * @description Fetch reviews and business
    *
@@ -62,7 +62,7 @@ AllBusiness.propTypes = {
   isLoading: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
   const { businesses, isLoading } = state;
   return {
     businesses: businesses.businesses,
@@ -71,7 +71,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+export const mapDispatchToProps = dispatch => bindActionCreators({
   fetchBusinesses,
   loader
 }, dispatch);

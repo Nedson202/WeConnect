@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImageUpload from '../ImageUpload/ImageUpload';
-import '../../index.scss';
 
 /**
  * @class UserProfileUpdate

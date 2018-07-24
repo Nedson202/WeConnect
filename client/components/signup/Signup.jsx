@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SignupForm from './SignupForm';
 import { userSignupRequest } from '../../actions/userActions';
-import addFlashMessage from '../../actions/flashMessages';
+// import addFlashMessage from '../../actions/flashMessages';
 import loader from '../../actions/loader';
 
 /**
  * @class Signup
  * @extends {Component}
  */
-class Signup extends Component {
+export class Signup extends Component {
   /**
    * @description Creates an instance of SignForm.
    *
@@ -100,17 +100,13 @@ Signup.propTypes = {
   isLoading: PropTypes.bool.isRequired
 };
 
-Signup.contextTypes = {
-  router: PropTypes.object.isRequired
-};
-
 const mapStateToProps = state => ({
   isLoading: state.isLoading
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   userSignupRequest,
-  addFlashMessage,
+  // addFlashMessage,
   loader
 }, dispatch);
 

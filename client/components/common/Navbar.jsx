@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux';
 import SearchForm from '../search/SearchForm';
 import { logout } from '../../actions/userActions';
 import filterBusiness from '../../actions/businessQueryAction';
-import addFlashMessage from '../../actions/flashMessages';
-import loader from '../../actions/loader';
 /**
  * @class Navbar
  *
@@ -26,7 +24,8 @@ class Navbar extends Component {
 
     this.state = {
       query: '',
-      option: ''
+      option: '',
+      isLoading: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -57,16 +56,22 @@ class Navbar extends Component {
    * @memberof SearchForm
    */
   onSubmit(event) {
+    this.setState({ isLoading: true });
     event.preventDefault();
     const { query, option } = this.state;
     const { history } = this.context.router;
 
     if (query.length === 0 || option.length === 0) {
+      this.setState({ isLoading: false });
       return toastr.error(`Please type the business you are looking for inside the input box
       and select an option`);
     }
 
-    this.props.filterBusiness(option, query, 'page=1', history);
+    this.props.filterBusiness(option, query, 'page=1', history).then(() => {
+      this.setState({ isLoading: false });
+    }).catch(() => {
+      this.setState({ isLoading: false });
+    });
   }
 
   /**
@@ -160,7 +165,6 @@ class Navbar extends Component {
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <SearchForm
               filterBusiness={this.props.filterBusiness}
-              addFlashMessage={this.props.addFlashMessage}
               state={state}
               onChange={onChange}
               onSubmit={onSubmit}
@@ -182,7 +186,6 @@ class Navbar extends Component {
 Navbar.propTypes = {
   filterBusiness: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  addFlashMessage: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
   auth: PropTypes.object.isRequired,
 };
@@ -196,19 +199,16 @@ Navbar.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const { auth, businesses, isLoading } = state;
+  const { auth, businesses } = state;
   return {
     auth,
-    searchResult: businesses.searchResult,
-    isLoading
+    searchResult: businesses.searchResult
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   filterBusiness,
   logout,
-  addFlashMessage,
-  loader
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

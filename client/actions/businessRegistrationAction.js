@@ -35,23 +35,25 @@ export const addBusiness = business => ({
  */
 const businessRegistrationRequest = (businessData, history) => (dispatch) => {
   dispatch(loadingState(true));
-  if (!tokenVerifier(localStorage.getItem('accessToken'))) {
-    return axios.post('/api/v1/businesses', businessData)
-      .then((res) => {
-        const { business, message } = res.data;
-        dispatch(loadingState(false));
-        dispatch(addBusiness(business));
-        toastr.success(message);
-        return history.push('/dashboard');
-      }).catch((error) => {
-        dispatch(loadingState(false));
-        error.response.data.map(err => toastr.error(err));
-      });
+  if (!!tokenVerifier(localStorage.getItem('accessToken'))) {
+    setAuthToken(false);
+    dispatch(setCurrentUser({}));
+    history.push('/login');
   }
 
-  setAuthToken(false);
-  dispatch(setCurrentUser({}));
-  window.location.replace('/login');
+  return axios.post('/api/v1/businesses', businessData)
+    .then((res) => {
+      const { business, message } = res.data;
+      dispatch(loadingState(false));
+      dispatch(addBusiness(business));
+      toastr.success(message);
+      return history.push('/dashboard');
+    }).catch((error) => {
+      if(error.response) {
+        dispatch(loadingState(false));
+        error.response.data.map(err => toastr.error(err));
+      }
+    });
 };
 /**
  * @description function to update business
@@ -72,8 +74,10 @@ const businessUpdateRequest = (id, businessData, history) => (dispatch) => {
       toastr.success(message);
       return history.push(`/profile/${id}`);
     }).catch((error) => {
-      dispatch(loadingState(false));
-      error.response.data.map(err => toastr.error(err));
+      if (error.response) {
+        dispatch(loadingState(false));
+        error.response.data.map(err => toastr.error(err));
+      }
     });
 };
 

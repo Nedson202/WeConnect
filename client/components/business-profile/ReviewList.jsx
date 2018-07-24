@@ -36,9 +36,9 @@ const ReviewsList = ({
         <Pagination
           onChange={onReviewPageChange}
           current={state.current}
-          total={!paginate ? null : totalReviews}
+          total={totalReviews}
           defaultCurrent={state.current}
-          defaultPageSize={!paginate ? null : limit}
+          defaultPageSize={limit}
         />
         }
       </div> : null}

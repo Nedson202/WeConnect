@@ -12,8 +12,6 @@ import {
   ADD_REVIEW,
   REVIEW_DELETED,
   EDIT_REVIEW,
-  BUSINESS_REQUEST_ERROR,
-  BUSINESS_REQUEST_SUCCESS
 } from '../actions/types';
 
 const initialState = {
@@ -113,18 +111,6 @@ export default (state = initialState, action) => {
 
           return review;
         })
-      };
-
-    case BUSINESS_REQUEST_ERROR:
-      return {
-        ...state,
-        businessRequestError: action.error
-      };
-
-    case BUSINESS_REQUEST_SUCCESS:
-      return {
-        ...state,
-        businessRequestSuccess: action.success
       };
 
     default: return state;

@@ -5,13 +5,12 @@ import { bindActionCreators } from 'redux';
 import RegistrationForm from './RegistrationForm';
 import { businessRegistrationRequest, businessUpdateRequest } from '../../actions/businessRegistrationAction';
 import { fetchBusinessById, fetchLocations, fetchCategories } from '../../actions/fetchActions';
-import loader from '../../actions/loader';
 /**
  * @class BusinessRegistration
  *
  * @extends {Component}
  */
-class BusinessRegistration extends Component {
+export class BusinessRegistration extends Component {
   /**
    * @description Creates an instance of RegistrationForm.
    *
@@ -38,6 +37,8 @@ class BusinessRegistration extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.mapCategories = this.mapCategories.bind(this);
+    this.mapLocations = this.mapLocations.bind(this);
   }
   /**
    * @description Fetch business by it's id
@@ -135,15 +136,38 @@ class BusinessRegistration extends Component {
     event.preventDefault();
 
     this.setState({ errors: {} });
-    this.props.loader(true);
     const { history } = this.props;
 
-    if (!this.props.params) {
+    if (!this.props.params.id) {
       this.props.businessRegistrationRequest(this.state, history);
     } else {
       this.props.businessUpdateRequest(this.props.params.id, this.state, history);
     }
   }
+  /**
+   * @description Handles submission of form data
+   *
+   * @param {any} event
+   *
+   * @returns {undefined}
+   */
+    mapCategories() {
+      const categoryOption = this.props.categories.map(({ id, category }) =>
+      <option key={id} value={category}>{category}</option>);
+      return categoryOption;
+    }
+  /**
+   * @description Handles submission of form data
+   *
+   * @param {any} event
+   *
+   * @returns {undefined}
+   */
+    mapLocations() {
+      const locationOption = this.props.locations.map(({ id, location }) =>
+      <option key={id} value={location}>{location}</option>);
+      return locationOption;
+    }
   /**
    * @description Renders component to the dom
    *
@@ -159,7 +183,15 @@ class BusinessRegistration extends Component {
       isLoading
     } = this.props;
 
-    const { state, onChange, onSubmit } = this;
+    const { 
+      state, 
+      onChange, 
+      onSubmit, 
+      mapCategories,
+      mapLocations
+    } = this;
+
+    const { changeValue, defaultTotal, color } = state;
 
     const businessLocations = locations || [];
     const businessCategories = categories || [];
@@ -169,12 +201,15 @@ class BusinessRegistration extends Component {
         <div id="background-image" />
         <RegistrationForm
           params={params}
-          categories={businessCategories}
-          locations={businessLocations}
+          categories={mapCategories}
+          locations={mapLocations}
           state={state}
           onChange={onChange}
           onSubmit={onSubmit}
           isLoading={isLoading}
+          changeValue={changeValue}
+          defaultTotal={defaultTotal}
+          color={color}
         />
       </div>
     );
@@ -188,16 +223,14 @@ BusinessRegistration.propTypes = {
   history: PropTypes.object.isRequired,
   fetchLocations: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
-  loader: PropTypes.func.isRequired,
   business: PropTypes.object,
   params: PropTypes.object.isRequired,
   categories: PropTypes.array,
   locations: PropTypes.array,
+  changeValue: PropTypes.number.isRequired,
+  defaultTotal: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired
-};
-
-BusinessRegistration.contextTypes = {
-  router: PropTypes.object.isRequired
 };
 
 BusinessRegistration.defaultProps = {
@@ -206,8 +239,10 @@ BusinessRegistration.defaultProps = {
   locations: []
 };
 
-const mapStateToProps = (state, props) => {
-  const { params } = props.match;
+export const mapStateToProps = (state, props) => {
+  let { params } = props.match;
+  params = params || {}
+  
   const { businesses, isLoading } = state;
   if (params.id) {
     return {
@@ -222,7 +257,8 @@ const mapStateToProps = (state, props) => {
     business: null,
     categories: businesses.categories,
     locations: businesses.locations,
-    isLoading
+    isLoading,
+    params: {}
   };
 };
 
@@ -232,7 +268,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchBusinessById,
   fetchLocations,
   fetchCategories,
-  loader
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(BusinessRegistration);
