@@ -1,4 +1,5 @@
 node_modules
+dist
 .nyc_output
 coverage
 .env
@@ -7,3 +8,4 @@ dist
 .DS_STORE
 .VSCODE
 .vscode
+./reports
