@@ -92,3 +92,5 @@ Click [here](https://github.com/Nedson202/WeConnect/blob/develop/package.json) t
 ## License
 
 MIT © Negedu Samson
+
+Licensed under the [MIT LICENSE](https://github.com/Nedson202/WeConnect/blob/develop/LICENSE)
