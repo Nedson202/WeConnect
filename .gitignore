@@ -8,4 +8,4 @@ dist
 .DS_STORE
 .VSCODE
 .vscode
-./reports
+reports

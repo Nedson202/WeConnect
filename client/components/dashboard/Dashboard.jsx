@@ -37,7 +37,8 @@ class Dashboard extends Component {
       email: user ? user.email : '',
       image: '',
       backgroundImage: '',
-      errors: {}
+      errors: {},
+      uploading: false
     };
 
     this.handleProfileVisibility = this.handleProfileVisibility.bind(this);
@@ -80,6 +81,7 @@ class Dashboard extends Component {
    * @memberof ImageUpload
    */
   onImageChange(event) {
+    this.setState({ uploading: true });
     const image = event.target.files[0];
     const uploadPreset = process.env.UPLOAD_PRESET;
     const cloudinaryApi = process.env.CLOUDINARY_API;
@@ -89,7 +91,7 @@ class Dashboard extends Component {
       cloudinaryApi,
     )
       .then(() => {
-        this.setState({ image: this.props.image });
+        this.setState({ image: this.props.image, uploading: false });
       });
   }
   /**

@@ -33,9 +33,6 @@ const setBusinessById = business => ({
  * @return {Object} action dispatched by the action creator
  */
 const uploadToCloudinary = (image, UPLOAD_PRESET, CLOUDINARY_API) => (dispatch) => {
-  document.getElementById('profile-update-button').disabled = true;
-  const loader = document.getElementById('progress');
-  loader.classList.remove('hide');
   const data = new FormData();
   data.append('file', image);
   data.append('upload_preset', UPLOAD_PRESET);
@@ -47,13 +44,11 @@ const uploadToCloudinary = (image, UPLOAD_PRESET, CLOUDINARY_API) => (dispatch) 
       setAuthToken(accessToken);
       const imageUrl = res.data.secure_url;
       dispatch(setImage(imageUrl));
-      document.getElementById('profile-update-button').disabled = false;
       const showImage = document.getElementById('show-image');
       document.getElementById('dropzone', 'upload-info').classList.add('hide');
       document.getElementById('upload-info').classList.remove('hide');
       showImage.classList.remove('hide');
       showImage.src = res.data.secure_url;
-      loader.classList.add('hide');
       toastr.info('Click upload button to finish');
     });// eslint-disable-line no-unused-vars
 };
