@@ -138,7 +138,7 @@ export class BusinessRegistration extends Component {
     this.setState({ errors: {} });
     const { history } = this.props;
 
-    if (!this.props.params) {
+    if (!this.props.params.id) {
       this.props.businessRegistrationRequest(this.state, history);
     } else {
       this.props.businessUpdateRequest(this.props.params.id, this.state, history);
