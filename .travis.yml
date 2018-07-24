@@ -11,8 +11,6 @@ cache:
 services:
   - postgresql
 
-env:
-  - NODE_ENV=test DB_USERNAME=askit DB_PASSWORD=password
 before_script:
   - psql -c 'drop database if exists weconnect_test;' -U postgres
   - psql -c 'create database weconnect_test;' -U postgres
@@ -24,3 +22,6 @@ script:
 after_success:
   - npm run coverage
   - npm run coveralls
+
+addons:
+ postgresql: "9.6"
