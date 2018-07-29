@@ -53,11 +53,21 @@ describe('Component: AllBusiness', () => {
     expect(mapStateToProps(state).businesses).toEqual(allBusiness);
     wrapper.setProps({ isLoading: true, businesses: [] });
     expect(wrapper.find('h2').length).toBe(0);
-  }) 
+  })
+});
 
-  it('should render connected AllBusiness component', () => {
-    const store = mockStore({});
-    const wrapper = shallow(<connectedAllBusiness store={store} />);
+describe('state to props', () => {
+  it('should render connected allbusinesses page', () => {
+    const businesses = {
+      businesses,
+      paginationResult
+    };
+
+    const store = mockStore({
+      businesses,
+      isLoading: false
+    });
+    const wrapper = shallow(<connectedAllBusiness store={store}  />);
     expect(wrapper.length).toBe(1);
-  }) 
+  });
 });

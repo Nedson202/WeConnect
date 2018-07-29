@@ -6,6 +6,7 @@ exports[`Component: Spinner should render 1`] = `
 >
   <onlyUpdateForKeys(Loader)
     color="#1a3c5d"
+    loaderStyle={Object {}}
     loading={false}
     size={60}
     sizeUnit="px"

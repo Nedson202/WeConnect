@@ -30,7 +30,7 @@ app.use(expressValidator());
 
 const compiler = webpack(webpackConfig);
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'production') {
   app.use(webpackMiddleware(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath,
@@ -51,10 +51,7 @@ reviewRoute(app);
 // route for api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// app.use(express.static('./dist'));
-// app.use(express.static(path.resolve(__dirname, './dist')));
-
-app.get('*', (req, res) => {
+app.get('*', (res) => {
   res.sendFile(path.join(__dirname, './client/index.html'));
 });
 
