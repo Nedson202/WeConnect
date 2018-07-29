@@ -51,7 +51,7 @@ reviewRoute(app);
 // route for api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('*', (res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './client/index.html'));
 });
 
