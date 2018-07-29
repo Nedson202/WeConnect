@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: BusinessImageUpload should render 1`] = `
+<div>
+  <div
+    aria-hidden="true"
+    aria-labelledby="confirmModalTitle"
+    className="modal fade"
+    id="businessImageModal"
+    role="dialog"
+    tabIndex="-1"
+  >
+    <div
+      className="modal-dialog modal-dialog-centered"
+      role="document"
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <h4>
+            Edit Image
+          </h4>
+          <button
+            aria-label="Close"
+            className="close"
+            data-dismiss="modal"
+            id="close-btn"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+        </div>
+        <div
+          className="modal-body"
+        >
+          <div
+            className="row col-lg-12"
+          >
+            <div
+              className="col-lg-6"
+            >
+              <label
+                className="btn btn-default"
+              >
+                <div
+                  className="circle"
+                >
+                  <img
+                    alt="Avatar"
+                    className="hide"
+                    height="130px"
+                    id="show-image"
+                    src=""
+                    width="160px"
+                  />
+                  <div
+                    id="dropzone"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="fa fa-picture-o fa-3x text-center"
+                    />
+                    <p>
+                      choose image
+                    </p>
+                  </div>
+                </div>
+                <input
+                  hidden={true}
+                  name="image"
+                  onChange={[MockFunction]}
+                  type="file"
+                />
+              </label>
+            </div>
+            <div
+              className="col-lg-4"
+            >
+              <h4
+                className="hide text-center"
+                id="upload-info"
+              >
+                You have to click the upload button to finish
+              </h4>
+              <button
+                className="btn btn-outline-success"
+                id="profile-update-button"
+                onClick={[MockFunction]}
+              >
+                upload image
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Component: BusinessImageUpload should render upload progress 1`] = `
+<div>
+  <div
+    aria-hidden="true"
+    aria-labelledby="confirmModalTitle"
+    className="modal fade"
+    id="businessImageModal"
+    role="dialog"
+    tabIndex="-1"
+  >
+    <div
+      className="modal-dialog modal-dialog-centered"
+      role="document"
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <h4>
+            Edit Image
+          </h4>
+          <button
+            aria-label="Close"
+            className="close"
+            data-dismiss="modal"
+            id="close-btn"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+        </div>
+        <div
+          className="modal-body"
+        >
+          <div
+            className="row col-lg-12"
+          >
+            <div
+              className="col-lg-6"
+            >
+              <label
+                className="btn btn-default"
+              >
+                <div
+                  className="progress form-progress-bar"
+                  id="progress"
+                >
+                  <div
+                    aria-valuemax="100"
+                    aria-valuemin="0"
+                    aria-valuenow="100"
+                    className="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style={
+                      Object {
+                        "width": "100%",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="circle"
+                >
+                  <img
+                    alt="Avatar"
+                    className="hide"
+                    height="130px"
+                    id="show-image"
+                    src=""
+                    width="160px"
+                  />
+                  <div
+                    id="dropzone"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="fa fa-picture-o fa-3x text-center"
+                    />
+                    <p>
+                      choose image
+                    </p>
+                  </div>
+                </div>
+                <input
+                  hidden={true}
+                  name="image"
+                  onChange={[MockFunction]}
+                  type="file"
+                />
+              </label>
+            </div>
+            <div
+              className="col-lg-4"
+            >
+              <h4
+                className="hide text-center"
+                id="upload-info"
+              >
+                You have to click the upload button to finish
+              </h4>
+              <button
+                className="btn btn-outline-success"
+                id="profile-update-button"
+                onClick={[MockFunction]}
+              >
+                upload image
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

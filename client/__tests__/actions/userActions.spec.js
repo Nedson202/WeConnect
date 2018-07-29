@@ -9,10 +9,11 @@ import
     logout
   }
 from '../../actions/userActions';
-import { SET_CURRENT_USER, TOGGLELOADER, SET_USERS  } from '../../actions/types';
+import { SET_CURRENT_USER, TOGGLELOADER, SET_USERS, USER_DELETED  } from '../../actions/types';
 import mockData from '../__mockData__/userData';
 import { fetchUsers } from '../../actions/fetchActions';
 import userData from '../__mockData__/userData';
+import { deleteUser } from '../../actions/deleteAction';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -24,6 +25,9 @@ describe('Signin action', () => {
       success: () => {},
       error: () => {}
     };
+    global.data = {
+      map: () => {}
+    }
   });
 
   afterEach(() => {
@@ -37,8 +41,7 @@ describe('Signin action', () => {
 
       moxios.stubRequest('/api/v1/auth/login', {
         status: 200,
-        response: authResponse,
-        error: errorResponse
+        response: authResponse
       });
 
       const expectedActions = [
@@ -57,7 +60,7 @@ describe('Signin action', () => {
       ];
 
       localStorage.setItem('accessToken', token);
-      expect(localStorage.getItem('accessToken')).toEqual(token);
+      expect(localStorage.accessToken).toEqual(token);
 
       const store = mockStore({});
       return store.dispatch(userLoginRequest(loginData))
@@ -136,7 +139,71 @@ describe('Signin action', () => {
           done();
         })
     }
+  ); 
+
+  it(
+    'should not dispatch login data to the store if request is unsucessful',
+    (done) => {
+
+      moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+          status: 400,
+          response: ['Email is invalid']
+        });
+      });
+
+      const store = mockStore({});
+      return store.dispatch(userLoginRequest({}))
+        .then(() => {
+          expect(store.getActions().length).toBe(2);
+          done();
+        })
+    }
   );  
+
+  it(
+    'should not dispatch signup data to the store if request is unsucessful',
+    (done) => {
+
+      moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+          status: 400,
+          response: ['Email is invalid']
+        });
+      });
+
+      const store = mockStore({});
+      return store.dispatch(userSignupRequest({}))
+        .then(() => {
+          expect(store.getActions().length).toBe(2);
+          done();
+        })
+    }
+  );  
+
+  it(
+    'should not dispatch updated data to the store if request is unsucessful',
+    (done) => {
+
+      moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+          status: 400,
+          response: ['Email is invalid']
+        });
+      });
+
+      const store = mockStore({});
+      return store.dispatch(userProfileUpdateRequest(1, {}))
+        .then(() => {
+          expect(store.getActions().length).toBe(0);
+          done();
+        })
+    }
+  );  
+
   it('should dispatch action to logout user',
     async (done) => {
       const expectedActions = [
@@ -147,14 +214,16 @@ describe('Signin action', () => {
       ];
 
       localStorage.setItem('accessToken', token);
-      expect(localStorage.removeItem('accessToken')).toEqual(true);
+      localStorage.removeItem('accessToken');
 
       const store = mockStore({});
       await store.dispatch(logout());
+      expect(localStorage.accessToken).toBeUndefined();
       expect(store.getActions()).toEqual(expectedActions);
       done();
     }
   );  
+
   it(
     'should dispatch all users to the store if request is sucessful',
     (done) => {
@@ -174,7 +243,7 @@ describe('Signin action', () => {
       ];
 
       const store = mockStore({});
-      store.dispatch(fetchUsers())
+      return store.dispatch(fetchUsers())
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
           expect(store.getActions().length).toBe(1);
@@ -182,4 +251,32 @@ describe('Signin action', () => {
         })
     }
   );
+
+  it(
+    'should successfully delete a user',
+    (done) => {
+
+      moxios.stubRequest('/api/v1/admin/users/1', {
+        status: 200,
+        response: {
+          id: 1
+        }
+      });
+
+      const expectedActions = [
+        {
+          type: USER_DELETED,
+          userId: 1
+        }
+      ];
+
+      const store = mockStore({});
+      return store.dispatch(deleteUser(1))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(1);
+          done();
+        })
+    }
+  ); 
 });

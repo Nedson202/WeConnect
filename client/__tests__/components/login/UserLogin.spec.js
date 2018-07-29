@@ -4,7 +4,6 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import Adapter from 'enzyme-adapter-react-16';
 import toJSON from 'enzyme-to-json';
-import sinon from 'sinon';
 import ConnectedLogin, { Login } from '../../../components/login/Login';
 import LoginForm from '../../../components/login/LoginForm';
 import state from '../../__mockData__/userData';
@@ -100,7 +99,6 @@ describe('Submit function', () => {
   it('should login user when user details is set to the state', () => {
     const wrapper = setup();
     const loginForm = wrapper.find('LoginForm');
-    // const button = loginForm.find('#submit-button');
     wrapper.setState(userData);
 
     loginForm.simulate('submit', event());

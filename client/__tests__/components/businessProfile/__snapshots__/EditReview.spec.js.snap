@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: EditReview when isLoading is false should render 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col-lg-9"
+  >
+    <button
+      aria-label="Close"
+      className="close"
+      data-dismiss="modal"
+      onClick={[MockFunction]}
+    >
+      <span
+        aria-hidden="true"
+      >
+        ×
+      </span>
+    </button>
+    <div
+      className="form-group"
+    >
+      <textarea
+        className="form-control edit-review-textarea"
+        id="control-label"
+        name="editMessage"
+        onChange={[MockFunction]}
+        placeholder="update review"
+        rows="3"
+        type="text"
+      />
+    </div>
+    <ReactStars
+      char="★"
+      color1="#333333"
+      color2="#ffaf00"
+      count={5}
+      edit={true}
+      half={true}
+      onChange={[MockFunction]}
+      size={17}
+      value={0}
+    />
+  </div>
+  <div
+    className="col-lg-3"
+  >
+    <button
+      className="btn btn-outline-success update-review-button"
+      disabled={false}
+      id="update-review"
+      onClick={[Function]}
+    >
+      <span>
+        Update review
+      </span>
+    </button>
+  </div>
+</div>
+`;

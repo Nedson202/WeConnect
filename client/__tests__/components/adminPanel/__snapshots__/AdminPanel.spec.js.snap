@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: AdminPanel should render 1`] = `
+<div>
+  <div
+    className="dashboard-heading"
+  >
+    <h3
+      className="textcase"
+    >
+      Welcome 
+      newUser
+      !
+    </h3>
+  </div>
+  <div
+    className="text-center"
+    id="warning-file"
+  >
+    <img
+      alt="warning file"
+      height="150px"
+      src="test-file-stub"
+      width="120px"
+    />
+    <h3>
+      Whatever action is done cannot be reversed!
+    </h3>
+  </div>
+  <button
+    className="btn btn-outline-success permission-button"
+    id="permission-button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Show permission
+  </button>
+  <button
+    className="btn btn-outline-success permission-button"
+    id="permission-button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Show users
+  </button>
+  <button
+    className="btn btn-outline-success permission-button"
+    id="permission-button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Show businesses
+  </button>
+</div>
+`;

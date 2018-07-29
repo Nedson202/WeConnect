@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Component: BusinessProfile should render 1`] = `
+exports[`Component: Dashboard should render 1`] = `
 <Spinner
   isLoading={true}
 />

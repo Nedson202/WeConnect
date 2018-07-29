@@ -9,28 +9,46 @@ import
 from '../../actions/businessRegistrationAction';
 import 
   { 
-    fetchBusinesses, fetchBusinessById, fetchLocations, fetchCategories, fetchReviews
+    fetchBusinesses, 
+    fetchBusinessById, 
+    fetchLocations, 
+    fetchCategories, 
+    fetchReviews,
+    fetchBusinessesByUserId
   }
 from '../../actions/fetchActions';
-import { SET_CURRENT_USER, ADD_BUSINESS, TOGGLELOADER, SET_BUSINESS_BY_ID, SET_BUSINESSES, PAGINATION_RESULT, SET_LOCATIONS, SET_CATEGORIES, SET_REVIEWS, FILTERED_BUSINESSES  } from '../../actions/types';
+import { SET_CURRENT_USER, 
+  TOGGLELOADER, 
+  SET_BUSINESS_BY_ID, 
+  SET_BUSINESSES, 
+  PAGINATION_RESULT, 
+  SET_LOCATIONS, 
+  SET_CATEGORIES, 
+  SET_REVIEWS, 
+  FILTERED_BUSINESSES,  
+  BUSINESS_DELETED,
+  ADD_IMAGE
+} from '../../actions/types';
 import businessData from '../__mockData__/business';
 import reviewData from '../__mockData__/reviews';
-import queryData from '../__mockData__/userData';
-import tokenVerifier from '../../utils/tokenVerifier';
-import userData from '../__mockData__/userData';
 import filterBusiness from '../../actions/businessQueryAction';
+import { businessImageUploader, uploadToCloudinary } from '../../actions/imageUpload';
+import { deleteBusiness } from '../../actions/deleteAction';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('Business action', () => {
   beforeEach(() => {
-    moxios.install();
     localStorage.setItem('accessToken', token);
     global.toastr = {
       success: () => {},
       error: () => {}
     };
+    global.document = {
+      getElementById: () => jest.fn()
+    };
+    moxios.install();
   });
 
   afterEach(() => {
@@ -133,6 +151,32 @@ describe('Business action', () => {
     }
   );
   it(
+    'should only toggle loading state if no business if found',
+    async (done) => {
+      const { business } = businessData;
+      const { id } = business;
+      
+      moxios.stubRequest(`/api/v1/businesses/${id}`, {
+        status: 200,
+      });
+
+      const expectedActions = [
+        {
+          type: TOGGLELOADER,
+          loadingStatus: false
+        }
+      ];
+
+      const store = mockStore({});
+      await store.dispatch(fetchBusinessById(id))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(1);
+          done();
+        })
+    }
+  );
+  it(
     'should dispatch all business to the store if request is sucessful',
     (done) => {
       const { allBusiness, paginationResult } = businessData;
@@ -178,6 +222,79 @@ describe('Business action', () => {
     }
   );
   it(
+    'should dispatch no business to the store if none is found',
+    (done) => {
+      const { allBusiness, paginationResult } = businessData;
+      const query = undefined;
+      
+      moxios.stubRequest(`/api/v1/businesses/?${query}`, {
+        status: 200,
+        response: {
+        }
+      });
+
+      const businesses = allBusiness;
+      const expectedActions = [
+        {
+          type: TOGGLELOADER,
+          loadingStatus: true
+        },
+        {
+          type: TOGGLELOADER,
+          loadingStatus: false
+        },
+        {
+          type: SET_BUSINESSES,
+           businesses: []
+        }
+      ];
+
+      const store = mockStore({});
+      store.dispatch(fetchBusinesses(query))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(3);
+          done();
+        })
+    }
+  );
+  
+  it(
+    'should dispatch no business to the store if none is found',
+    (done) => {
+      const query = undefined;
+      
+      moxios.stubRequest(`/api/v1/businesses/?${query}`, {
+        status: 200,
+        response: {
+        }
+      });
+
+      const expectedActions = [
+        {
+          type: TOGGLELOADER,
+          loadingStatus: true
+        },
+        {
+          type: TOGGLELOADER,
+          loadingStatus: false
+        },
+        {
+          type: SET_BUSINESSES,
+           businesses: []
+        }
+      ];
+
+      const store = mockStore({});
+      store.dispatch(fetchBusinesses(query))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(3);
+          done();
+        })
+    }
+  );
+  it(
     'should dispatch all locations to the store if request is sucessful',
     (done) => {
       const { locations } = businessData;
@@ -203,6 +320,49 @@ describe('Business action', () => {
         })
     }
   );
+
+  it(
+    'should not dispatch updated business data to the store if request is unsucessful',
+    (done) => {
+
+      moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+          status: 400,
+          response: ['Email is invalid']
+        });
+      });
+
+      const store = mockStore({});
+      store.dispatch(businessUpdateRequest(1, {}, {}))
+        .then(() => {
+          expect(store.getActions().length).toBe(2);
+          done();
+        })
+    }
+  );
+  
+  // it(
+  //   'should not dispatch created business data to the store if request is unsucessful',
+  //   (done) => {
+  //     moxios.wait(() => {
+  //       // localStorage.accessToken = token
+  //       const request = moxios.requests.mostRecent();
+  //       request.respondWith({
+  //         status: 400,
+  //         response: ['Email is invalid']
+  //       });
+  //     });
+
+  //     const store = mockStore({});
+  //     store.dispatch(businessRegistrationRequest())
+  //       .then(() => {
+  //         expect(store.getActions().length).toBe(2);
+  //         done();
+  //       })
+  //   }
+  // );
+
   it(
     'should dispatch all categories to the store if request is sucessful',
     (done) => {
@@ -259,10 +419,39 @@ describe('Business action', () => {
       ];
 
       const store = mockStore({});
-      store.dispatch(fetchReviews(id, query))
+      return store.dispatch(fetchReviews(id, query))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
           expect(store.getActions().length).toBe(2);
+          done();
+        })
+    }
+  );
+  it(
+    'should dispatch no reviews to the store if none is found',
+    (done) => {
+      const { business } = businessData;
+      const { id } = business;
+      const query = undefined;
+
+      moxios.stubRequest(`/api/v1/businesses/${id}/reviews?${query}`, {
+        status: 200,
+        response: {
+        }
+      });
+
+      const expectedActions = [
+        {
+          type: SET_REVIEWS,
+          reviews: []
+        }
+      ];
+
+      const store = mockStore({});
+      return store.dispatch(fetchReviews(id, query))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(1);
           done();
         })
     }
@@ -297,7 +486,7 @@ describe('Business action', () => {
       ];
 
       const store = mockStore({});
-      store.dispatch(filterBusiness(option, query, page, history))
+      return store.dispatch(filterBusiness(option, query, page, history))
         .then(() => {
           expect(store.getActions()).toEqual(expectedActions);
           expect(store.getActions().length).toBe(2);
@@ -305,4 +494,61 @@ describe('Business action', () => {
         })
     }
   );
+  it(
+    'should upload image url successfully to the database',
+    (done) => {
+      const { business } = businessData;
+      const businessId = business.id;
+
+      moxios.stubRequest(`/api/v1/business/${businessId}/image`, {
+        status: 200,
+        response: {
+          business
+        }
+      });
+
+      const expectedActions = [
+        {
+          type: SET_BUSINESS_BY_ID,
+          business
+        }
+      ];
+
+      const store = mockStore({});
+      return store.dispatch(businessImageUploader(businessId, '/path/to/image'))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(1);
+          done();
+        })
+    }
+  );
+
+  it(
+    'should successfully delete a business',
+    (done) => {
+
+      moxios.stubRequest('/api/v1/businesses/1', {
+        status: 200,
+        response: {
+          id: 1
+        }
+      });
+
+      const expectedActions = [
+        {
+          type: BUSINESS_DELETED,
+          businessId: 1
+        }
+      ];
+
+      const store = mockStore({});
+      return store.dispatch(deleteBusiness(1, 'allen', history))
+        .then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+          expect(store.getActions().length).toBe(1);
+          done();
+        })
+    }
+  ); 
 });
