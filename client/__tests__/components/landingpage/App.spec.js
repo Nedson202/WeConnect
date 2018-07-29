@@ -6,14 +6,6 @@ import App from '../../../components/landingPage/App';
 
 configure({ adapter: new Adapter() });
 
-// let props;
-// const setup = () => {
-//   props = business;
-
-//   return shallow(<BusinessCard {...props} />);
-// };
-
-
 describe('Component: App', () => {
   beforeEach(() => {
     global.document = {

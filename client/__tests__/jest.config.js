@@ -1,23 +1,11 @@
 import { configure, shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-const localStorage = {
-  setItem(key, value) {
-    return Object.assign(localStorage, { [key]: value });
-  },
-  getItem(key) {
-    return localStorage[key];
-  },
-  removeItem(key) {
-    return delete localStorage[key]; //eslint-disable-line
-  }
-}
-
 const history = {
   push: jest.fn()
-}
+};
 
-const params = {}
+const params = {};
 
 global.localStorage = localStorage;
 global.shallow = shallow;

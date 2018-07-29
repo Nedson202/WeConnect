@@ -6,7 +6,7 @@ import ReviewList from '../../../components/business-profile/ReviewList';
 import businessData from '../../__mockData__/business';
 import userData from '../../__mockData__/userData';
 
-const { business, reviews, review, paginationResult} = businessData;
+const { reviews, review, paginationResult } = businessData;
 const { userUpdateData } = userData;
 configure({ adapter: new Adapter() });
 
@@ -26,7 +26,6 @@ const setup = () => {
     reviewUpdateRequest: jest.fn(() => Promise.resolve()),
     edit: jest.fn(() => Promise.resolve()),
     cancelEdit: jest.fn(() => Promise.resolve()),
-    edit: jest.fn(() => Promise.resolve()),
     state: review,
     user: userUpdateData,
     params: {},
@@ -42,8 +41,8 @@ describe('Component: ReviewList', () => {
   beforeEach(() => {
     global.window = {
       window: () => {},
-    }
-  })
+    };
+  });
 
   it('should render', () => {
     const wrapper = setup();
@@ -56,16 +55,23 @@ describe('Component: ReviewList', () => {
     expect(wrapper.find('span').length).toBe(1);
     expect(wrapper.find('div').length).toBe(3);
     expect(wrapper.find('Pagination').length).toBe(0);
-    wrapper.setProps({ paginate: {
-      totalReviews: 3,
-      limit: 5
-    }, reviews: [] });
+    wrapper.setProps({
+      paginate: {
+        totalReviews: 3,
+        limit: 5
+      },
+      reviews: []
+    });
     expect(wrapper.find('div').length).toBe(2);
-    wrapper.setProps({ paginate: {
-      totalReviews: undefined,
-      limit: 5
-    }, reviews: [] });
+    wrapper.setProps({
+      paginate: {
+        totalReviews: undefined,
+        limit: 5
+      }
+    });
     expect(wrapper.find('Pagination').length).toBe(0);
+    wrapper.setProps({ reviews: [] });
+    expect(wrapper.find('div').length).toBe(3);
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
 });

@@ -51,6 +51,7 @@ exports[`Component: ReviewModal should render form if reviewer is not the busine
       >
         <button
           className="btn btn-outline-success add-review-button"
+          disabled={false}
           id="add-review"
           onClick={[MockFunction]}
         >

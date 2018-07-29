@@ -16,7 +16,11 @@ const setup = () => {
     onChange: jest.fn(() => Promise.resolve()),
     onStarClick: jest.fn(() => Promise.resolve()),
     onSubmit: jest.fn(() => Promise.resolve()),
-    state: review,
+    state: {
+      message: review.message,
+      rating: review.rating,
+      isLoading: false
+    },
     user: userUpdateData,
     business
   };
@@ -29,15 +33,15 @@ describe('Component: ReviewModal', () => {
   beforeEach(() => {
     global.window = {
       window: () => {},
-    }
-  })
+    };
+  });
 
   it('should render', () => {
     const wrapper = setup();
     expect(wrapper.find('div').length).toBe(2);
     expect(toJSON(wrapper)).toMatchSnapshot();
     expect(wrapper.length).toBe(1);
-  }) 
+  });
 
   it('should render form if reviewer is not the business owner', () => {
     const wrapper = setup();
@@ -49,5 +53,5 @@ describe('Component: ReviewModal', () => {
     expect(wrapper.find('span').length).toBe(1);
     expect(toJSON(wrapper)).toMatchSnapshot();
     expect(wrapper.length).toBe(1);
-  }) 
+  });
 });

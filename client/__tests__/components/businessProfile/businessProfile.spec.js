@@ -1,18 +1,22 @@
 import React from 'react';
 import { configure, shallow } from 'enzyme';
+import thunk from 'redux-thunk';
 import Adapter from 'enzyme-adapter-react-16';
 import toJSON from 'enzyme-to-json';
-import sinon from 'sinon';
+import configureMockStore from 'redux-mock-store';
 import connectedBusinessProfile, { BusinessProfile } from '../../../components/business-profile/BusinessProfile';
 import businessData from '../../__mockData__/business';
 import userData from '../../__mockData__/userData';
-import { mapStateToProps } from '../../../components/business-profile/BusinessProfile';
 
-const { business, reviews, review, paginationResult} = businessData;
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+const {
+  business, reviews, review, paginationResult
+} = businessData;
 const { userUpdateData } = userData;
 configure({ adapter: new Adapter() });
 
-let props, store, match;
+let props;
 const setup = () => {
   props = {
     onChange: jest.fn(() => Promise.resolve()),
@@ -32,7 +36,6 @@ const setup = () => {
     reviewUpdateRequest: jest.fn(() => Promise.resolve()),
     edit: jest.fn(() => Promise.resolve()),
     cancelEdit: jest.fn(() => Promise.resolve()),
-    edit: jest.fn(() => Promise.resolve()),
     state: review,
     user: userUpdateData,
     match: {
@@ -48,13 +51,16 @@ const setup = () => {
     loader: jest.fn(() => Promise.resolve()),
     business,
     isLoading: false,
-    image: {image:'path/to/image'},
+    image: { image: 'path/to/image' },
     history: {}
   };
 
   return shallow(<BusinessProfile {...props} />);
 };
 
+const event = {
+  preventDefault: jest.fn()
+};
 
 describe('Component: BusinessProfile', () => {
   beforeEach(() => {
@@ -65,11 +71,11 @@ describe('Component: BusinessProfile', () => {
       match: {
         params: () => {}
       }
-    }
+    };
     global.match = {
       params: () => {}
-    }
-  })
+    };
+  });
 
   it('should render', () => {
     const wrapper = setup();
@@ -82,52 +88,178 @@ describe('Component: BusinessProfile', () => {
     expect(wrapper.find('ImageZoom').length).toBe(1);
     expect(wrapper.find('BusinessImageUpload').length).toBe(1);
     expect(wrapper.length).toBe(1);
-    // expect(wrapper.find('span').length).toBe(1);
     expect(wrapper.find('ReviewModal').length).toBe(1);
     expect(wrapper.find('ReviewList').length).toBe(0);
-    wrapper.setProps({ user: {}, reviews: ['good'] });
+    wrapper.setProps({ user: {}, reviews: ['good'], business });
     expect(wrapper.find('ReviewList').length).toBe(0);
+    wrapper.setProps({ business: {} });
+    expect(wrapper.find('h3').length).toBe(1);
+    wrapper.setProps({ isLoading: true });
+    expect(wrapper.find('Spinner').length).toBe(1);
     expect(toJSON(wrapper)).toMatchSnapshot();
   });
 });
 
-describe('Component: BusinessProfile ComponentDidMount', () => {
-  it('should get a business', () => {
-    const spy = sinon.spy(BusinessProfile.prototype, 'componentDidMount');
-    shallow(<BusinessProfile {...props} componentDidMount={spy}/>)
-      .instance().componentDidMount({ setState: () => 1 });
+describe('state to props', () => {
+  props = {
+    match: {
+      params: { id: 1 }
+    },
+  };
+
+  it('should render connected registration page', () => {
+    const businesses = {
+      reviews,
+      business,
+      paginationResult
+    };
+
+    const auth = {
+      user: userUpdateData
+    };
+
+    const store = mockStore({
+      businesses,
+      isLoading: false,
+      auth,
+      image: '/psth/to/image',
+      params: props
+    });
+    const wrapper = shallow(<connectedBusinessProfile store={store} />);
+    expect(wrapper.length).toBe(1);
   });
 });
 
-describe('Component: BusinessProfile ComponentDidMount', () => {
-  it('should render connected component', () => {
-    const wrapper = shallow(<connectedBusinessProfile store={store} />);
-    expect(wrapper.length).toBe(1);
-  }) 
+describe('Function test', () => {
+  beforeEach(() => {
+    global.toastr = {
+      error: () => {}
+    };
+  });
+
+  it('should call imageChange function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const imageChange = jest.spyOn(wrapper.instance(), 'onImageChange');
+    action.onImageChange({ target: { files: ['1'] } });
+    expect(imageChange).toBeCalled();
+  });
+
+  it('should call onImageSubmit function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const onImageSubmit = jest.spyOn(wrapper.instance(), 'onImageSubmit');
+    action.onImageSubmit(event);
+    expect(onImageSubmit).toBeCalled();
+  });
+
+  it('should call onStarClick function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const starClick = jest.spyOn(wrapper.instance(), 'onStarClick');
+    action.onStarClick({ target: { files: ['1'] } });
+    expect(starClick).toBeCalled();
+  });
+
+  it('should call onReviewDelete function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const onReviewDelete = jest.spyOn(wrapper.instance(), 'onReviewDelete');
+    action.onReviewDelete(1);
+    expect(onReviewDelete).toBeCalled();
+  });
+
+  it('should call onBusinessDelete function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const onBusinessDelete = jest.spyOn(wrapper.instance(), 'onBusinessDelete');
+    action.onBusinessDelete(event);
+    expect(onBusinessDelete).toBeCalled();
+  });
+
+  it('should call onReviewPageChange function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const onReviewPageChange = jest.spyOn(wrapper.instance(), 'onReviewPageChange');
+    action.onReviewPageChange(1);
+    expect(onReviewPageChange).toBeCalled();
+  });
+
+  it('should call onReviewUpdate function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const onReviewUpdate = jest.spyOn(wrapper.instance(), 'onReviewUpdate');
+    action.onReviewUpdate(1);
+    expect(onReviewUpdate).toBeCalled();
+  });
+
+  it('should call cancelEdit function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const cancelEdit = jest.spyOn(wrapper.instance(), 'cancelEdit');
+    action.cancelEdit(1);
+    expect(cancelEdit).toBeCalled();
+  });
+
+  it('should call deleteStatus function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const deleteStatus = jest.spyOn(wrapper.instance(), 'deleteStatus');
+    action.deleteStatus(1);
+    expect(deleteStatus).toBeCalled();
+  });
+
+  it('should call edit function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const edit = jest.spyOn(wrapper.instance(), 'edit');
+    action.edit(1);
+    expect(edit).toBeCalled();
+  });
+
+  it('should call imageGenerator function', () => {
+    const wrapper = setup();
+    const action = wrapper.instance();
+    const imageGenerator = jest.spyOn(wrapper.instance(), 'imageGenerator');
+    action.imageGenerator();
+    wrapper.setProps({ business: {} });
+    expect(imageGenerator).toBeCalled();
+  });
 });
 
-describe('Component: BusinessProfile mapStateToProps', () => {
+describe('Review onchange method', () => {
   beforeEach(() => {
-    global.props = {
-      match: {
-        params: () => {}
-      }
-    }
-    global.match = {
-      match: () => {}
-    }
-  })
+    global.document = {
+      title: () => {}
+    };
+  });
 
-  // it('should check mapStateToProps', () => {
-  //   const state = {
-  //     businesses: {
-  //       reviews,
-  //       paginationResult
-  //     },
-  //     auth: userUpdateData,
-  //     isLoading: false,
-  //     image: ''
-  //   };
-  //   expect(mapStateToProps(state).businesses).toEqual(state);
-  // }) 
+  it('should simulate input change', () => {
+    const event = (name, value) => ({
+      preventDefault: jest.fn(() => Promise.resolve()),
+      target: {
+        name,
+        value
+      }
+    });
+
+    const wrapper = setup();
+    const ReviewForm = wrapper.find('ReviewModal');
+
+    ReviewForm.simulate('change', event('message', review.message));
+    expect(wrapper.instance().state.message).toBe(review.message);
+
+    ReviewForm.simulate('change', event('rating', review.rating));
+    expect(wrapper.instance().state.rating).toBe(review.rating);
+  });
+});
+
+describe('Submit function', () => {
+  it('should submit review', () => {
+    const wrapper = setup();
+    const ReviewForm = wrapper.find('ReviewModal');
+    wrapper.setState(review);
+
+    ReviewForm.simulate('submit', event);
+  });
 });

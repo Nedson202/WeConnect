@@ -3,7 +3,6 @@ import { configure, shallow, mount } from 'enzyme';
 import thunk from 'redux-thunk';
 import Adapter from 'enzyme-adapter-react-16';
 import toJSON from 'enzyme-to-json';
-// import sinon from 'sinon';
 import Spinner from '../../../components/common/Spinner';
 
 configure({ adapter: new Adapter() });

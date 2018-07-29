@@ -186,5 +186,4 @@ describe('Business reducer test', () => {
       ...initialState, reviews: [...reviews]
     });
   });
-
 });
