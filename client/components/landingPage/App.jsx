@@ -8,7 +8,7 @@ import Main from './Main';
  */
 class App extends Component {
   /**
-   * @description Set page document title   *
+   * @description Set page document title
    * @returns {undefined}
    *
    * @memberof App

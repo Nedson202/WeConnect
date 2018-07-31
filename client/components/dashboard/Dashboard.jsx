@@ -9,7 +9,6 @@ import avatar from '../../images/user-avatar.png';
 import UserProfileUpdate from '../user/UserProfileUpdate';
 import { userProfileUpdateRequest } from '../../actions/userActions';
 import { fetchBusinesses, fetchBusinessesByUserId } from '../../actions/fetchActions';
-// import addFlashMessages from '../../actions/flashMessages';
 import { uploadToCloudinary } from '../../actions/imageUpload';
 import Spinner from '../common/Spinner';
 import loader from '../../actions/loader';
@@ -19,7 +18,7 @@ import loader from '../../actions/loader';
  *
  * @extends {Component}
  */
-class Dashboard extends Component {
+export class Dashboard extends Component {
   /**
    * @description Creates an instance of Dashboard.
    *
@@ -72,7 +71,7 @@ class Dashboard extends Component {
     this.props.userProfileUpdateRequest(this.props.user.userId, this.state);
   }
   /**
-   * @description Handles image upload to firebase
+   * @description Handles image upload to cloudinary
    *
    * @param {any} event
    *
@@ -233,7 +232,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchBusinesses,
   fetchBusinessesByUserId,
   userProfileUpdateRequest,
-  // addFlashMessages,
   uploadToCloudinary,
   loader
 }, dispatch);

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 /**
  * @description react stateless component for card template
- * @return {Object} action dispatched by the action creator
+ * @return {Object} user card
  */
 export default function UserCard({ user, removeUser, markUserToRemove }) {
   const { username, id } = user;

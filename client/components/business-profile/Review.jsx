@@ -13,7 +13,7 @@ import EditReview from './EditReview';
  */
 class Review extends Component {
   /**
-   * @description Edit business
+   * @description Display buttons
    * @returns {undefined}
    * @memberof ReviewList
    */

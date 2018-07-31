@@ -104,7 +104,7 @@ export class BusinessProfile extends Component {
     }
   }
   /**
-   * @description Handles image upload to firebase
+   * @description Handles image upload to cloudinary
    *
    * @param {any} event
    *
@@ -113,7 +113,7 @@ export class BusinessProfile extends Component {
    * @memberof ImageUpload
    */
   onImageChange(event) {
-    this.setState({ uploading: true })
+    this.setState({ uploading: true });
     const image = event.target.files[0];
     const uploadPreset = process.env.UPLOAD_PRESET;
     const cloudinaryApi = process.env.CLOUDINARY_API;
@@ -123,8 +123,8 @@ export class BusinessProfile extends Component {
       cloudinaryApi,
     )
       .then(() => {
-        this.setState({ 
-          isImageProcessing: false, 
+        this.setState({
+          isImageProcessing: false,
           image: this.props.image,
           uploading: false
         });
@@ -132,7 +132,7 @@ export class BusinessProfile extends Component {
   }
 
   /**
-   * @description Fetch reviews and business
+   * @description Handle review event in form
    *
    * @param {any} event
    *
@@ -148,7 +148,7 @@ export class BusinessProfile extends Component {
   }
 
   /**
-   * @description Fetch reviews and business
+   * @description Handle star rating
    *
    * @param {any} newRating
    *
@@ -164,7 +164,7 @@ export class BusinessProfile extends Component {
   }
 
   /**
-   * @description Fetch reviews and business
+   * @description Handle review submission
    *
    * @param {any} event
    *
@@ -205,7 +205,7 @@ export class BusinessProfile extends Component {
     this.props.deleteBusiness(params.id, username, history);
   }
   /**
-   * @description Delete business
+   * @description Delete review
    *
    * @param {any} businessId
    *
@@ -231,7 +231,9 @@ export class BusinessProfile extends Component {
    */
   onImageSubmit(event) {
     event.preventDefault();
-    this.props.businessImageUploader(this.props.params.id, this.state);
+    this.props.businessImageUploader(this.props.params.id, this.state).then(() => {
+      document.getElementById('close-btn').click();
+    });
   }
   /**
    * @description Toggler for pagination
@@ -266,8 +268,8 @@ export class BusinessProfile extends Component {
     const { state, cancelEdit } = this;
     const { editMessage, editRating } = this.state;
     if (!editMessage || editRating === 0) {
-    this.setState({ isLoading: false });
-    return toastr.error('Please leave a review and rating');
+      this.setState({ isLoading: false });
+      return toastr.error('Please leave a review and rating');
     }
     this.props.reviewUpdateRequest(
       params.id,
@@ -275,11 +277,10 @@ export class BusinessProfile extends Component {
       state,
       this.props.fetchBusinessById
     )
-      .then(
-        () => {
-          cancelEdit()
-          this.setState({ isLoading: false });
-        });
+      .then(() => {
+        cancelEdit();
+        this.setState({ isLoading: false });
+      });
   }
   /**
    * @description Edit business
@@ -519,7 +520,15 @@ export class BusinessProfile extends Component {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-outline-success" data-dismiss="modal">No</button>
-                <button type="button" className="btn btn-outline-success" onClick={this.onBusinessDelete} data-dismiss="modal">Yes</button>
+                <button
+                  type="button"
+                  className="btn btn-outline-success"
+                  onClick={this.onBusinessDelete}
+                  data-dismiss="modal"
+                  id="delete-button"
+                >
+                  Yes
+                </button>
               </div>
             </div>
           </div>
@@ -561,7 +570,7 @@ BusinessProfile.defaultProps = {
   paginate: {}
 };
 
-export const mapStateToProps = (state, props) => {
+const mapStateToProps = (state, props) => {
   const {
     businesses, isLoading, auth, image
   } = state;

@@ -41,7 +41,7 @@ export class BusinessRegistration extends Component {
     this.mapLocations = this.mapLocations.bind(this);
   }
   /**
-   * @description Fetch business by it's id
+   * @description Fetch business locations and categories
    *
    * @returns {undefined}
    *
@@ -64,12 +64,11 @@ export class BusinessRegistration extends Component {
     if (!params) {
       return null;
     }
-
     this.props.fetchBusinessById(params.id);
   }
 
   /**
-   * @description Retrieve business fetched
+   * @description Retrieve business
    *
    * @param {any} nextProps
    *
@@ -78,7 +77,7 @@ export class BusinessRegistration extends Component {
    * @memberof RegistrationForm
    */
   componentWillReceiveProps(nextProps) {
-    if (!this.props.params) {
+    if (!this.props.params.id) {
       return null;
     }
     if (nextProps.business) {
@@ -132,10 +131,7 @@ export class BusinessRegistration extends Component {
    * @memberof RegistrationForm
    */
   onSubmit(event) {
-    this.setState({ errors: {} });
     event.preventDefault();
-
-    this.setState({ errors: {} });
     const { history } = this.props;
 
     if (!this.props.params.id) {
@@ -145,29 +141,33 @@ export class BusinessRegistration extends Component {
     }
   }
   /**
-   * @description Handles submission of form data
+   * @description Handles mapping of business locations
    *
    * @param {any} event
    *
    * @returns {undefined}
    */
-    mapCategories() {
+  mapCategories() {
+    if (this.props.categories) {
       const categoryOption = this.props.categories.map(({ id, category }) =>
-      <option key={id} value={category}>{category}</option>);
+        <option key={id} value={category}>{category}</option>);
       return categoryOption;
     }
+  }
   /**
-   * @description Handles submission of form data
+   * @description Handles mapping of business locations
    *
    * @param {any} event
    *
    * @returns {undefined}
    */
-    mapLocations() {
+  mapLocations() {
+    if (this.props.locations) {
       const locationOption = this.props.locations.map(({ id, location }) =>
-      <option key={id} value={location}>{location}</option>);
+        <option key={id} value={location}>{location}</option>);
       return locationOption;
     }
+  }
   /**
    * @description Renders component to the dom
    *
@@ -178,23 +178,18 @@ export class BusinessRegistration extends Component {
   render() {
     const {
       params,
-      categories,
-      locations,
       isLoading
     } = this.props;
 
-    const { 
-      state, 
-      onChange, 
-      onSubmit, 
+    const {
+      state,
+      onChange,
+      onSubmit,
       mapCategories,
       mapLocations
     } = this;
 
     const { changeValue, defaultTotal, color } = state;
-
-    const businessLocations = locations || [];
-    const businessCategories = categories || [];
 
     return (
       <div>
@@ -225,24 +220,18 @@ BusinessRegistration.propTypes = {
   fetchCategories: PropTypes.func.isRequired,
   business: PropTypes.object,
   params: PropTypes.object.isRequired,
-  categories: PropTypes.array,
-  locations: PropTypes.array,
-  changeValue: PropTypes.number.isRequired,
-  defaultTotal: PropTypes.number.isRequired,
-  color: PropTypes.string.isRequired,
+  locations: PropTypes.array.isRequired,
+  categories: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired
 };
 
 BusinessRegistration.defaultProps = {
-  business: {},
-  categories: [],
-  locations: []
+  business: {}
 };
 
-export const mapStateToProps = (state, props) => {
+const mapStateToProps = (state, props) => {
   let { params } = props.match;
-  params = params || {}
-  
+  params = params || {};
   const { businesses, isLoading } = state;
   if (params.id) {
     return {

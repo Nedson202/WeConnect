@@ -6,7 +6,7 @@ import passwordToggler from '../../utils/passwordToggler';
 import '../../index.scss';
 
 /**
- * @class SignForm
+ * @class SignupForm
  *
  * @extends {Component}
  */

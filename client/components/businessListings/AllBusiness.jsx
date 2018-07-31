@@ -13,7 +13,7 @@ import loader from '../../actions/loader';
  */
 export class AllBusiness extends Component {
   /**
-   * @description Fetch reviews and business
+   * @description Fetch business
    *
    * @returns {undefined}
    *
@@ -57,9 +57,13 @@ export class AllBusiness extends Component {
 AllBusiness.propTypes = {
   fetchBusinesses: PropTypes.func.isRequired,
   loader: PropTypes.func.isRequired,
-  businesses: PropTypes.array.isRequired,
+  businesses: PropTypes.array,
   paginate: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired
+};
+
+AllBusiness.defaultProps = {
+  businesses: []
 };
 
 export const mapStateToProps = (state) => {
