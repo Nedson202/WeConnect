@@ -66,7 +66,6 @@ const businessImageUploader = (businessId, image) => dispatch => axios.put(`/api
     const { business } = res.data;
     dispatch(setBusinessById(business));
     toastr.success('Image uploaded successfully');
-    document.getElementById('close-btn').click();
   }); // eslint-disable-line no-unused-vars
 
 export {

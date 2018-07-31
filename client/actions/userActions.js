@@ -51,7 +51,7 @@ const userLoginRequest = (userData, history) => (dispatch) => {
         history.push('/dashboard');
       }
     }).catch((error) => {
-      if(error.response) {
+      if (error.response) {
         error.response.data.map(err => toastr.error(err));
         dispatch(loadingState(false));
       }
@@ -78,7 +78,7 @@ const userSignupRequest = (userData, history) => (dispatch) => {
       toastr.success(message);
       history.push('/dashboard');
     }).catch((error) => {
-      if(error.response) {
+      if (error.response) {
         const { data } = error.response;
         data.map(err => toastr.error(err));
         dispatch(loadingState(false));
@@ -107,7 +107,7 @@ const userProfileUpdateRequest = (userId, data) => dispatch => axios.put(`/api/v
     if (error.response) {
       error.response.data.map(err => toastr.error(err));
     }
-  }); // eslint-disable-line no-unused-vars
+  });// eslint-disable-line no-unused-vars
 
 export {
   logout,

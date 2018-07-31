@@ -45,7 +45,6 @@ const updateReview = review => ({
  * @return {Object} action dispatched by the action creator
  */
 const reviewRequest = (businessId, message, fetchBusinessById) => (dispatch) => {
-
   if (tokenVerifier(localStorage.getItem('accessToken'))) {
     setAuthToken(false);
     dispatch(setCurrentUser({}));
