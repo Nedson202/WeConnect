@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SignupForm from './SignupForm';
 import { userSignupRequest } from '../../actions/userActions';
-// import addFlashMessage from '../../actions/flashMessages';
 import loader from '../../actions/loader';
 
 /**
@@ -106,7 +105,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   userSignupRequest,
-  // addFlashMessage,
   loader
 }, dispatch);
 

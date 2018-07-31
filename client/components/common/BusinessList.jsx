@@ -61,7 +61,7 @@ class BusinessList extends Component {
     }
   }
   /**
-   * @description Deletes business from the database
+   * @description Handles image url
    *
    * @param {any} event
    *

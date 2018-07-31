@@ -4,8 +4,7 @@ import UserCard from './UserCard';
 
 /**
    * @description Creates users list.
-   * @param {prop} users
-   * @param {prop} deleteUser
+   * @param {prop} users, removeUser, markUserToRemove
    * @returns {object} JSX object
    * @memberof UserList
    */

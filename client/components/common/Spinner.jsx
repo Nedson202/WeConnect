@@ -5,7 +5,7 @@ import { RingLoader } from 'react-spinners';
 /**
  * @description react stateless component for card template
  *
- * @return {Object} action dispatched by the action creator
+ * @return {Object} spinner
  */
 const Spinner = ({ isLoading }) => (
   <div className="spinner">

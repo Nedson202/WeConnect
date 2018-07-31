@@ -7,7 +7,7 @@ import green from '../../images/default.jpeg';
 /**
  * @description react stateless component for card template
  *
- * @return {Object} action dispatched by the action creator
+ * @return {Object} business card
  */
 const BusinessCard = ({ business }) => {
   const {
