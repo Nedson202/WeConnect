@@ -35,7 +35,7 @@ export const addBusiness = business => ({
  */
 const businessRegistrationRequest = (businessData, history) => (dispatch) => {
   dispatch(loadingState(true));
-  if (!!tokenVerifier(localStorage.getItem('accessToken'))) {
+  if (tokenVerifier(localStorage.getItem('accessToken'))) {
     setAuthToken(false);
     dispatch(setCurrentUser({}));
     history.push('/login');
@@ -49,7 +49,7 @@ const businessRegistrationRequest = (businessData, history) => (dispatch) => {
       toastr.success(message);
       return history.push('/dashboard');
     }).catch((error) => {
-      if(error.response) {
+      if (error.response) {
         dispatch(loadingState(false));
         error.response.data.map(err => toastr.error(err));
       }

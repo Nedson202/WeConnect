@@ -76,7 +76,7 @@ const deleteBusiness = (id, username, history) => dispatch => axios.delete(`/api
  *
  * @return {Object} action dispatched by the action creator
  */
-const deleteUser = id => dispatch => axios.delete(`http://localhost:4000/api/v1/admin/users/${id}`).then(() => {
+const deleteUser = id => dispatch => axios.delete(`/api/v1/admin/users/${id}`).then(() => {
   dispatch(userDeleted(id));
   toastr.success('User removed successfully');
 });
