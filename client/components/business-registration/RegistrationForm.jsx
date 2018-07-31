@@ -17,14 +17,6 @@ const RegistrationForm = ({
   defaultTotal, 
   color
 }) => {
-  // const { changeValue, defaultTotal, color } = state;
-
-  // const categoryOption = categories.map(({ id, category }) =>
-  //   <option key={id} value={category}>{category}</option>);
-
-  // const locationOption = locations.map(({ id, location }) =>
-  //   <option key={id} value={location}>{location}</option>);
-
   /**
    * @description Renders the component to the dom
    *

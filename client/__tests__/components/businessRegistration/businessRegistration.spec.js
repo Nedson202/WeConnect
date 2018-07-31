@@ -16,45 +16,40 @@ const { business, categories, locations } = state;
 
 configure({ adapter: new Adapter() });
 let props;
-props = {
-  businessRegistrationRequest: jest.fn(() => Promise.resolve()),
-  businessUpdateRequest: jest.fn(() => Promise.resolve()),
-  fetchBusinessById: jest.fn(() => Promise.resolve()),
-  fetchCategories: jest.fn(() => Promise.resolve()),
-  categories: jest.fn(() => Promise.resolve()),
-  fetchLocations: jest.fn(() => Promise.resolve()),
-  locations: jest.fn(() => Promise.resolve()),
-  isLoading: false,
-  match: {
+const setup = () => {
+  props = {
+    businessRegistrationRequest: jest.fn(() => Promise.resolve()),
+    businessUpdateRequest: jest.fn(() => Promise.resolve()),
+    fetchBusinessById: jest.fn(() => Promise.resolve()),
+    categories: jest.fn(() => Promise.resolve()),
+    fetchCategories: jest.fn(() => Promise.resolve()),
+    fetchLocations: jest.fn(() => Promise.resolve()),
+    locations: jest.fn(() => Promise.resolve()),
+    isLoading: false,
+    match: {
+      params: {
+        id: 1
+      }
+    },
     params: {
       id: 1
-    }
-  },
-  params: {
-    id: 1
-  },
-  history,
-  categories,
-  locations,
-  onChange: jest.fn(() => Promise.resolve()),
-  onSubmit: jest.fn(() => Promise.resolve()),
-  state: {
-    businesses: {
-      categories: () => [],
-      locations: () => []
     },
-    business
-  }
-};
-const setup = () => shallow(<BusinessRegistration {...props} />);
+    history,
+    categories,
+    locations,
+    onChange: jest.fn(() => Promise.resolve()),
+    onSubmit: jest.fn(() => Promise.resolve()),
+    state: {
+      businesses: {
+        categories: () => [],
+        locations: () => []
+      },
+      business
+    }
+  };
 
-const event = (name, value) => ({
-  preventDefault: jest.fn(() => Promise.resolve()),
-  target: {
-    name,
-    value
-  }
-});
+  return shallow(<BusinessRegistration {...props} />)
+};
 
 describe('state to props', () => {
   props = {
@@ -82,7 +77,7 @@ describe('componentWillReceiveProps()', () => {
     business
   };
   it('should return next props', () => {
-    const wrapper = shallow(<BusinessRegistration {...props} />);
+    const wrapper = setup();
     const action = wrapper.instance();
     const componentWillReceiveProps = jest.spyOn(wrapper.instance(), 'componentWillReceiveProps');
     action.componentWillReceiveProps(nextProps);
@@ -92,17 +87,17 @@ describe('componentWillReceiveProps()', () => {
 
 describe('Business registration component', () => {
   beforeEach(() => {
-    global.props = {
-      match: {
-        params: () => {}
-      },
-      state: {
-        businesses: {
-          business: () => {},
-          categories: () => {}
-        }
-      }
-    };
+    // global.props = {
+    //   match: {
+    //     params: () => {}
+    //   },
+    //   state: {
+    //     businesses: {
+    //       business: () => {},
+    //       categories: () => {}
+    //     }
+    //   }
+    // };
   });
 
   it('should render registration page', () => {
@@ -121,18 +116,12 @@ describe('Business registration component', () => {
       categories: jest.fn(() => Promise.resolve()),
       onChange: jest.fn(() => Promise.resolve()),
       onSubmit: jest.fn(() => Promise.resolve()),
+      fetchCategories: jest.fn(() => Promise.resolve()),
+      fetchLocations: jest.fn(() => Promise.resolve()),
       params: {
         id: 1
       },
       isLoading: false
-    };
-
-    const state = {
-      business: null,
-      params: { id: 1 },
-      categories,
-      locations,
-      isLoading: false,
     };
 
     const wrapper = shallow(<RegistrationForm {...props} />);
@@ -159,8 +148,6 @@ describe('Business registration component', () => {
         }
       },
     };
-
-    // expect(mapStateToProps(state, props)).toEqual(state);
   });
 
   it('should render connected registration page', () => {
@@ -178,11 +165,11 @@ describe('Business registration component', () => {
 });
 
 describe('Registration onchange method', () => {
-  beforeEach(() => {
-    global.document = {
-      title: () => {}
-    };
-  });
+  // beforeEach(() => {
+  //   global.document = {
+  //     title: () => {}
+  //   };
+  // });
 
 
   it('should simulate input change', () => {

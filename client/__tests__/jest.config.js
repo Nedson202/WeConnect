@@ -1,10 +1,43 @@
 import { configure, shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
+let window;
+const event = (name, value) => ({
+  preventDefault: jest.fn(),
+  target: {
+    name,
+    value,
+    files: [{
+      type: ''
+    }]
+  }
+});
+
 const history = {
-  push: jest.fn()
+  push: () => {}
+}
+
+global.event = event;
+
+global.toastr = {
+  error: jest.fn()
 };
 
+const props = { 
+  history: [],
+  match: {
+    params: () => {}
+  },
+  state: {
+    businesses: {
+      business: () => {},
+      categories: () => {}
+    }
+  }
+ };
+global.props = props;
+
+global.window = window;
 const params = {};
 
 global.localStorage = localStorage;

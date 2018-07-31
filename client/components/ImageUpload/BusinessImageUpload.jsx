@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import firebaseApp from '../../utils/firebaseConfig';
 import '../../index.scss';
 /**
  * @class BusinessImageUpload
@@ -9,12 +8,25 @@ import '../../index.scss';
  */
 const BusinessImageUpload = ({ onImageChange, onImageSubmit, state }) => (
   <div>
-    <div className="modal fade" id="businessImageModal" tabIndex="-1" role="dialog" aria-labelledby="confirmModalTitle" aria-hidden="true">
+    <div
+      className="modal fade"
+      id="businessImageModal"
+      tabIndex="-1"
+      role="dialog"
+      aria-labelledby="confirmModalTitle"
+      aria-hidden="true"
+    >
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h4>Edit Image</h4>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close" id="close-btn">
+            <button
+              type="button"
+              className="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              id="close-btn"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -22,19 +34,20 @@ const BusinessImageUpload = ({ onImageChange, onImageSubmit, state }) => (
             <div className="row col-lg-12">
               <div className="col-lg-6">
                 <label className="btn btn-default">
-                  { state.uploading ? <div
-                    className="progress form-progress-bar"
-                    id="progress"
-                  >
+                  { state.uploading ?
                     <div
-                      className="progress-bar progress-bar-striped progress-bar-animated"
-                      role="progressbar"
-                      aria-valuenow="100"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                      style={{ width: '100%' }}
-                    />
-                  </div> : null }
+                      className="progress form-progress-bar"
+                      id="progress"
+                    >
+                      <div
+                        className="progress-bar progress-bar-striped progress-bar-animated"
+                        role="progressbar"
+                        aria-valuenow="100"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style={{ width: '100%' }}
+                      />
+                    </div> : null }
                   <div className="circle"><img
                     src=""
                     className="hide"
@@ -78,6 +91,7 @@ const BusinessImageUpload = ({ onImageChange, onImageSubmit, state }) => (
 BusinessImageUpload.propTypes = {
   onImageChange: PropTypes.func.isRequired,
   onImageSubmit: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
 };
 
 export default BusinessImageUpload;

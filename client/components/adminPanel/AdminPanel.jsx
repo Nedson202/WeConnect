@@ -15,7 +15,7 @@ let userToRemove;
  *
  * @extends {Component}
  */
-class AdminPanel extends Component {
+export class AdminPanel extends Component {
   /**
    * @description Creates an instance of AdminPanel.
    *
@@ -101,7 +101,7 @@ class AdminPanel extends Component {
     this.props.deleteUser(userToRemove);
   }
   /**
-   * @description handle business list toggling
+   * @description Marks user for deletion
    *
    * @param {Number} id
    * @returns {undefined}

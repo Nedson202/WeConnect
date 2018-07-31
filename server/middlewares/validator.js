@@ -10,7 +10,7 @@ class validator {
   */
   static userSignup(req, res, next) {
     req.check('username', 'Username is required').notEmpty();
-    req.checkBody('email', 'Email cannot be empty or invalid').isEmail().trim();
+    req.check('email', 'Email cannot be empty or invalid').isEmail().normalizeEmail();
     req
       .check('password', 'Minimun password length is 6 characters')
       .isLength({ min: 6 }).trim();
