@@ -7,6 +7,8 @@ import logger from 'morgan';
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import http from 'http';
+import https from 'https';
 import path from 'path';
 import userRoute from './server/routes/user';
 import businessRoute from './server/routes/business';
@@ -19,7 +21,10 @@ const swaggerDocument = yaml.load(`${process.cwd()}/swagger.yaml`);
 
 const app = express();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
+
+const appUrl = process.env.NODE_ENV.match('development')
+  ? `http://localhost:${port}` : process.env.PRODUCTION_URL
 
 // parse incoming requests data
 app.use(bodyParser.json());
@@ -36,7 +41,7 @@ if (process.env.NODE_ENV !== 'production') {
     publicPath: webpackConfig.output.publicPath,
     hot: true
   }));
-  
+
   app.use(webpackHotMiddleware(compiler));
 } else {
   app.use(webpackMiddleware(webpack(webpackProdConfig)));
@@ -58,5 +63,13 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   models.sequelize.sync();
 });
+
+const httpProtocol = process.env.NODE_ENV.match('production') ? https : http;
+
+setInterval(() => {
+  (() => {
+    httpProtocol.get(`${appUrl}/api/v1/healthCheck`, () => {});
+  })();
+}, 1000 * 10 * 60);
 
 export default app;

@@ -9,4 +9,4 @@ dist
 .VSCODE
 .vscode
 reports
-.selenium-debug-log
+.selenium-debug.log

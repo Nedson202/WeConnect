@@ -5,10 +5,12 @@ import validator from '../middlewares/validator';
 import errorHandler from '../middlewares/error-handler';
 import sorter from '../middlewares/business-filterer';
 import checkAuth from '../middlewares/check-auth';
+import HealthChecker from '../controller/healthChecker';
 // all endpoints related to businesses
 export default (route) => {
   route.post('/api/v1/businesses', checkAuth, validator.registerBusiness, errorHandler, Businesses.createBusiness);
   route.get('/api/v1/businesses', validator.checkQuery, sorter.sortQuery, Businesses.getBusiness);
+  route.get('/api/v1/healthCheck', HealthChecker.getServerHealth);
   route.get('/api/v1/categories', Categories.getCategories);
   route.get('/api/v1/locations', Locations.getLocations);
   route.get('/api/v1/businesses/:businessId', Businesses.getOneBusiness);
