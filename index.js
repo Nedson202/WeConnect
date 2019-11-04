@@ -70,6 +70,6 @@ setInterval(() => {
   (() => {
     httpProtocol.get(`${appUrl}/api/v1/healthCheck`, () => {});
   })();
-}, 1000 * 10 * 60);
+}, 1000 * 10 * 60 * 24);
 
 export default app;
